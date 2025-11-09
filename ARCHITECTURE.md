@@ -8,12 +8,21 @@ This document outlines the proposed architecture for a modular road cross-sectio
 
 **Python** is recommended for this project because:
 - VIKTOR is Python-based (native integration)
-- Excellent geometric libraries (Shapely, scipy)
-- Strong CAD export support (ezdxf for DXF, svgwrite for SVG)
+- Excellent geometric libraries (CadQuery, Shapely for optional adapters)
+- Strong CAD export support (CadQuery for DXF/STEP, svgwrite for SVG)
 - CLI support (Click, Typer)
 - Web API support (FastAPI)
 - Type safety with type hints
 - Scientific computing ecosystem
+
+## Critical Constraint: VIKTOR Vendoring
+
+**VIKTOR projects cannot import from parent folders.** This architectural constraint drives a key design decision:
+
+- **Core domain logic must be pure Python** (no external dependencies)
+- Core will be **vendored (copied)** into the VIKTOR project folder
+- Heavy libraries (CadQuery, Shapely) are used via **adapters** outside the core
+- Clean separation between portable core and library-specific adapters
 
 ## Architectural Layers
 
@@ -21,7 +30,7 @@ This document outlines the proposed architecture for a modular road cross-sectio
 ┌─────────────────────────────────────────────────────────┐
 │         INTERFACE LAYER (Frontends)                     │
 │  ┌──────────┐  ┌──────────┐  ┌──────────────────┐     │
-│  │   CLI    │  │  Web API │  │  VIKTOR Adapter  │     │
+│  │   CLI    │  │  Web API │  │  VIKTOR App      │     │
 │  └──────────┘  └──────────┘  └──────────────────┘     │
 └─────────────────────────────────────────────────────────┘
                          │
@@ -33,34 +42,95 @@ This document outlines the proposed architecture for a modular road cross-sectio
 └─────────────────────────────────────────────────────────┘
                          │
 ┌─────────────────────────────────────────────────────────┐
-│         DOMAIN LAYER (Core Business Logic)              │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │  Road Components (Lanes, Shoulders, Curbs, etc.) │  │
-│  │  Connection Rules & Constraints                  │  │
-│  │  Component Interfaces & Protocols                │  │
-│  └──────────────────────────────────────────────────┘  │
+│  ╔═══════════════════════════════════════════════════╗ │
+│  ║ CORE (Pure Python - Vendorable to VIKTOR)        ║ │
+│  ╠═══════════════════════════════════════════════════╣ │
+│  ║ DOMAIN LAYER                                      ║ │
+│  ║  • Road Components (Lanes, Shoulders, etc.)       ║ │
+│  ║  • Connection Rules & Constraints                 ║ │
+│  ║  • Component Interfaces & Protocols               ║ │
+│  ╠═══════════════════════════════════════════════════╣ │
+│  ║ GEOMETRY LAYER (Abstract)                         ║ │
+│  ║  • Point2D, Polygon, Polyline (pure data)         ║ │
+│  ║  • Component → Geometry Transformation            ║ │
+│  ║  • Positioning & Assembly Logic                   ║ │
+│  ╚═══════════════════════════════════════════════════╝ │
+│         NO EXTERNAL DEPENDENCIES (stdlib only)          │
 └─────────────────────────────────────────────────────────┘
                          │
 ┌─────────────────────────────────────────────────────────┐
-│         GEOMETRY LAYER (Shape Translation)              │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │  Geometric Primitives (Polygon, Polyline, etc.)  │  │
-│  │  Component → Geometry Transformation              │  │
-│  │  Positioning & Assembly Logic                    │  │
-│  └──────────────────────────────────────────────────┘  │
+│         ADAPTER LAYER (Library Conversions)             │
+│  ┌──────────────┐  ┌──────────────┐  ┌────────────┐   │
+│  │  CadQuery    │  │   Shapely    │  │   VIKTOR   │   │
+│  │  Adapter     │  │   Adapter    │  │  Adapter   │   │
+│  └──────────────┘  └──────────────┘  └────────────┘   │
 └─────────────────────────────────────────────────────────┘
                          │
 ┌─────────────────────────────────────────────────────────┐
-│         EXPORT LAYER (Format Output)                    │
+│         EXPORT/VISUALIZATION LAYER                      │
 │  ┌──────────┐  ┌──────────┐  ┌──────────────────┐     │
-│  │   DXF    │  │   SVG    │  │   Future (PDF)   │     │
+│  │ DXF/STEP │  │   SVG    │  │  VIKTOR Views    │     │
 │  └──────────┘  └──────────┘  └──────────────────┘     │
 └─────────────────────────────────────────────────────────┘
 ```
 
+**Key Innovation: The boxed "CORE" module is completely self-contained and can be copied into VIKTOR projects without any external dependencies.**
+
 ## Core Design Patterns
 
-### 1. Component Pattern (Domain Layer)
+### 1. Abstract Geometry Primitives (Pure Python)
+
+The core uses **pure Python data structures** with no external dependencies:
+
+```python
+# src/cross_section/core/geometry/primitives.py
+"""Pure Python geometry - NO external dependencies"""
+from dataclasses import dataclass, field
+from typing import List, Optional
+import math
+
+@dataclass
+class Point2D:
+    """2D point - pure Python, no library dependencies"""
+    x: float
+    y: float
+
+    def distance_to(self, other: 'Point2D') -> float:
+        """Calculate distance to another point"""
+        return math.sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
+
+    def offset(self, dx: float, dy: float) -> 'Point2D':
+        """Create new point offset by dx, dy"""
+        return Point2D(self.x + dx, self.y + dy)
+
+@dataclass
+class Polygon:
+    """2D polygon - pure Python, no library dependencies"""
+    exterior: List[Point2D]
+    holes: Optional[List[List[Point2D]]] = None
+
+    def bounds(self) -> tuple[float, float, float, float]:
+        """Returns (min_x, min_y, max_x, max_y)"""
+        xs = [p.x for p in self.exterior]
+        ys = [p.y for p in self.exterior]
+        return (min(xs), min(ys), max(xs), max(ys))
+
+    def offset_x(self, dx: float) -> 'Polygon':
+        """Translate polygon horizontally"""
+        return Polygon(
+            exterior=[p.offset(dx, 0) for p in self.exterior],
+            holes=[[p.offset(dx, 0) for p in hole] for hole in (self.holes or [])]
+        )
+
+@dataclass
+class ComponentGeometry:
+    """Complete geometry for a road component - pure data structure"""
+    polygons: List[Polygon] = field(default_factory=list)
+    polylines: List[List[Point2D]] = field(default_factory=list)
+    metadata: dict = field(default_factory=dict)
+```
+
+### 2. Component Pattern (Domain Layer)
 
 All road components implement a common interface:
 
@@ -69,6 +139,7 @@ from abc import ABC, abstractmethod
 from typing import Protocol, Optional
 from dataclasses import dataclass
 from enum import Enum
+from ..geometry.primitives import ComponentGeometry
 
 class ConnectionSide(Enum):
     LEFT = "left"
@@ -113,17 +184,20 @@ class RoadComponent(ABC):
         pass
 
     @abstractmethod
-    def to_geometry(self, start_x: float, elevation: float) -> 'ComponentGeometry':
-        """Convert to geometric representation"""
+    def to_geometry(self, start_x: float, elevation: float) -> ComponentGeometry:
+        """Convert to abstract geometric representation (pure Python)"""
         pass
 ```
 
-### 2. Concrete Components
+### 3. Concrete Components (Pure Python)
 
 ```python
+from dataclasses import dataclass
+from ..geometry.primitives import Point2D, Polygon, ComponentGeometry
+
 @dataclass
 class TravelLane(RoadComponent):
-    """Standard travel lane"""
+    """Standard travel lane - pure Python, no dependencies"""
     width: float = 3.6  # meters, typical lane width
     cross_slope: float = 0.02  # 2% typical
     surface_type: str = "asphalt"
@@ -144,6 +218,30 @@ class TravelLane(RoadComponent):
             width=self.width,
             elevation=0.0,
             compatible_types={"TravelLane", "Shoulder", "TurnLane"}
+        )
+
+    def to_geometry(self, start_x: float, elevation: float) -> ComponentGeometry:
+        """Returns pure Python geometry (no library dependencies)"""
+        # Calculate rectangular lane with cross-slope
+        end_x = start_x + self.width
+        end_elevation = elevation - (self.width * self.cross_slope)
+
+        points = [
+            Point2D(start_x, elevation),
+            Point2D(end_x, end_elevation),
+            Point2D(end_x, 0),
+            Point2D(start_x, 0)
+        ]
+
+        return ComponentGeometry(
+            polygons=[Polygon(exterior=points)],
+            polylines=[],
+            metadata={
+                'type': 'TravelLane',
+                'width': self.width,
+                'cross_slope': self.cross_slope,
+                'surface_type': self.surface_type
+            }
         )
 
 @dataclass
@@ -268,40 +366,100 @@ class RoadSection:
         pass
 ```
 
-### 4. Geometry Layer
+### 4. Adapter Pattern (Library Conversions)
+
+The adapter layer converts abstract geometry to library-specific formats:
 
 ```python
-from shapely.geometry import Polygon, LineString, Point
-from dataclasses import dataclass
-from typing import List, Tuple
+# src/cross_section/adapters/cadquery_adapter.py
+"""CadQuery adapter - converts abstract geometry to CadQuery"""
+import cadquery as cq
+from ..core.geometry.primitives import ComponentGeometry, Polygon, Point2D
 
-@dataclass
-class ComponentGeometry:
-    """Geometric representation of a component"""
-    polygons: List[Polygon] = field(default_factory=list)
-    polylines: List[LineString] = field(default_factory=list)
-    points: List[Point] = field(default_factory=list)
-    metadata: dict = field(default_factory=dict)
+class CadQueryAdapter:
+    """Convert abstract geometry to CadQuery for export/3D operations"""
 
-    def offset_x(self, dx: float) -> 'ComponentGeometry':
-        """Translate geometry horizontally"""
-        # Implementation using shapely affine transforms
-        pass
+    @staticmethod
+    def polygon_to_cadquery(polygon: Polygon) -> cq.Workplane:
+        """Convert pure Python polygon to CadQuery sketch"""
+        if not polygon.exterior:
+            return cq.Workplane("XY")
 
-@dataclass
-class SectionGeometry:
-    """Complete section geometry"""
-    components: List[Tuple[RoadComponent, ComponentGeometry]]
-    bounds: Tuple[float, float, float, float]  # min_x, min_y, max_x, max_y
+        # Start sketch at first point
+        points = polygon.exterior
+        sketch = cq.Workplane("XY").moveTo(points[0].x, points[0].y)
 
-    def get_total_width(self) -> float:
-        return self.bounds[2] - self.bounds[0]
+        # Add lines to other points
+        for p in points[1:]:
+            sketch = sketch.lineTo(p.x, p.y)
+
+        return sketch.close()
+
+    @staticmethod
+    def component_to_cadquery(geom: ComponentGeometry) -> cq.Workplane:
+        """Convert component geometry to CadQuery"""
+        # For multiple polygons, union them
+        result = None
+        for polygon in geom.polygons:
+            sketch = CadQueryAdapter.polygon_to_cadquery(polygon)
+            if result is None:
+                result = sketch
+            else:
+                result = result.union(sketch)
+        return result if result else cq.Workplane("XY")
 ```
 
-### 5. Exporter Strategy Pattern
+```python
+# src/cross_section/adapters/shapely_adapter.py
+"""Shapely adapter - for geometric validation and analysis"""
+from shapely.geometry import Polygon as ShapelyPolygon, Point as ShapelyPoint
+from ..core.geometry.primitives import ComponentGeometry, Polygon, Point2D
+
+class ShapelyAdapter:
+    """Convert abstract geometry to Shapely for validation/analysis"""
+
+    @staticmethod
+    def polygon_to_shapely(polygon: Polygon) -> ShapelyPolygon:
+        """Convert pure Python polygon to Shapely"""
+        coords = [(p.x, p.y) for p in polygon.exterior]
+        holes = None
+        if polygon.holes:
+            holes = [[(p.x, p.y) for p in hole] for hole in polygon.holes]
+        return ShapelyPolygon(shell=coords, holes=holes)
+
+    @staticmethod
+    def component_to_shapely(geom: ComponentGeometry) -> list[ShapelyPolygon]:
+        """Convert component geometry to Shapely polygons"""
+        return [ShapelyAdapter.polygon_to_shapely(p) for p in geom.polygons]
+```
+
+```python
+# src/cross_section/interfaces/viktor/viktor_adapter.py
+"""VIKTOR adapter - converts to VIKTOR geometry types"""
+import viktor.geometry as vgeo
+from ...vendor.cross_section_core.geometry.primitives import ComponentGeometry, Polygon
+
+class ViktorAdapter:
+    """Convert abstract geometry to VIKTOR geometry (in VIKTOR project)"""
+
+    @staticmethod
+    def polygon_to_viktor(polygon: Polygon) -> vgeo.GeoPolygon:
+        """Convert pure Python polygon to VIKTOR polygon"""
+        points = [vgeo.Point(p.x, p.y, 0) for p in polygon.exterior]
+        return vgeo.GeoPolygon(points)
+
+    @staticmethod
+    def component_to_viktor(geom: ComponentGeometry) -> list[vgeo.GeoPolygon]:
+        """Convert component geometry to VIKTOR polygons"""
+        return [ViktorAdapter.polygon_to_viktor(p) for p in geom.polygons]
+```
+
+### 5. Exporter Strategy Pattern (Uses Adapters)
 
 ```python
 from abc import ABC, abstractmethod
+from ..adapters.cadquery_adapter import CadQueryAdapter
+from ..core.geometry.primitives import ComponentGeometry
 
 class SectionExporter(ABC):
     """Base class for all exporters"""
@@ -311,26 +469,29 @@ class SectionExporter(ABC):
         pass
 
 class DXFExporter(SectionExporter):
-    """Export to AutoCAD DXF format"""
+    """Export to AutoCAD DXF format using CadQuery"""
 
     def export(self, geometry: SectionGeometry, filepath: str, **options) -> None:
-        import ezdxf
+        import cadquery as cq
 
-        doc = ezdxf.new('R2018')
-        msp = doc.modelspace()
+        # Combine all component geometries
+        combined = None
 
         for component, geom in geometry.components:
-            layer_name = type(component).__name__
+            # Convert abstract geometry to CadQuery
+            cq_sketch = CadQueryAdapter.component_to_cadquery(geom)
 
-            # Add polygons as polylines
-            for polygon in geom.polygons:
-                coords = list(polygon.exterior.coords)
-                msp.add_lwpolyline(coords, dxfattribs={'layer': layer_name})
+            if combined is None:
+                combined = cq_sketch
+            else:
+                combined = combined.union(cq_sketch)
 
-        doc.saveas(filepath)
+        # Export using CadQuery's built-in DXF exporter
+        if combined:
+            cq.exporters.export(combined, filepath, 'DXF')
 
 class SVGExporter(SectionExporter):
-    """Export to SVG format"""
+    """Export to SVG format - direct from abstract geometry"""
 
     def export(self, geometry: SectionGeometry, filepath: str, **options) -> None:
         import svgwrite
@@ -342,8 +503,9 @@ class SVGExporter(SectionExporter):
         dwg = svgwrite.Drawing(filepath, size=(width * scale, height * scale))
 
         for component, geom in geometry.components:
+            # Work directly with abstract geometry (no adapter needed)
             for polygon in geom.polygons:
-                points = [(x * scale, y * scale) for x, y in polygon.exterior.coords]
+                points = [(p.x * scale, p.y * scale) for p in polygon.exterior]
                 dwg.add(dwg.polygon(points, fill='lightgray', stroke='black'))
 
         dwg.save()
@@ -381,81 +543,105 @@ cross-section/
 │   └── cross_section/
 │       ├── __init__.py
 │       │
-│       ├── domain/                # Domain Layer
+│       ├── ╔══════════════════════════════════════════╗
+│       │   ║ CORE (Pure Python - Vendorable)         ║
+│       │   ╚══════════════════════════════════════════╝
+│       ├── core/                   # NO external dependencies
 │       │   ├── __init__.py
-│       │   ├── base.py           # RoadComponent, ConnectionInterface
-│       │   ├── components/
+│       │   │
+│       │   ├── geometry/           # Abstract geometry primitives
 │       │   │   ├── __init__.py
-│       │   │   ├── lanes.py      # TravelLane, TurnLane, BikeLane
-│       │   │   ├── shoulders.py  # Shoulder
-│       │   │   ├── curbs.py      # Curb, Gutter
-│       │   │   ├── medians.py    # Median
-│       │   │   ├── slopes.py     # CutSlope, FillSlope
-│       │   │   └── sidewalks.py  # Sidewalk, Planting
-│       │   └── section.py        # RoadSection
+│       │   │   ├── primitives.py  # Point2D, Polygon, ComponentGeometry
+│       │   │   ├── transforms.py  # Pure math transformations
+│       │   │   └── assembler.py   # Section geometry assembly
+│       │   │
+│       │   ├── domain/             # Domain model (pure Python)
+│       │   │   ├── __init__.py
+│       │   │   ├── base.py        # RoadComponent, ConnectionInterface
+│       │   │   ├── components/
+│       │   │   │   ├── __init__.py
+│       │   │   │   ├── lanes.py   # TravelLane, TurnLane, BikeLane
+│       │   │   │   ├── shoulders.py  # Shoulder
+│       │   │   │   ├── curbs.py   # Curb, Gutter
+│       │   │   │   ├── medians.py # Median
+│       │   │   │   ├── slopes.py  # CutSlope, FillSlope
+│       │   │   │   └── sidewalks.py # Sidewalk, Planting
+│       │   │   └── section.py     # RoadSection
+│       │   │
+│       │   └── validation/         # Pure Python validation
+│       │       ├── __init__.py
+│       │       └── rules.py       # Connection rules, constraints
 │       │
-│       ├── geometry/              # Geometry Layer
+│       ├── adapters/               # Library conversions (NOT vendored)
 │       │   ├── __init__.py
-│       │   ├── primitives.py     # ComponentGeometry, SectionGeometry
-│       │   ├── transforms.py     # Positioning, rotation, scaling
-│       │   └── assembler.py      # Component → Geometry conversion
+│       │   ├── cadquery_adapter.py   # Core → CadQuery
+│       │   ├── shapely_adapter.py    # Core → Shapely
+│       │   └── svg_adapter.py        # Core → SVG (optional)
 │       │
-│       ├── export/                # Export Layer
+│       ├── export/                 # Export Layer (NOT vendored)
 │       │   ├── __init__.py
-│       │   ├── base.py           # SectionExporter, ExporterFactory
-│       │   ├── dxf_exporter.py   # DXF export implementation
-│       │   ├── svg_exporter.py   # SVG export implementation
-│       │   └── formats/
-│       │       └── __init__.py
+│       │   ├── base.py            # SectionExporter, ExporterFactory
+│       │   ├── dxf_exporter.py    # DXF export (uses CadQuery adapter)
+│       │   ├── svg_exporter.py    # SVG export (direct or adapter)
+│       │   └── step_exporter.py   # STEP export (uses CadQuery adapter)
 │       │
-│       ├── application/           # Application Layer
+│       ├── application/            # Application Layer (NOT vendored)
 │       │   ├── __init__.py
-│       │   ├── builder.py        # Section builder/assembler
-│       │   ├── validation.py     # Validation rules & logic
-│       │   ├── templates.py      # Standard section templates
+│       │   ├── builder.py         # Section builder/assembler
+│       │   ├── templates.py       # Standard section templates
 │       │   └── use_cases/
 │       │       ├── __init__.py
 │       │       ├── create_section.py
 │       │       └── export_section.py
 │       │
-│       ├── interfaces/            # Interface Layer
-│       │   ├── __init__.py
-│       │   ├── cli/
-│       │   │   ├── __init__.py
-│       │   │   ├── main.py       # CLI entry point
-│       │   │   └── commands/
-│       │   │       ├── create.py
-│       │   │       ├── export.py
-│       │   │       └── validate.py
-│       │   │
-│       │   ├── web/
-│       │   │   ├── __init__.py
-│       │   │   ├── app.py        # FastAPI application
-│       │   │   ├── routers/
-│       │   │   │   ├── sections.py
-│       │   │   │   └── export.py
-│       │   │   └── schemas/
-│       │   │       └── section_schema.py
-│       │   │
-│       │   └── viktor/
-│       │       ├── __init__.py
-│       │       ├── adapter.py    # VIKTOR integration adapter
-│       │       └── parametrization.py
-│       │
-│       └── utils/
+│       └── interfaces/             # Interface Layer
 │           ├── __init__.py
-│           ├── units.py          # Unit conversion utilities
-│           └── validators.py     # Common validators
+│           │
+│           ├── cli/                # Command-line interface
+│           │   ├── __init__.py
+│           │   ├── main.py        # CLI entry point
+│           │   └── commands/
+│           │       ├── create.py
+│           │       ├── export.py
+│           │       └── validate.py
+│           │
+│           ├── web/                # Web API
+│           │   ├── __init__.py
+│           │   ├── app.py         # FastAPI application
+│           │   ├── routers/
+│           │   │   ├── sections.py
+│           │   │   └── export.py
+│           │   └── schemas/
+│           │       └── section_schema.py
+│           │
+│           └── viktor/             # VIKTOR integration
+│               ├── __init__.py
+│               ├── app.py         # VIKTOR app entry point
+│               ├── parametrization.py
+│               ├── viktor_adapter.py  # Core → VIKTOR geometry
+│               │
+│               └── vendor/         # ← VENDORED CORE (copied)
+│                   └── cross_section_core/
+│                       ├── __init__.py
+│                       ├── geometry/    # Copied from core/geometry
+│                       ├── domain/      # Copied from core/domain
+│                       └── validation/  # Copied from core/validation
+│
+├── scripts/
+│   ├── sync_to_viktor.py          # Syncs core/ → viktor/vendor/
+│   └── pre_commit_hook.sh         # Auto-sync before commit
 │
 ├── tests/
 │   ├── __init__.py
 │   ├── unit/
+│   │   ├── test_core_geometry.py
 │   │   ├── test_components.py
-│   │   ├── test_geometry.py
+│   │   ├── test_adapters.py
 │   │   └── test_exporters.py
 │   ├── integration/
 │   │   ├── test_section_creation.py
-│   │   └── test_export_workflow.py
+│   │   ├── test_export_workflow.py
+│   │   └── test_viktor_vendor_sync.py
 │   └── fixtures/
 │       └── sample_sections.py
 │
@@ -467,8 +653,34 @@ cross-section/
 └── docs/
     ├── user_guide.md
     ├── api_reference.md
-    └── component_catalog.md
+    ├── component_catalog.md
+    └── viktor_vendoring.md       # Vendoring strategy docs
 ```
+
+### Key Structure Principles
+
+1. **`core/` is completely self-contained**
+   - Only stdlib imports (math, dataclasses, typing, etc.)
+   - Can be copied to VIKTOR without modification
+   - All business logic and domain knowledge
+
+2. **`adapters/` converts between core and libraries**
+   - CadQuery for 3D and CAD export
+   - Shapely for geometric analysis (optional)
+   - VIKTOR for visualization
+   - NOT copied to VIKTOR
+
+3. **`interfaces/viktor/vendor/` is a copy of `core/`**
+   - Synced via script
+   - VIKTOR imports from vendor, not parent
+   - Committed to git (shows what VIKTOR sees)
+
+4. **Dependencies are optional**
+   - Core: No dependencies
+   - CLI: Requires Typer
+   - Web: Requires FastAPI
+   - Export: Requires CadQuery (DXF/STEP) or svgwrite (SVG)
+   - VIKTOR: Only needs vendored core
 
 ## Key Architectural Principles
 
@@ -534,13 +746,13 @@ cross-section create \
 cross-section create --template urban_arterial --export svg
 ```
 
-### Python API
+### Python API (CLI/Web)
 ```python
-from cross_section.domain.components import TravelLane, Shoulder, Median
-from cross_section.domain.section import RoadSection
+from cross_section.core.domain.components import TravelLane, Shoulder, Median
+from cross_section.core.domain.section import RoadSection
 from cross_section.export.base import ExporterFactory
 
-# Create section programmatically
+# Create section programmatically (using pure Python core)
 section = RoadSection(name="Highway Section")
 section.add_component(Shoulder(width=3.0, paved=True))
 section.add_component(TravelLane(width=3.6))
@@ -555,9 +767,9 @@ errors = section.validate_connections()
 if errors:
     print("Validation errors:", errors)
 
-# Export
-geometry = section.to_geometry()
-exporter = ExporterFactory.get_exporter('dxf')
+# Export using adapter pattern
+geometry = section.to_geometry()  # Returns abstract geometry
+exporter = ExporterFactory.get_exporter('dxf')  # Uses CadQuery adapter internally
 exporter.export(geometry, 'highway.dxf')
 ```
 
@@ -580,21 +792,46 @@ curl -X POST http://localhost:8000/api/sections \
   }'
 ```
 
-### VIKTOR
+### VIKTOR (Uses Vendored Core)
 ```python
+# src/cross_section/interfaces/viktor/app.py
 from viktor import ViktorController
-from viktor.parametrization import ViktorParametrization
-from cross_section.interfaces.viktor.adapter import CrossSectionAdapter
+from viktor.parametrization import ViktorParametrization, NumberField
+from viktor.views import GeometryView, GeometryResult
+import viktor.geometry as vgeo
+
+# Import from VENDORED core (not from parent!)
+from .vendor.cross_section_core.domain.components import TravelLane, Shoulder, Median
+from .vendor.cross_section_core.domain.section import RoadSection
+from .viktor_adapter import ViktorAdapter
+
+class Parametrization(ViktorParametrization):
+    lane_width = NumberField("Lane Width (m)", default=3.6, min=2.5, max=5.0)
+    shoulder_width = NumberField("Shoulder Width (m)", default=2.4, min=0, max=4.0)
+    num_lanes = NumberField("Number of Lanes", default=2, min=1, max=4, step=1)
 
 class RoadSectionController(ViktorController):
-    parametrization = ViktorParametrization
+    parametrization = Parametrization
 
-    @GeometryView("3D View")
+    @GeometryView("Cross Section View", duration_guess=1)
     def create_geometry(self, params, **kwargs):
-        adapter = CrossSectionAdapter()
-        section = adapter.from_viktor_params(params)
-        return adapter.to_viktor_geometry(section)
+        # Create section using vendored core (pure Python, no external deps)
+        section = RoadSection(name="Parametric Section")
+        section.add_component(Shoulder(width=params.shoulder_width, paved=True))
+
+        for _ in range(int(params.num_lanes)):
+            section.add_component(TravelLane(width=params.lane_width))
+
+        section.add_component(Shoulder(width=params.shoulder_width, paved=True))
+
+        # Convert abstract geometry to VIKTOR geometry
+        abstract_geom = section.to_geometry()
+        viktor_geom = ViktorAdapter.section_to_viktor(abstract_geom)
+
+        return GeometryResult(viktor_geom)
 ```
+
+**Note:** VIKTOR app imports from `vendor/cross_section_core/`, which is a copy of `core/` synced via `scripts/sync_to_viktor.py`. This allows VIKTOR to work within its project folder constraints.
 
 ## Implementation Phases
 

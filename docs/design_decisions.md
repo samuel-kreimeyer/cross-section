@@ -7,8 +7,8 @@
 | Criterion | Python | TypeScript | Winner |
 |-----------|--------|------------|--------|
 | VIKTOR Integration | Native support | Difficult | **Python** |
-| Geometry Libraries | Shapely, scipy (excellent) | turf.js, jsts (limited) | **Python** |
-| CAD Export | ezdxf, svgwrite (mature) | dxf-writer (basic) | **Python** |
+| Geometry Libraries | CadQuery, Shapely (excellent) | turf.js, jsts (limited) | **Python** |
+| CAD Export | CadQuery, ezdxf, svgwrite | dxf-writer (basic) | **Python** |
 | CLI Support | Click, Typer (excellent) | Commander (good) | Tie |
 | Web API | FastAPI (modern) | Express, NestJS (mature) | Tie |
 | Type Safety | Type hints + mypy | Native TypeScript | TypeScript |
@@ -23,29 +23,107 @@
 
 ---
 
-### Geometry Library: Shapely
+## Core Architecture Decision: Pure Python Core + Adapters
 
-**Alternatives Considered:**
-1. **Shapely** (chosen)
-2. PyGEOS (merged into Shapely 2.0)
-3. GDAL/OGR (overkill for this use case)
-4. Custom implementation (too much work)
+### The Critical Constraint: VIKTOR Vendoring
 
-**Why Shapely:**
-- Industry standard for Python geometry
-- GEOS backend (C++ library, very fast)
-- Rich feature set: unions, intersections, buffers
-- Well-maintained (NumFOCUS project)
-- Excellent documentation
-- NumPy integration
-- Easy conversion to export formats
+**VIKTOR projects cannot import from parent folders.** This means we must **vendor (copy)** core logic into the VIKTOR project folder.
 
-**Tradeoffs:**
-- ✅ Battle-tested, reliable
-- ✅ Performance optimized
-- ✅ Active development
-- ❌ Some learning curve for advanced features
-- ❌ 2D only (but that's what we need)
+**Implication:** The core must be **pure Python with zero external dependencies**.
+
+### Architecture Decision
+
+```
+┌─────────────────────────────────────────┐
+│ CORE (Pure Python)                      │
+│ • Only stdlib (math, dataclasses)      │
+│ • Abstract geometry (Point2D, Polygon)  │
+│ • Business logic (components, rules)    │
+│ • Vendorable to VIKTOR                  │
+└─────────────────────────────────────────┘
+              ↓
+┌─────────────────────────────────────────┐
+│ ADAPTERS (Library-specific)             │
+│ • CadQueryAdapter → CAD export          │
+│ • ShapelyAdapter → validation           │
+│ • ViktorAdapter → visualization         │
+│ • NOT vendored to VIKTOR                │
+└─────────────────────────────────────────┘
+```
+
+**Benefits:**
+1. ✅ Core is portable (works in VIKTOR, CLI, Web)
+2. ✅ No dependency hell in VIKTOR
+3. ✅ Easy to test (no mocking heavy libraries)
+4. ✅ Clear separation of concerns
+5. ✅ Can use best library for each task
+
+**Trade-offs:**
+1. ❌ More abstraction layers
+2. ❌ Need to sync core to VIKTOR vendor folder
+3. ❌ Must maintain discipline (keep core pure)
+
+**Decision: Use pure Python core + adapter pattern**
+
+See [docs/viktor_vendoring.md](viktor_vendoring.md) for complete vendoring strategy.
+
+---
+
+### Geometry Libraries: CadQuery + Shapely (via Adapters)
+
+**Key Insight:** We don't have to choose! Use both via adapters.
+
+#### CadQuery
+
+**When to use:**
+- DXF/STEP export (professional CAD formats)
+- 3D operations (future: extrusion along alignment)
+- Complex CAD operations
+
+**Pros:**
+- Built on OpenCASCADE (professional CAD kernel)
+- Native CAD export (DXF, STEP, STL)
+- 3D-ready
+- Handles complex geometry
+
+**Cons:**
+- Larger dependency (~200MB)
+- Steeper learning curve
+- Heavier than needed for simple 2D
+
+#### Shapely
+
+**When to use:**
+- Geometric validation (overlaps, gaps)
+- Fast 2D operations
+- Spatial analysis
+
+**Pros:**
+- Lightweight (~10MB)
+- Very fast for 2D (GEOS backend)
+- Simple API
+- Industry standard
+
+**Cons:**
+- 2D only
+- Separate export libraries needed
+
+#### Decision: Use Both via Adapters
+
+```python
+# Core produces abstract geometry (pure Python)
+geom = lane.to_geometry()  # Returns Point2D, Polygon
+
+# Adapters convert as needed
+cq_geom = CadQueryAdapter.from_geometry(geom)  # For export
+shapely_geom = ShapelyAdapter.from_geometry(geom)  # For validation
+```
+
+**Benefits:**
+- Use best tool for each job
+- Core stays dependency-free
+- CLI/Web can use both
+- VIKTOR doesn't need either (uses vendored core + VIKTOR API)
 
 ---
 
