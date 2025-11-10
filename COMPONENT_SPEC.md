@@ -710,26 +710,38 @@ class FillSlope(RoadComponent):
 
 ## Component Relationships
 
-### Connection Matrix
+### Geometric Connection Model
 
-Shows which components can connect and connection type:
+Components connect through **insertion points** and **attachment points** rather than categorical connection types. Each component:
 
-| From ↓ / To → | Lane | Shoulder | Curb | Median | Sidewalk | Barrier | Slope | Buffer |
-|---------------|------|----------|------|---------|----------|---------|-------|--------|
-| **Lane** | FLUSH | FLUSH | RAISED | FLUSH/RAISED | ❌ | ❌ | ❌ | FLUSH |
-| **Shoulder** | FLUSH | FLUSH | RAISED | ❌ | ❌ | FLUSH | SLOPED | FLUSH |
-| **Curb** | RAISED | RAISED | ❌ | ❌ | RAISED | ❌ | ❌ | RAISED |
-| **Median** | FLUSH/RAISED | ❌ | RAISED | ❌ | ❌ | FLUSH | ❌ | FLUSH |
-| **Sidewalk** | ❌ | ❌ | RAISED | ❌ | FLUSH | ❌ | ❌ | FLUSH |
-| **Barrier** | FLUSH | FLUSH | ❌ | FLUSH | ❌ | ❌ | ❌ | FLUSH |
-| **Slope** | ❌ | SLOPED | ❌ | ❌ | ❌ | ❌ | ❌ | SLOPED |
-| **Buffer** | FLUSH | FLUSH | RAISED | FLUSH | FLUSH | FLUSH | SLOPED | FLUSH |
+1. Has an **insertion point** - where it connects to the previous component (snaps to previous attachment point)
+2. Has an **attachment point** - where the next component connects to it (defined by geometry)
 
-**Connection Types:**
-- **FLUSH**: Same elevation, direct connection
-- **RAISED**: Elevation difference (curb height)
-- **SLOPED**: Gradual transition
-- **❌**: Invalid connection
+Components naturally "snap together" with geometry determining elevation changes, slopes, etc.
+
+**See [docs/connection_model.md](../docs/connection_model.md) for complete geometric connection specification.**
+
+**Key Principles:**
+- **Control Point**: Provides initial attachment point (usually at crown, edge of traveled way)
+- **Snap-Together**: Insertion points snap to attachment points forming continuous chain
+- **Natural Geometry**: Vertical offsets (curbs), slopes, and transitions emerge from component geometry
+- **Rare Exceptions**: Components can offset their insertion point if needed (e.g., barrier with lateral offset)
+
+**Example:**
+```
+Control Point (crown at elevation 0)
+    ↓ attachment: (0, 0)
+Lane 1 inserts at (0, 0)
+    ↓ attachment: (3.6, -0.072) [3.6m wide, 2% cross-slope]
+Lane 2 inserts at (3.6, -0.072)
+    ↓ attachment: (7.2, -0.144)
+Shoulder inserts at (7.2, -0.144)
+    ↓ attachment: (9.6, -0.240) [2.4m wide, 4% cross-slope]
+Slope inserts at toe (9.6, -0.240)
+    ↓ attachment: (14.6, -3.240) [2:1 slope, 3m drop]
+```
+
+All connections are geometric - no categorical types needed!
 
 ### Typical Sequences
 
