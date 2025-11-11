@@ -3,6 +3,7 @@
 from .base import RoadComponent, Direction
 from .section import RoadSection, ControlPoint, SectionGeometry
 from .components import TravelLane
+from .pavement import AsphaltLayer, ConcreteLayer, CrushedRockLayer, PavementLayer
 
 __all__ = [
     "RoadComponent",
@@ -11,4 +12,8 @@ __all__ = [
     "ControlPoint",
     "SectionGeometry",
     "TravelLane",
+    "AsphaltLayer",
+    "ConcreteLayer",
+    "CrushedRockLayer",
+    "PavementLayer",
 ]

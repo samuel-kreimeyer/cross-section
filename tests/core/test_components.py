@@ -14,20 +14,25 @@ class TestTravelLane:
         assert lane.width == 3.6
         assert lane.cross_slope == 0.02
         assert lane.traffic_direction == 'outbound'
-        assert lane.surface_type == 'asphalt'
+        # Default should have one asphalt layer
+        assert len(lane.pavement_layers) == 1
+        assert lane.pavement_layers[0].thickness == 0.05
 
     def test_create_lane_custom(self):
         """Test creating a lane with custom parameters."""
+        from cross_section.core.domain.pavement import ConcreteLayer
+
         lane = TravelLane(
             width=3.0,
             cross_slope=0.025,
             traffic_direction='inbound',
-            surface_type='concrete'
+            pavement_layers=[ConcreteLayer(thickness=0.25, compressive_strength=35.0)]
         )
         assert lane.width == 3.0
         assert lane.cross_slope == 0.025
         assert lane.traffic_direction == 'inbound'
-        assert lane.surface_type == 'concrete'
+        assert len(lane.pavement_layers) == 1
+        assert isinstance(lane.pavement_layers[0], ConcreteLayer)
 
     def test_insertion_point_right(self):
         """Test that lane snaps to previous attachment point (right side)."""
@@ -112,8 +117,18 @@ class TestTravelLane:
         assert geometry.metadata['assembly_direction'] == 'left'
 
     def test_validate_valid(self):
-        """Test validation of valid lane."""
-        lane = TravelLane(width=3.6, cross_slope=0.02)
+        """Test validation of valid lane with valid pavement layers."""
+        from cross_section.core.domain.pavement import AsphaltLayer, CrushedRockLayer
+
+        lane = TravelLane(
+            width=3.6,
+            cross_slope=0.02,
+            pavement_layers=[
+                AsphaltLayer(thickness=0.05, aggregate_size=12.5, binder_type='PG 64-22',
+                            binder_percentage=5.5, density=2400),
+                CrushedRockLayer(thickness=0.15, aggregate_size=37.5, density=2200)
+            ]
+        )
         errors = lane.validate()
         assert errors == []
 

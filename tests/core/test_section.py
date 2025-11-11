@@ -104,11 +104,21 @@ class TestRoadSection:
 
     def test_validate_with_components(self):
         """Test validation with valid components."""
+        from cross_section.core.domain.pavement import AsphaltLayer
+
         cp = ControlPoint(x=0.0, elevation=100.0)
         section = RoadSection(name="Test", control_point=cp)
 
-        section.add_component_right(TravelLane(width=3.6))
-        section.add_component_right(TravelLane(width=3.6))
+        # Use thicker pavement to avoid validation warnings
+        layers = [
+            AsphaltLayer(thickness=0.10, aggregate_size=12.5, binder_type='PG 64-22',
+                        binder_percentage=5.5, density=2400),
+            AsphaltLayer(thickness=0.10, aggregate_size=19.0, binder_type='PG 64-22',
+                        binder_percentage=5.0, density=2380),
+        ]
+
+        section.add_component_right(TravelLane(width=3.6, pavement_layers=layers))
+        section.add_component_right(TravelLane(width=3.6, pavement_layers=layers))
 
         errors = section.validate()
         assert errors == []

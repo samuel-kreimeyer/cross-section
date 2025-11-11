@@ -1,8 +1,9 @@
 """Lane components."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Literal
 from ..base import RoadComponent, Direction
+from ..pavement import PavementLayer, AsphaltLayer
 from ...geometry.primitives import ConnectionPoint, ComponentGeometry, Polygon, Point2D
 
 
@@ -10,17 +11,28 @@ from ...geometry.primitives import ConnectionPoint, ComponentGeometry, Polygon, 
 class TravelLane(RoadComponent):
     """A travel lane for vehicular traffic.
 
+    The lane includes a layered pavement structure from top (surface) to bottom (subbase).
+    Each layer is represented as a separate polygon in the geometry.
+
     Attributes:
         width: Lane width in meters (typically 3.0-3.6m)
         cross_slope: Cross slope as ratio (e.g., 0.02 for 2%, positive slopes down away from crown)
         traffic_direction: Traffic flow direction ('inbound' or 'outbound')
-        surface_type: Pavement surface type (default: 'asphalt')
+        pavement_layers: List of pavement layers from top (surface) to bottom (subbase)
     """
 
     width: float
     cross_slope: float = 0.02  # 2% default cross slope
     traffic_direction: Literal['inbound', 'outbound'] = 'outbound'
-    surface_type: str = 'asphalt'
+    pavement_layers: List[PavementLayer] = field(default_factory=lambda: [
+        AsphaltLayer(
+            thickness=0.05,  # 50mm surface course
+            aggregate_size=12.5,
+            binder_type='PG 64-22',
+            binder_percentage=5.5,
+            density=2400
+        )
+    ])
 
     def get_insertion_point(
         self, previous_attachment: ConnectionPoint, direction: Direction
@@ -74,50 +86,87 @@ class TravelLane(RoadComponent):
     def to_geometry(
         self, insertion: ConnectionPoint, direction: Direction
     ) -> ComponentGeometry:
-        """Create lane geometry as a rectangular polygon with cross slope.
+        """Create lane geometry with stacked pavement layers.
+
+        Each pavement layer is represented as a separate polygon.
+        Layers are stacked from top (surface) to bottom (subbase).
 
         Args:
             insertion: This lane's insertion point
             direction: Assembly direction ('left' or 'right' from control point)
 
         Returns:
-            ComponentGeometry with a single polygon representing the lane surface
+            ComponentGeometry with one polygon per pavement layer
         """
         attachment = self.get_attachment_point(insertion, direction)
 
-        # Create rectangular polygon with cross slope
-        # Vertices in counter-clockwise order
-        if direction == 'right':
-            vertices = [
-                Point2D(insertion.x, insertion.y),           # Inside (crown side), top
-                Point2D(attachment.x, attachment.y),         # Outside, bottom (sloped down)
-                Point2D(attachment.x, attachment.y - 0.2),   # Outside, bottom (with depth)
-                Point2D(insertion.x, insertion.y - 0.2),     # Inside, bottom (with depth)
-            ]
-        else:  # left
-            vertices = [
-                Point2D(insertion.x, insertion.y),           # Inside (crown side), top
-                Point2D(insertion.x, insertion.y - 0.2),     # Inside, bottom (with depth)
-                Point2D(attachment.x, attachment.y - 0.2),   # Outside, bottom (with depth)
-                Point2D(attachment.x, attachment.y),         # Outside, bottom (sloped down)
-            ]
+        polygons = []
+        current_depth = 0.0  # Depth below surface
 
-        polygon = Polygon(exterior=vertices)
+        # Create one polygon per layer, stacked vertically
+        for layer in self.pavement_layers:
+            layer_top = current_depth
+            layer_bottom = current_depth + layer.thickness
+
+            # Calculate elevations at inside (insertion) and outside (attachment) edges
+            # Cross slope applies to the surface
+            inside_top = insertion.y - layer_top
+            inside_bottom = insertion.y - layer_bottom
+            outside_top = attachment.y - layer_top
+            outside_bottom = attachment.y - layer_bottom
+
+            # Create polygon vertices (counter-clockwise)
+            if direction == 'right':
+                vertices = [
+                    Point2D(insertion.x, inside_top),      # Inside, top
+                    Point2D(attachment.x, outside_top),    # Outside, top
+                    Point2D(attachment.x, outside_bottom), # Outside, bottom
+                    Point2D(insertion.x, inside_bottom),   # Inside, bottom
+                ]
+            else:  # left
+                vertices = [
+                    Point2D(insertion.x, inside_top),      # Inside, top
+                    Point2D(insertion.x, inside_bottom),   # Inside, bottom
+                    Point2D(attachment.x, outside_bottom), # Outside, bottom
+                    Point2D(attachment.x, outside_top),    # Outside, top
+                ]
+
+            polygons.append(Polygon(exterior=vertices))
+            current_depth = layer_bottom
+
+        # Build layer metadata
+        layer_info = []
+        for i, layer in enumerate(self.pavement_layers):
+            layer_dict = {
+                'layer_index': i,
+                'type': type(layer).__name__,
+                'thickness': layer.thickness,
+            }
+            # Add layer-specific attributes
+            if hasattr(layer, 'binder_type'):
+                layer_dict['binder_type'] = layer.binder_type
+            if hasattr(layer, 'compressive_strength'):
+                layer_dict['compressive_strength'] = layer.compressive_strength
+            if hasattr(layer, 'material_type'):
+                layer_dict['material_type'] = layer.material_type
+            layer_info.append(layer_dict)
 
         return ComponentGeometry(
-            polygons=[polygon],
+            polygons=polygons,
             metadata={
                 'component_type': 'TravelLane',
                 'width': self.width,
                 'cross_slope': self.cross_slope,
                 'assembly_direction': direction,
                 'traffic_direction': self.traffic_direction,
-                'surface_type': self.surface_type
+                'layer_count': len(self.pavement_layers),
+                'total_depth': sum(layer.thickness for layer in self.pavement_layers),
+                'layers': layer_info
             }
         )
 
     def validate(self) -> List[str]:
-        """Validate lane parameters.
+        """Validate lane parameters and pavement layers.
 
         Returns:
             List of error messages (empty if valid)
@@ -137,5 +186,21 @@ class TravelLane(RoadComponent):
             errors.append(f"Cross slope {self.cross_slope:.1%} exceeds typical maximum (6%) - verify design")
         elif abs(self.cross_slope) < 0.015:
             errors.append(f"Cross slope {self.cross_slope:.1%} below minimum for drainage (1.5%) - verify design")
+
+        # Pavement layer validation
+        if not self.pavement_layers:
+            errors.append("Lane must have at least one pavement layer")
+        else:
+            for i, layer in enumerate(self.pavement_layers):
+                layer_errors = layer.validate()
+                for error in layer_errors:
+                    errors.append(f"Layer {i} ({type(layer).__name__}): {error}")
+
+            # Check total pavement depth
+            total_depth = sum(layer.thickness for layer in self.pavement_layers)
+            if total_depth < 0.15:
+                errors.append(f"Total pavement depth {total_depth:.3f}m below typical minimum (0.15m)")
+            elif total_depth > 0.80:
+                errors.append(f"Total pavement depth {total_depth:.3f}m exceeds typical maximum (0.80m)")
 
         return errors
