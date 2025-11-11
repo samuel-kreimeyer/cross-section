@@ -20,18 +20,18 @@ def main():
         control_point=control_point
     )
 
-    # Add components (they snap together automatically)
-    section.add_component(TravelLane(
+    # Add components to the right side (they snap together automatically)
+    section.add_component_right(TravelLane(
         width=3.6,
         cross_slope=0.02,
-        direction='outbound',
+        traffic_direction='outbound',
         surface_type='asphalt'
     ))
 
-    section.add_component(TravelLane(
+    section.add_component_right(TravelLane(
         width=3.6,
         cross_slope=0.02,
-        direction='outbound',
+        traffic_direction='outbound',
         surface_type='asphalt'
     ))
 
@@ -60,7 +60,8 @@ def main():
         print(f"    Type: {comp_geom.metadata.get('component_type', 'Unknown')}")
         print(f"    Width: {comp_geom.metadata.get('width', 'N/A')} m")
         print(f"    Cross slope: {comp_geom.metadata.get('cross_slope', 'N/A')}")
-        print(f"    Direction: {comp_geom.metadata.get('direction', 'N/A')}")
+        print(f"    Assembly direction: {comp_geom.metadata.get('assembly_direction', 'N/A')}")
+        print(f"    Traffic direction: {comp_geom.metadata.get('traffic_direction', 'N/A')}")
         print(f"    Bounds: {comp_geom.bounds()}")
         print(f"    Polygons: {len(comp_geom.polygons)}")
 

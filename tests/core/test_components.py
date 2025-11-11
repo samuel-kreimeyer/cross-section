@@ -13,7 +13,7 @@ class TestTravelLane:
         lane = TravelLane(width=3.6)
         assert lane.width == 3.6
         assert lane.cross_slope == 0.02
-        assert lane.direction == 'outbound'
+        assert lane.traffic_direction == 'outbound'
         assert lane.surface_type == 'asphalt'
 
     def test_create_lane_custom(self):
@@ -21,44 +21,67 @@ class TestTravelLane:
         lane = TravelLane(
             width=3.0,
             cross_slope=0.025,
-            direction='inbound',
+            traffic_direction='inbound',
             surface_type='concrete'
         )
         assert lane.width == 3.0
         assert lane.cross_slope == 0.025
-        assert lane.direction == 'inbound'
+        assert lane.traffic_direction == 'inbound'
         assert lane.surface_type == 'concrete'
 
-    def test_insertion_point(self):
-        """Test that lane snaps to previous attachment point."""
+    def test_insertion_point_right(self):
+        """Test that lane snaps to previous attachment point (right side)."""
         lane = TravelLane(width=3.6)
         cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
 
-        insertion = lane.get_insertion_point(cp)
+        insertion = lane.get_insertion_point(cp, 'right')
         assert insertion.x == 0.0
         assert insertion.y == 100.0
 
-    def test_attachment_point(self):
-        """Test attachment point calculation with cross slope."""
+    def test_insertion_point_left(self):
+        """Test that lane snaps to previous attachment point (left side)."""
+        lane = TravelLane(width=3.6)
+        cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
+
+        insertion = lane.get_insertion_point(cp, 'left')
+        assert insertion.x == 0.0
+        assert insertion.y == 100.0
+
+    def test_attachment_point_right(self):
+        """Test attachment point calculation with cross slope (right side)."""
         lane = TravelLane(width=3.6, cross_slope=0.02)
         cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
 
-        insertion = lane.get_insertion_point(cp)
-        attachment = lane.get_attachment_point(insertion)
+        insertion = lane.get_insertion_point(cp, 'right')
+        attachment = lane.get_attachment_point(insertion, 'right')
 
-        # Should be offset by width
+        # Should be offset in positive X direction
         assert attachment.x == 3.6
         # Should drop by width * cross_slope
         expected_drop = 3.6 * 0.02
         assert attachment.y == pytest.approx(100.0 - expected_drop)
 
-    def test_to_geometry(self):
-        """Test geometry generation."""
+    def test_attachment_point_left(self):
+        """Test attachment point calculation with cross slope (left side)."""
         lane = TravelLane(width=3.6, cross_slope=0.02)
         cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
 
-        insertion = lane.get_insertion_point(cp)
-        geometry = lane.to_geometry(insertion)
+        insertion = lane.get_insertion_point(cp, 'left')
+        attachment = lane.get_attachment_point(insertion, 'left')
+
+        # Should be offset in negative X direction
+        assert attachment.x == -3.6
+        # Should drop by width * cross_slope
+        expected_drop = 3.6 * 0.02
+        assert attachment.y == pytest.approx(100.0 - expected_drop)
+
+    def test_to_geometry_right(self):
+        """Test geometry generation for right side."""
+        lane = TravelLane(width=3.6, cross_slope=0.02)
+        cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
+
+        insertion = lane.get_insertion_point(cp, 'right')
+        geometry = lane.to_geometry(insertion, 'right')
 
         # Should have one polygon
         assert len(geometry.polygons) == 1
@@ -68,6 +91,25 @@ class TestTravelLane:
         assert geometry.metadata['component_type'] == 'TravelLane'
         assert geometry.metadata['width'] == 3.6
         assert geometry.metadata['cross_slope'] == 0.02
+        assert geometry.metadata['assembly_direction'] == 'right'
+
+    def test_to_geometry_left(self):
+        """Test geometry generation for left side."""
+        lane = TravelLane(width=3.6, cross_slope=0.02)
+        cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
+
+        insertion = lane.get_insertion_point(cp, 'left')
+        geometry = lane.to_geometry(insertion, 'left')
+
+        # Should have one polygon
+        assert len(geometry.polygons) == 1
+        assert len(geometry.polygons[0].exterior) == 4
+
+        # Check metadata
+        assert geometry.metadata['component_type'] == 'TravelLane'
+        assert geometry.metadata['width'] == 3.6
+        assert geometry.metadata['cross_slope'] == 0.02
+        assert geometry.metadata['assembly_direction'] == 'left'
 
     def test_validate_valid(self):
         """Test validation of valid lane."""

@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, field
 from typing import List
-from .base import RoadComponent
+from .base import RoadComponent, Direction
 from ..geometry.primitives import ConnectionPoint, ComponentGeometry
 
 
@@ -63,33 +63,59 @@ class RoadSection:
     """Coordinates assembly of road components into a complete cross-section.
 
     The RoadSection class is responsible for:
-    - Managing the sequence of components
+    - Managing the sequence of components on left and right sides
     - Coordinating geometric assembly (translating attachment points)
     - Validating the complete section
     - Generating the final geometry
 
-    Components are added in sequence and automatically snap together using
-    insertion and attachment points.
+    Components can be added to either side of the control point and automatically
+    snap together using insertion and attachment points.
+
+    Typical section: Left Shoulder ← Left Lane ← Control Point → Right Lane → Right Shoulder
 
     Attributes:
         name: Descriptive name for this section
         control_point: Reference point for assembly (typically crown/grade point)
-        components: List of components in assembly order
+        left_components: Components extending left (negative X) from control point
+        right_components: Components extending right (positive X) from control point
     """
 
     name: str
     control_point: ControlPoint
-    components: List[RoadComponent] = field(default_factory=list)
+    left_components: List[RoadComponent] = field(default_factory=list)
+    right_components: List[RoadComponent] = field(default_factory=list)
 
-    def add_component(self, component: RoadComponent) -> None:
-        """Add a component to the section.
+    def add_component_left(self, component: RoadComponent) -> None:
+        """Add a component to the left side of the control point.
 
-        Components are added in sequence and will snap together during geometry generation.
+        Left components extend in the negative X direction from the control point.
 
         Args:
             component: The component to add
         """
-        self.components.append(component)
+        self.left_components.append(component)
+
+    def add_component_right(self, component: RoadComponent) -> None:
+        """Add a component to the right side of the control point.
+
+        Right components extend in the positive X direction from the control point.
+
+        Args:
+            component: The component to add
+        """
+        self.right_components.append(component)
+
+    def add_component(self, component: RoadComponent, direction: Direction) -> None:
+        """Add a component to the specified side of the control point.
+
+        Args:
+            component: The component to add
+            direction: Which side to add the component ('left' or 'right')
+        """
+        if direction == 'left':
+            self.add_component_left(component)
+        else:
+            self.add_component_right(component)
 
     def validate(self) -> List[str]:
         """Validate the complete section.
@@ -105,26 +131,39 @@ class RoadSection:
         errors = []
 
         # Basic validation
-        if not self.components:
+        if not self.left_components and not self.right_components:
             errors.append("Section must contain at least one component")
             return errors
 
-        # Validate each component
-        for i, component in enumerate(self.components):
+        # Validate left components
+        for i, component in enumerate(self.left_components):
             component_errors = component.validate()
             for error in component_errors:
-                errors.append(f"Component {i} ({type(component).__name__}): {error}")
+                errors.append(f"Left component {i} ({type(component).__name__}): {error}")
 
-        # Validate geometric continuity
-        # (This will be expanded as we add more component types)
+        # Validate right components
+        for i, component in enumerate(self.right_components):
+            component_errors = component.validate()
+            for error in component_errors:
+                errors.append(f"Right component {i} ({type(component).__name__}): {error}")
+
+        # Validate geometric continuity for left side
         current_attachment = self.control_point.to_connection_point()
-
-        for i, component in enumerate(self.components):
+        for i, component in enumerate(self.left_components):
             try:
-                insertion = component.get_insertion_point(current_attachment)
-                current_attachment = component.get_attachment_point(insertion)
+                insertion = component.get_insertion_point(current_attachment, 'left')
+                current_attachment = component.get_attachment_point(insertion, 'left')
             except Exception as e:
-                errors.append(f"Component {i} ({type(component).__name__}): Failed geometric calculation - {e}")
+                errors.append(f"Left component {i} ({type(component).__name__}): Failed geometric calculation - {e}")
+
+        # Validate geometric continuity for right side
+        current_attachment = self.control_point.to_connection_point()
+        for i, component in enumerate(self.right_components):
+            try:
+                insertion = component.get_insertion_point(current_attachment, 'right')
+                current_attachment = component.get_attachment_point(insertion, 'right')
+            except Exception as e:
+                errors.append(f"Right component {i} ({type(component).__name__}): Failed geometric calculation - {e}")
 
         return errors
 
@@ -132,27 +171,31 @@ class RoadSection:
         """Generate complete section geometry by coordinating component assembly.
 
         This method:
-        1. Starts from the control point
+        1. Starts from the control point for both left and right sides
         2. For each component, calculates its insertion point based on previous attachment
-        3. Generates component geometry at the insertion point
+        3. Generates component geometry at the insertion point with correct direction
         4. Uses component's attachment point for next component's insertion
 
         Returns:
-            SectionGeometry containing all component geometries
+            SectionGeometry containing all component geometries (left side first, then right side)
         """
         geometries = []
+
+        # Assemble left components (extending in negative X direction)
         current_attachment = self.control_point.to_connection_point()
-
-        for component in self.components:
-            # Calculate where this component begins (snaps to previous attachment)
-            insertion = component.get_insertion_point(current_attachment)
-
-            # Generate this component's geometry
-            component_geom = component.to_geometry(insertion)
+        for component in self.left_components:
+            insertion = component.get_insertion_point(current_attachment, 'left')
+            component_geom = component.to_geometry(insertion, 'left')
             geometries.append(component_geom)
+            current_attachment = component.get_attachment_point(insertion, 'left')
 
-            # Calculate where next component will attach
-            current_attachment = component.get_attachment_point(insertion)
+        # Assemble right components (extending in positive X direction)
+        current_attachment = self.control_point.to_connection_point()
+        for component in self.right_components:
+            insertion = component.get_insertion_point(current_attachment, 'right')
+            component_geom = component.to_geometry(insertion, 'right')
+            geometries.append(component_geom)
+            current_attachment = component.get_attachment_point(insertion, 'right')
 
         return SectionGeometry(
             components=geometries,
@@ -162,9 +205,12 @@ class RoadSection:
                     'x': self.control_point.x,
                     'elevation': self.control_point.elevation
                 },
-                'component_count': len(self.components)
+                'left_component_count': len(self.left_components),
+                'right_component_count': len(self.right_components),
+                'total_component_count': len(self.left_components) + len(self.right_components)
             }
         )
 
     def __repr__(self) -> str:
-        return f"RoadSection('{self.name}', {len(self.components)} components)"
+        total = len(self.left_components) + len(self.right_components)
+        return f"RoadSection('{self.name}', {total} components: {len(self.left_components)} left, {len(self.right_components)} right)"

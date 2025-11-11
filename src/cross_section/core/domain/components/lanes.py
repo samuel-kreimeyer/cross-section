@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from typing import List, Literal
-from ..base import RoadComponent
+from ..base import RoadComponent, Direction
 from ...geometry.primitives import ConnectionPoint, ComponentGeometry, Polygon, Point2D
 
 
@@ -13,20 +13,23 @@ class TravelLane(RoadComponent):
     Attributes:
         width: Lane width in meters (typically 3.0-3.6m)
         cross_slope: Cross slope as ratio (e.g., 0.02 for 2%, positive slopes down away from crown)
-        direction: Traffic flow direction ('inbound' or 'outbound')
+        traffic_direction: Traffic flow direction ('inbound' or 'outbound')
         surface_type: Pavement surface type (default: 'asphalt')
     """
 
     width: float
     cross_slope: float = 0.02  # 2% default cross slope
-    direction: Literal['inbound', 'outbound'] = 'outbound'
+    traffic_direction: Literal['inbound', 'outbound'] = 'outbound'
     surface_type: str = 'asphalt'
 
-    def get_insertion_point(self, previous_attachment: ConnectionPoint) -> ConnectionPoint:
+    def get_insertion_point(
+        self, previous_attachment: ConnectionPoint, direction: Direction
+    ) -> ConnectionPoint:
         """Lane snaps directly to previous component's attachment point.
 
         Args:
             previous_attachment: The attachment point from the previous component
+            direction: Assembly direction ('left' or 'right' from control point)
 
         Returns:
             The insertion point (same as previous attachment for continuous assembly)
@@ -34,46 +37,70 @@ class TravelLane(RoadComponent):
         return ConnectionPoint(
             x=previous_attachment.x,
             y=previous_attachment.y,
-            description=f"TravelLane insertion ({self.direction})"
+            description=f"TravelLane insertion ({direction}, {self.traffic_direction})"
         )
 
-    def get_attachment_point(self, insertion: ConnectionPoint) -> ConnectionPoint:
+    def get_attachment_point(
+        self, insertion: ConnectionPoint, direction: Direction
+    ) -> ConnectionPoint:
         """Calculate the outside edge of the lane accounting for cross slope.
 
         Args:
             insertion: This lane's insertion point
+            direction: Assembly direction ('left' or 'right' from control point)
 
         Returns:
             The attachment point at the lane's outside edge
         """
         # Cross slope creates vertical drop across the width
+        # Positive cross_slope means it slopes DOWN away from crown
         drop = self.width * self.cross_slope
 
-        return ConnectionPoint(
-            x=insertion.x + self.width,
-            y=insertion.y - drop,  # Negative because slope goes down
-            description=f"TravelLane attachment ({self.direction})"
-        )
+        # For right-side: extends in +X direction, slopes down
+        # For left-side: extends in -X direction, slopes down
+        if direction == 'right':
+            return ConnectionPoint(
+                x=insertion.x + self.width,
+                y=insertion.y - drop,  # Slopes down away from crown
+                description=f"TravelLane attachment ({direction}, {self.traffic_direction})"
+            )
+        else:  # left
+            return ConnectionPoint(
+                x=insertion.x - self.width,
+                y=insertion.y - drop,  # Also slopes down away from crown
+                description=f"TravelLane attachment ({direction}, {self.traffic_direction})"
+            )
 
-    def to_geometry(self, insertion: ConnectionPoint) -> ComponentGeometry:
+    def to_geometry(
+        self, insertion: ConnectionPoint, direction: Direction
+    ) -> ComponentGeometry:
         """Create lane geometry as a rectangular polygon with cross slope.
 
         Args:
             insertion: This lane's insertion point
+            direction: Assembly direction ('left' or 'right' from control point)
 
         Returns:
             ComponentGeometry with a single polygon representing the lane surface
         """
-        attachment = self.get_attachment_point(insertion)
+        attachment = self.get_attachment_point(insertion, direction)
 
         # Create rectangular polygon with cross slope
         # Vertices in counter-clockwise order
-        vertices = [
-            Point2D(insertion.x, insertion.y),           # Inside, top
-            Point2D(attachment.x, attachment.y),         # Outside, bottom (sloped down)
-            Point2D(attachment.x, attachment.y - 0.2),   # Outside, bottom (with depth for visualization)
-            Point2D(insertion.x, insertion.y - 0.2),     # Inside, bottom (with depth)
-        ]
+        if direction == 'right':
+            vertices = [
+                Point2D(insertion.x, insertion.y),           # Inside (crown side), top
+                Point2D(attachment.x, attachment.y),         # Outside, bottom (sloped down)
+                Point2D(attachment.x, attachment.y - 0.2),   # Outside, bottom (with depth)
+                Point2D(insertion.x, insertion.y - 0.2),     # Inside, bottom (with depth)
+            ]
+        else:  # left
+            vertices = [
+                Point2D(insertion.x, insertion.y),           # Inside (crown side), top
+                Point2D(insertion.x, insertion.y - 0.2),     # Inside, bottom (with depth)
+                Point2D(attachment.x, attachment.y - 0.2),   # Outside, bottom (with depth)
+                Point2D(attachment.x, attachment.y),         # Outside, bottom (sloped down)
+            ]
 
         polygon = Polygon(exterior=vertices)
 
@@ -83,7 +110,8 @@ class TravelLane(RoadComponent):
                 'component_type': 'TravelLane',
                 'width': self.width,
                 'cross_slope': self.cross_slope,
-                'direction': self.direction,
+                'assembly_direction': direction,
+                'traffic_direction': self.traffic_direction,
                 'surface_type': self.surface_type
             }
         )
