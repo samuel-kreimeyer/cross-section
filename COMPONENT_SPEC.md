@@ -719,7 +719,7 @@ Components connect through **insertion points** and **attachment points** rather
 
 Components naturally "snap together" with geometry determining elevation changes, slopes, etc.
 
-**See [docs/connection_model.md](../docs/connection_model.md) for complete geometric connection specification.**
+**See [ARCHITECTURE.md](ARCHITECTURE.md) for complete architectural specification.**
 
 **Key Principles:**
 - **Control Point**: Provides initial attachment point (usually at crown, edge of traveled way)
