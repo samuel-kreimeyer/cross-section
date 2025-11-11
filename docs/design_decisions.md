@@ -181,20 +181,14 @@ def create(width: float = typer.Option(..., help='Lane width')):
 
 ---
 
-### DXF Export: ezdxf
+### CAD Export: CadQuery
 
-**Alternatives Considered:**
-1. **ezdxf** (chosen)
-2. dxfwrite (deprecated)
-3. dxfgrabber (read-only)
-
-**Why ezdxf:**
-- Most mature Python DXF library
-- Active development
-- Supports modern DXF versions (R2018)
-- Comprehensive feature set
-- Good documentation
-- Used in production by many projects
+**Why CadQuery (via adapter):**
+- Built on OpenCASCADE (professional CAD kernel)
+- Native DXF, STEP, STL export
+- 3D-ready for future extrusion features
+- Well-maintained and actively developed
+- Used via adapter pattern (not in core)
 
 ---
 
@@ -218,98 +212,14 @@ def create(width: float = typer.Option(..., help='Lane width')):
 
 ## Architectural Patterns
 
-### Component Pattern
+Key patterns used in the architecture:
 
-**Problem:** Need consistent interface for diverse road components
+- **Component Pattern**: Consistent interface for all road components
+- **Builder Pattern**: Fluent API for section assembly (`section.add_component()`)
+- **Strategy Pattern**: Pluggable exporters for different formats
+- **Adapter Pattern**: Convert core geometry to library-specific formats
 
-**Solution:** Protocol/ABC with required methods
-
-**Benefits:**
-- Enforces interface consistency
-- Easy to add new component types
-- Clear contract for all components
-- Type checking support
-
-**Example:**
-```python
-class RoadComponent(Protocol):
-    def get_width(self) -> float: ...
-    def to_geometry(self, x: float, y: float) -> ComponentGeometry: ...
-```
-
----
-
-### Strategy Pattern for Exporters
-
-**Problem:** Multiple export formats with different implementations
-
-**Solution:** Strategy pattern with factory
-
-**Benefits:**
-- Easy to add new formats
-- Format-specific logic isolated
-- Testable independently
-- Plugin architecture possible
-
-**Example:**
-```python
-class SectionExporter(ABC):
-    @abstractmethod
-    def export(self, geometry: SectionGeometry, path: str): ...
-
-class DXFExporter(SectionExporter): ...
-class SVGExporter(SectionExporter): ...
-
-# Factory
-exporter = ExporterFactory.get_exporter('dxf')
-```
-
----
-
-### Builder Pattern for Sections
-
-**Problem:** Complex section assembly process
-
-**Solution:** Fluent builder API
-
-**Benefits:**
-- Clear, readable section creation
-- Step-by-step validation possible
-- Flexible construction
-- Immutable when desired
-
-**Example:**
-```python
-section = (RoadSection("Highway")
-    .add_component(Shoulder(3.0))
-    .add_component(Lane(3.6))
-    .add_component(Lane(3.6))
-    .add_component(Median(4.0))
-    .validate())
-```
-
----
-
-### Dataclass Pattern
-
-**Problem:** Need clean, typed component definitions
-
-**Solution:** Python dataclasses with defaults
-
-**Benefits:**
-- Clean, readable syntax
-- Automatic `__init__`, `__repr__`, `__eq__`
-- Type hints support
-- Validation with `__post_init__`
-- Immutable option (`frozen=True`)
-
-**Example:**
-```python
-@dataclass
-class TravelLane(RoadComponent):
-    width: float = 3.6
-    cross_slope: float = 0.02
-```
+**See [ARCHITECTURE.md](../ARCHITECTURE.md) for complete pattern implementations and examples.**
 
 ---
 

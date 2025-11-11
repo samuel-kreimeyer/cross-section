@@ -18,24 +18,33 @@ Cross-Section is a Python-based engineering tool that provides a domain model fo
 ## Quick Example
 
 ```python
-from cross_section.domain.components import TravelLane, Shoulder, Median
-from cross_section.domain.section import RoadSection
+from cross_section.core.domain.components import TravelLane, Shoulder, Median
+from cross_section.core.domain.section import RoadSection
 
 # Create a highway section
-section = (RoadSection(name="Four-Lane Highway")
-    .add_component(Shoulder(width=3.0, paved=True))
-    .add_component(TravelLane(width=3.6))
-    .add_component(TravelLane(width=3.6))
-    .add_component(Median(width=4.0, barrier=True))
-    .add_component(TravelLane(width=3.6))
-    .add_component(TravelLane(width=3.6))
-    .add_component(Shoulder(width=3.0, paved=True)))
+section = RoadSection(
+    name="Four-Lane Highway",
+    control_point=ControlPoint(x=0, elevation=0)
+)
 
-# Validate connections
-errors = section.validate_connections()
+section.add_component(Shoulder(width=3.0, paved=True))
+section.add_component(TravelLane(width=3.6))
+section.add_component(TravelLane(width=3.6))
+section.add_component(Median(width=4.0, barrier=True))
+section.add_component(TravelLane(width=3.6))
+section.add_component(TravelLane(width=3.6))
+section.add_component(Shoulder(width=3.0, paved=True))
 
-# Export to DXF
-section.export('dxf', 'highway.dxf')
+# Validate (section validates assembly)
+errors = section.validate()
+
+# Generate geometry
+geometry = section.to_geometry()
+
+# Export using adapters
+from cross_section.export.dxf_exporter import DXFExporter
+exporter = DXFExporter()
+exporter.export(geometry, 'highway.dxf')
 ```
 
 ## Architecture
@@ -71,9 +80,11 @@ See [ROADMAP.md](ROADMAP.md) for detailed implementation schedule.
 
 ## Technology Stack
 
-- **Language**: Python 3.11+
-- **Geometry**: Shapely 2.0+ (GEOS backend)
-- **Export**: ezdxf (DXF), svgwrite (SVG)
+- **Core**: Pure Python 3.11+ (stdlib only - vendorable to VIKTOR)
+- **Geometry Adapters** (optional):
+  - CadQuery: DXF/STEP export, 3D operations
+  - Shapely: Geometric validation
+- **Export**: Via adapters (DXF, SVG, STEP)
 - **Web API**: FastAPI
 - **CLI**: Typer
 - **Testing**: pytest, hypothesis
@@ -181,7 +192,7 @@ See [ROADMAP.md](ROADMAP.md) for detailed breakdown.
 ## Acknowledgments
 
 Built with:
-- [Shapely](https://shapely.readthedocs.io/) - Geometric operations
-- [ezdxf](https://ezdxf.readthedocs.io/) - DXF export
+- [CadQuery](https://cadquery.readthedocs.io/) - CAD export and 3D operations
+- [Shapely](https://shapely.readthedocs.io/) - Geometric validation
 - [FastAPI](https://fastapi.tiangolo.com/) - Web API framework
 - [VIKTOR](https://viktor.ai/) - Engineering application platform
