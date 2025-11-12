@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180.0" height="736.0" viewBox="0 0 1180.0 736.0">
+  <title>Test Layered Section</title>
+  <rect width="1180.0" height="736.0" fill="white"/>
+  <g transform="scale(1,-1)">
+    <g transform="translate(0,-736.0)">
+      <polygon points="410.00,486.00 410.00,361.00 50.00,325.00 50.00,450.00" fill="#95A5A6" stroke="black" stroke-width="1"/>
+      <polygon points="410.00,361.00 410.00,286.00 50.00,250.00 50.00,325.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="410.00,486.00 770.00,450.00 770.00,425.00 410.00,461.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="410.00,461.00 770.00,425.00 770.00,387.50 410.00,423.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="410.00,423.50 770.00,387.50 770.00,287.50 410.00,323.50" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="770.00,450.00 1130.00,414.00 1130.00,389.00 770.00,425.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="770.00,425.00 1130.00,389.00 1130.00,351.50 770.00,387.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="770.00,387.50 1130.00,351.50 1130.00,251.50 770.00,287.50" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">Test Layered Section</text>
+  <rect x="10" y="40" width="15" height="15" fill="#2C3E50"/>
+  <text x="30" y="52" font-family="Arial" font-size="12">AsphaltLayer</text>
+  <rect x="10" y="60" width="15" height="15" fill="#95A5A6"/>
+  <text x="30" y="72" font-family="Arial" font-size="12">ConcreteLayer</text>
+  <rect x="10" y="80" width="15" height="15" fill="#7F8C8D"/>
+  <text x="30" y="92" font-family="Arial" font-size="12">CrushedRockLayer</text>
+  <!-- Scale -->
+  <line x1="10" y1="706.0000000000042" x2="210.0" y2="706.0000000000042" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="701.0000000000042" x2="10" y2="711.0000000000042" stroke="black" stroke-width="2"/>
+  <line x1="210.0" y1="701.0000000000042" x2="210.0" y2="711.0000000000042" stroke="black" stroke-width="2"/>
+  <text x="110.0" y="726.0000000000042" font-family="Arial" font-size="12" text-anchor="middle">2m</text>
+</svg>
