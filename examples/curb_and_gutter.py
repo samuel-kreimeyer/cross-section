@@ -52,13 +52,13 @@ def main():
     # Classic barrier curb dimensions (converting from inches to meters)
     curb = Curb(
         gutter_width=0.4572,  # 18 inches
-        gutter_thickness=0.15,  # 6 inches (typical concrete slab)
+        gutter_thickness=0.3048,  # 12 inches
         gutter_drop=0.025,  # 1 inch drop from attachment to curb
         curb_height=0.1016,  # 4 inches
         curb_width_bottom=0.1524,  # 6 inches
-        curb_width_top=0.1524,  # 6 inches (vertical back face)
+        curb_width_top=0.1016,  # 4 inches (battered face)
         concrete=ConcreteLayer(
-            thickness=0.15,
+            thickness=0.3048,  # 12 inches
             compressive_strength=28.0,  # 28 MPa (4000 psi)
             reinforced=False,
             steel_per_cy=None
@@ -169,10 +169,12 @@ def main():
     print(f"✓ SVG exported successfully!")
     print(f"\nOpen {svg_path} in a web browser to view the cross-section.")
     print(f"\nCurb and gutter geometry:")
-    print(f"  - Gutter: 18 inches wide, slopes down 1 inch to curb")
-    print(f"  - Curb: 4 inches tall, 6 inches wide")
-    print(f"  - Vertical back face (curb_width_top = curb_width_bottom)")
-    print(f"  - 8-vertex polygon includes gutter slab and curb")
+    print(f"  - Gutter: 18 inches wide, 12 inches thick")
+    print(f"  - Gutter slopes down 1 inch from attachment to curb")
+    print(f"  - Curb: 4 inches tall, 6 inches wide at base")
+    print(f"  - Curb top: 4 inches wide (battered face)")
+    print(f"  - Bottom has continuous slope from inside to outside")
+    print(f"  - 7-vertex polygon for complete curb and gutter profile")
 
 
 if __name__ == "__main__":

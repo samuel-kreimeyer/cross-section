@@ -6,11 +6,11 @@
       <polygon points="235.48,672.75 235.48,635.25 55.48,581.25 55.48,618.75" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="235.48,635.25 235.48,579.00 55.48,525.00 55.48,581.25" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="235.48,579.00 235.48,429.00 55.48,375.00 55.48,525.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="55.48,618.75 32.62,600.00 25.00,676.20 25.00,676.20 25.00,600.00 25.00,487.50 32.62,487.50 55.48,506.25" fill="#95A5A6" stroke="black" stroke-width="1"/>
+      <polygon points="55.48,618.75 55.48,390.15 25.00,390.15 25.00,600.00 25.00,676.20 27.54,676.20 32.62,600.00" fill="#95A5A6" stroke="black" stroke-width="1"/>
       <polygon points="235.48,672.75 415.48,618.75 415.48,581.25 235.48,635.25" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="235.48,635.25 415.48,581.25 415.48,525.00 235.48,579.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="235.48,579.00 415.48,525.00 415.48,375.00 235.48,429.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="415.48,618.75 415.48,506.25 438.34,487.50 445.96,487.50 445.96,600.00 445.96,676.20 445.96,676.20 438.34,600.00" fill="#95A5A6" stroke="black" stroke-width="1"/>
+      <polygon points="415.48,618.75 438.34,600.00 443.42,676.20 445.96,676.20 445.96,600.00 445.96,390.15 415.48,390.15" fill="#95A5A6" stroke="black" stroke-width="1"/>
     </g>
   </g>
   <!-- Legend -->

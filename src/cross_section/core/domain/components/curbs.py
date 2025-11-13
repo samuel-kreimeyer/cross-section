@@ -140,24 +140,25 @@ class Curb(RoadComponent):
         """Create geometry for right-side curb.
 
         Returns vertices in counter-clockwise order for right side.
+        Creates a 7-vertex polygon with continuous bottom slope.
         """
-        # Attachment point (top inside of gutter)
+        # Top inside of gutter (attachment point)
         p1 = Point2D(insertion.x, insertion.y)
 
-        # Bottom inside of gutter
-        p2 = Point2D(insertion.x, insertion.y - self.gutter_thickness)
-
-        # Bottom outside of gutter (at outer edge, with drop)
+        # Top outside of gutter (at outer edge, with drop)
         gutter_outer_y = insertion.y - self.gutter_drop
+        p2 = Point2D(insertion.x + self.gutter_width, gutter_outer_y)
+
+        # Front of curb at top (battered face - narrower than bottom)
         p3 = Point2D(
-            insertion.x + self.gutter_width,
-            gutter_outer_y - self.gutter_thickness
+            insertion.x + self.gutter_width + self.curb_width_top,
+            gutter_outer_y + self.curb_height
         )
 
-        # Bottom outside of curb (extending from gutter)
+        # Back of curb at top
         p4 = Point2D(
             insertion.x + self.gutter_width + self.curb_width_bottom,
-            gutter_outer_y - self.gutter_thickness
+            gutter_outer_y + self.curb_height
         )
 
         # Back of curb at gutter surface level
@@ -166,45 +167,34 @@ class Curb(RoadComponent):
             gutter_outer_y
         )
 
-        # Back of curb at top
+        # Bottom outside of curb (continuous with gutter bottom)
         p6 = Point2D(
             insertion.x + self.gutter_width + self.curb_width_bottom,
-            gutter_outer_y + self.curb_height
+            insertion.y - self.gutter_thickness
         )
 
-        # Front of curb at top (may be same as back if vertical, or inset if battered)
-        p7 = Point2D(
-            insertion.x + self.gutter_width + self.curb_width_top,
-            gutter_outer_y + self.curb_height
-        )
+        # Bottom inside of gutter (straight slope from inside to outside)
+        p7 = Point2D(insertion.x, insertion.y - self.gutter_thickness)
 
-        # Top of gutter at outer edge
-        p8 = Point2D(insertion.x + self.gutter_width, gutter_outer_y)
-
-        return [p1, p2, p3, p4, p5, p6, p7, p8]
+        return [p1, p2, p3, p4, p5, p6, p7]
 
     def _create_left_geometry(self, insertion: ConnectionPoint) -> List[Point2D]:
         """Create geometry for left-side curb.
 
         Returns vertices in counter-clockwise order for left side.
+        Creates a 7-vertex polygon with continuous bottom slope.
         """
-        # Attachment point (top inside of gutter)
+        # Top inside of gutter (attachment point)
         p1 = Point2D(insertion.x, insertion.y)
 
-        # Top of gutter at outer edge
+        # Bottom inside of gutter
+        p7 = Point2D(insertion.x, insertion.y - self.gutter_thickness)
+
+        # Bottom outside of curb (continuous with gutter bottom)
         gutter_outer_y = insertion.y - self.gutter_drop
-        p8 = Point2D(insertion.x - self.gutter_width, gutter_outer_y)
-
-        # Front of curb at top (may be same as back if vertical, or inset if battered)
-        p7 = Point2D(
-            insertion.x - self.gutter_width - self.curb_width_top,
-            gutter_outer_y + self.curb_height
-        )
-
-        # Back of curb at top
         p6 = Point2D(
             insertion.x - self.gutter_width - self.curb_width_bottom,
-            gutter_outer_y + self.curb_height
+            insertion.y - self.gutter_thickness
         )
 
         # Back of curb at gutter surface level
@@ -213,22 +203,22 @@ class Curb(RoadComponent):
             gutter_outer_y
         )
 
-        # Bottom outside of curb
+        # Back of curb at top
         p4 = Point2D(
             insertion.x - self.gutter_width - self.curb_width_bottom,
-            gutter_outer_y - self.gutter_thickness
+            gutter_outer_y + self.curb_height
         )
 
-        # Bottom outside of gutter
+        # Front of curb at top (battered face - narrower than bottom)
         p3 = Point2D(
-            insertion.x - self.gutter_width,
-            gutter_outer_y - self.gutter_thickness
+            insertion.x - self.gutter_width - self.curb_width_top,
+            gutter_outer_y + self.curb_height
         )
 
-        # Bottom inside of gutter
-        p2 = Point2D(insertion.x, insertion.y - self.gutter_thickness)
+        # Top outside of gutter (at outer edge, with drop)
+        p2 = Point2D(insertion.x - self.gutter_width, gutter_outer_y)
 
-        return [p1, p8, p7, p6, p5, p4, p3, p2]
+        return [p1, p7, p6, p5, p4, p3, p2]
 
     def validate(self) -> List[str]:
         """Validate curb and gutter parameters.
