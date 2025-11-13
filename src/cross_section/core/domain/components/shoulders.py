@@ -254,10 +254,8 @@ class Shoulder(RoadComponent):
             current_outside_width = bottom_outside_width
 
         # Process crushed rock base layers extending to foreslope
-        # The base fills the space from inside edge to paved edge at top,
-        # then extends to foreslope at bottom (creates irregular polygon)
-        total_depth = sum(layer.thickness for layer in self.pavement_layers)
-
+        # The base creates a 5-vertex irregular polygon filling the space between
+        # the inside edge, slumped asphalt edge, paved edge, and foreslope
         for layer in base_layers:
             layer_top_depth = current_depth
             layer_bottom_depth = current_depth + layer.thickness
@@ -266,36 +264,39 @@ class Shoulder(RoadComponent):
             inside_top_y = insertion.y - layer_top_depth
             inside_bottom_y = insertion.y - layer_bottom_depth
 
-            # Outside edge elevations
-            outside_top_y = surface_at_paved_edge - layer_top_depth
-            outside_bottom_y = surface_at_paved_edge - layer_bottom_depth
+            # Outside top at slumped asphalt edge
+            # This is where the asphalt layers ended (current_outside_width from asphalt processing)
+            outside_slumped_y = surface_at_paved_edge - layer_top_depth
 
-            # Base creates irregular polygon:
-            # - Top outside at paved edge (not following asphalt slump)
-            # - Bottom outside extends to foreslope
-            top_outside_width = self.width  # At paved edge, not slumped
+            # Top outside at paved edge (where first asphalt layer starts)
+            # This point is at the surface level at the paved edge
+            paved_edge_y = surface_at_paved_edge
+
+            # Bottom outside follows foreslope from paved edge
+            outside_bottom_y = surface_at_paved_edge - layer_bottom_depth
             bottom_extension = layer_bottom_depth * self.foreslope_ratio
-            bottom_outside_width = self.width + bottom_extension
 
             if direction == 'right':
-                outside_top_x = insertion.x + top_outside_width
-                outside_bottom_x = insertion.x + bottom_outside_width
-
+                # 5-vertex polygon:
+                # 1. Inside top (at base of asphalt stack)
+                # 2. Outside top at slumped asphalt edge
+                # 3. Outside at paved edge (surface level - connects to asphalt)
+                # 4. Outside bottom (foreslope intercept)
+                # 5. Inside bottom
                 vertices = [
-                    Point2D(insertion.x, inside_top_y),        # Inside, top
-                    Point2D(outside_top_x, outside_top_y),     # Outside, top (at paved edge)
-                    Point2D(outside_bottom_x, outside_bottom_y), # Outside, bottom (to foreslope)
-                    Point2D(insertion.x, inside_bottom_y),     # Inside, bottom
+                    Point2D(insertion.x, inside_top_y),                              # 1: Inside top
+                    Point2D(insertion.x + current_outside_width, outside_slumped_y), # 2: Slumped edge top
+                    Point2D(insertion.x + self.width, paved_edge_y),                 # 3: Paved edge (surface)
+                    Point2D(insertion.x + self.width + bottom_extension, outside_bottom_y), # 4: Foreslope intercept
+                    Point2D(insertion.x, inside_bottom_y),                           # 5: Inside bottom
                 ]
             else:  # left
-                outside_top_x = insertion.x - top_outside_width
-                outside_bottom_x = insertion.x - bottom_outside_width
-
                 vertices = [
-                    Point2D(insertion.x, inside_top_y),        # Inside, top
-                    Point2D(insertion.x, inside_bottom_y),     # Inside, bottom
-                    Point2D(outside_bottom_x, outside_bottom_y), # Outside, bottom (to foreslope)
-                    Point2D(outside_top_x, outside_top_y),     # Outside, top (at paved edge)
+                    Point2D(insertion.x, inside_top_y),                              # 1: Inside top
+                    Point2D(insertion.x, inside_bottom_y),                           # 5: Inside bottom
+                    Point2D(insertion.x - self.width - bottom_extension, outside_bottom_y), # 4: Foreslope intercept
+                    Point2D(insertion.x - self.width, paved_edge_y),                 # 3: Paved edge (surface)
+                    Point2D(insertion.x - current_outside_width, outside_slumped_y), # 2: Slumped edge top
                 ]
 
             polygons.append(Polygon(exterior=vertices))
