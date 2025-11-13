@@ -2,5 +2,6 @@
 
 from .lanes import TravelLane
 from .shoulders import Shoulder
+from .curbs import Curb
 
-__all__ = ["TravelLane", "Shoulder"]
+__all__ = ["TravelLane", "Shoulder", "Curb"]
