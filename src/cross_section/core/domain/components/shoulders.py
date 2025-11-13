@@ -254,7 +254,8 @@ class Shoulder(RoadComponent):
             current_outside_width = bottom_outside_width
 
         # Process crushed rock base layers extending to foreslope
-        # The base extends from the current asphalt edge to the overall foreslope
+        # The base fills the space from inside edge to paved edge at top,
+        # then extends to foreslope at bottom (creates irregular polygon)
         total_depth = sum(layer.thickness for layer in self.pavement_layers)
 
         for layer in base_layers:
@@ -269,10 +270,10 @@ class Shoulder(RoadComponent):
             outside_top_y = surface_at_paved_edge - layer_top_depth
             outside_bottom_y = surface_at_paved_edge - layer_bottom_depth
 
-            # Base extends from current asphalt width to foreslope
-            # Top starts where asphalt ended
-            top_outside_width = current_outside_width
-            # Bottom extends to foreslope: paved_width + total_depth * foreslope_ratio
+            # Base creates irregular polygon:
+            # - Top outside at paved edge (not following asphalt slump)
+            # - Bottom outside extends to foreslope
+            top_outside_width = self.width  # At paved edge, not slumped
             bottom_extension = layer_bottom_depth * self.foreslope_ratio
             bottom_outside_width = self.width + bottom_extension
 
@@ -282,8 +283,8 @@ class Shoulder(RoadComponent):
 
                 vertices = [
                     Point2D(insertion.x, inside_top_y),        # Inside, top
-                    Point2D(outside_top_x, outside_top_y),     # Outside, top
-                    Point2D(outside_bottom_x, outside_bottom_y), # Outside, bottom
+                    Point2D(outside_top_x, outside_top_y),     # Outside, top (at paved edge)
+                    Point2D(outside_bottom_x, outside_bottom_y), # Outside, bottom (to foreslope)
                     Point2D(insertion.x, inside_bottom_y),     # Inside, bottom
                 ]
             else:  # left
@@ -293,13 +294,12 @@ class Shoulder(RoadComponent):
                 vertices = [
                     Point2D(insertion.x, inside_top_y),        # Inside, top
                     Point2D(insertion.x, inside_bottom_y),     # Inside, bottom
-                    Point2D(outside_bottom_x, outside_bottom_y), # Outside, bottom
-                    Point2D(outside_top_x, outside_top_y),     # Outside, top
+                    Point2D(outside_bottom_x, outside_bottom_y), # Outside, bottom (to foreslope)
+                    Point2D(outside_top_x, outside_top_y),     # Outside, top (at paved edge)
                 ]
 
             polygons.append(Polygon(exterior=vertices))
             current_depth = layer_bottom_depth
-            current_outside_width = bottom_outside_width
 
         return self._build_geometry(polygons, direction)
 
