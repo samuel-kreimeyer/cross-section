@@ -170,8 +170,8 @@ def main():
     import os
     os.makedirs("examples/output", exist_ok=True)
 
-    # Use higher vertical exaggeration to make the trapezoids visible
-    exporter = SimpleSVGExporter(scale=50.0, vertical_exaggeration=10.0)
+    # Use true proportions (no vertical exaggeration)
+    exporter = SimpleSVGExporter(scale=50.0, vertical_exaggeration=1.0)
     with open(svg_path, 'w') as f:
         exporter.export(geometry, f)
 
