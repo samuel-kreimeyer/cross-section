@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="764.0" height="698.5" viewBox="0 0 764.0 698.5">
+  <title>Two-Lane Road with Shoulders</title>
+  <rect width="764.0" height="698.5" fill="white"/>
+  <g transform="scale(1,-1)">
+    <g transform="translate(0,-698.5)">
+      <polygon points="382.00,448.50 382.00,423.50 202.00,387.50 202.00,412.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="382.00,423.50 382.00,386.00 202.00,350.00 202.00,387.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="382.00,386.00 382.00,286.00 202.00,250.00 202.00,350.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="202.00,412.50 202.00,392.50 70.00,368.50 82.00,388.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="202.00,392.50 202.00,317.50 25.00,293.50 70.00,368.50" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="382.00,448.50 562.00,412.50 562.00,387.50 382.00,423.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="382.00,423.50 562.00,387.50 562.00,350.00 382.00,386.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="382.00,386.00 562.00,350.00 562.00,250.00 382.00,286.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="562.00,412.50 682.00,388.50 694.00,368.50 562.00,392.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="562.00,392.50 694.00,368.50 739.00,293.50 562.00,317.50" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">Two-Lane Road with Shoulders</text>
+  <rect x="10" y="40" width="15" height="15" fill="#2C3E50"/>
+  <text x="30" y="52" font-family="Arial" font-size="12">AsphaltLayer</text>
+  <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
+  <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
+  <!-- Scale -->
+  <line x1="10" y1="668.5000000000027" x2="260.0" y2="668.5000000000027" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="663.5000000000027" x2="10" y2="673.5000000000027" stroke="black" stroke-width="2"/>
+  <line x1="260.0" y1="663.5000000000027" x2="260.0" y2="673.5000000000027" stroke="black" stroke-width="2"/>
+  <text x="135.0" y="688.5000000000027" font-family="Arial" font-size="12" text-anchor="middle">5m</text>
+</svg>
