@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="790.0" height="735.0" viewBox="0 0 790.0 735.0">
+  <title>Two-Lane Road with Slumped Shoulders</title>
+  <rect width="790.0" height="735.0" fill="white"/>
+  <g transform="scale(1,-1)">
+    <g transform="translate(0,-735.0)">
+      <polygon points="395.00,485.00 395.00,460.00 215.00,424.00 215.00,449.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="395.00,460.00 395.00,422.50 215.00,386.50 215.00,424.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="395.00,422.50 395.00,322.50 215.00,286.50 215.00,386.50" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="215.00,449.00 215.00,429.00 93.00,405.00 95.00,425.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="215.00,429.00 215.00,404.00 90.50,380.00 93.00,405.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="215.00,404.00 215.00,374.00 87.50,350.00 90.50,380.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="215.00,374.00 215.00,274.00 25.00,250.00 87.50,350.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="395.00,485.00 575.00,449.00 575.00,424.00 395.00,460.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="395.00,460.00 575.00,424.00 575.00,386.50 395.00,422.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="395.00,422.50 575.00,386.50 575.00,286.50 395.00,322.50" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="575.00,449.00 695.00,425.00 697.00,405.00 575.00,429.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="575.00,429.00 697.00,405.00 699.50,380.00 575.00,404.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="575.00,404.00 699.50,380.00 702.50,350.00 575.00,374.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="575.00,374.00 702.50,350.00 765.00,250.00 575.00,274.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">Two-Lane Road with Slumped Shoulders</text>
+  <rect x="10" y="40" width="15" height="15" fill="#2C3E50"/>
+  <text x="30" y="52" font-family="Arial" font-size="12">AsphaltLayer</text>
+  <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
+  <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
+  <!-- Scale -->
+  <line x1="10" y1="704.9999999999994" x2="260.0" y2="704.9999999999994" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="699.9999999999994" x2="10" y2="709.9999999999994" stroke="black" stroke-width="2"/>
+  <line x1="260.0" y1="699.9999999999994" x2="260.0" y2="709.9999999999994" stroke="black" stroke-width="2"/>
+  <text x="135.0" y="724.9999999999994" font-family="Arial" font-size="12" text-anchor="middle">5m</text>
+</svg>
