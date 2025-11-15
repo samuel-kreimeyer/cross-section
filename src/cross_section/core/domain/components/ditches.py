@@ -101,27 +101,24 @@ class Ditch(RoadComponent):
     ) -> ComponentGeometry:
         """Create ditch geometry.
 
-        Creates a polygon representing the ditch cross-section including
-        foreslope, bottom, and backslope. If lining is specified, creates
-        an additional polygon for the lining material.
+        Creates a polygon representing the ditch lining material (if specified).
+        The lining is projected downward from the ditch bottom surface.
 
         Args:
             insertion: This ditch's insertion point
             direction: Assembly direction ('left' or 'right' from control point)
 
         Returns:
-            ComponentGeometry with ditch polygon(s)
+            ComponentGeometry with ditch lining polygon (if lining specified)
         """
-        if direction == 'right':
-            vertices = self._create_right_geometry(insertion)
-        else:
-            vertices = self._create_left_geometry(insertion)
+        polygons = []
 
-        polygons = [Polygon(exterior=vertices)]
-
-        # Add lining if specified
+        # Add lining if specified (projected downward from ditch bottom)
         if self.lining is not None:
-            lining_vertices = self._create_lining_geometry(insertion, direction)
+            if direction == 'right':
+                lining_vertices = self._create_right_lining(insertion)
+            else:
+                lining_vertices = self._create_left_lining(insertion)
             polygons.append(Polygon(exterior=lining_vertices))
 
         return ComponentGeometry(
@@ -137,6 +134,13 @@ class Ditch(RoadComponent):
                 'has_lining': self.lining is not None,
                 'lining_thickness': self.lining_thickness if self.lining else 0,
                 'assembly_direction': direction,
+                'layers': [
+                    {
+                        'layer_index': 0,
+                        'type': type(self.lining).__name__ if self.lining else None,
+                        'thickness': self.lining_thickness if self.lining else 0,
+                    }
+                ] if self.lining else []
             }
         )
 
@@ -225,85 +229,151 @@ class Ditch(RoadComponent):
 
             return [p1, p4, p3, p2]
 
-    def _create_lining_geometry(
-        self, insertion: ConnectionPoint, direction: Direction
-    ) -> List[Point2D]:
-        """Create lining material geometry inside the ditch.
+    def _create_right_lining(self, insertion: ConnectionPoint) -> List[Point2D]:
+        """Create lining material for right-side ditch.
 
-        The lining follows the ditch profile but is offset inward by the
-        lining thickness.
+        The lining is projected downward from the ditch bottom surface.
+        Top of lining follows the ditch profile, bottom is offset by lining_thickness.
+
+        Returns vertices in counter-clockwise order.
         """
         foreslope_run = self.depth * self.foreslope_ratio
         backslope_run = self.depth * self.backslope_ratio
 
-        # Calculate lining offset (perpendicular to slope)
-        # For simplicity, approximate with vertical offset
-        lining_depth = self.depth - self.lining_thickness
+        if self.ditch_type == 'v_ditch':
+            # V-ditch lining
+            # Top of foreslope
+            p1 = Point2D(insertion.x, insertion.y)
 
-        if direction == 'right':
-            if self.ditch_type == 'v_ditch':
-                # Top of foreslope
-                p1 = Point2D(insertion.x, insertion.y)
+            # Bottom point (top surface)
+            bottom_x = insertion.x + foreslope_run
+            bottom_y = insertion.y - self.depth
+            p2 = Point2D(bottom_x, bottom_y)
 
-                # Bottom point
-                bottom_x = insertion.x + foreslope_run
-                bottom_y = insertion.y - lining_depth
-                p2 = Point2D(bottom_x, bottom_y)
+            # Top of backslope
+            p3 = Point2D(insertion.x + foreslope_run + backslope_run, insertion.y)
 
-                # Top of backslope
-                p3 = Point2D(insertion.x + foreslope_run + backslope_run, insertion.y)
+            # Bottom of backslope (bottom surface of lining)
+            p4 = Point2D(insertion.x + foreslope_run + backslope_run, insertion.y - self.lining_thickness)
 
-                return [p1, p2, p3]
-            else:
-                # Trapezoid lining
-                foreslope_lining_run = lining_depth * self.foreslope_ratio
-                backslope_lining_run = lining_depth * self.backslope_ratio
+            # Bottom point (bottom surface)
+            p5 = Point2D(bottom_x, bottom_y - self.lining_thickness)
 
-                p1 = Point2D(insertion.x + (foreslope_run - foreslope_lining_run), insertion.y - self.lining_thickness)
+            # Bottom of foreslope (bottom surface of lining)
+            p6 = Point2D(insertion.x, insertion.y - self.lining_thickness)
 
-                bottom_start_y = insertion.y - self.depth + self.lining_thickness
-                p2 = Point2D(insertion.x + foreslope_run, bottom_start_y)
+            return [p1, p2, p3, p4, p5, p6]
+        else:
+            # Trapezoid ditch lining
+            # Top surface vertices (following ditch profile)
+            # Top of foreslope
+            p1 = Point2D(insertion.x, insertion.y)
 
-                bottom_drop = self.bottom_width * self.bottom_slope
-                bottom_end_y = bottom_start_y - bottom_drop
-                p3 = Point2D(insertion.x + foreslope_run + self.bottom_width, bottom_end_y)
+            # Bottom of foreslope (start of flat bottom)
+            bottom_start_x = insertion.x + foreslope_run
+            bottom_start_y = insertion.y - self.depth
+            p2 = Point2D(bottom_start_x, bottom_start_y)
 
-                p4 = Point2D(
-                    insertion.x + foreslope_run + self.bottom_width + backslope_lining_run,
-                    insertion.y - self.lining_thickness
-                )
+            # End of flat bottom (start of backslope)
+            bottom_drop = self.bottom_width * self.bottom_slope
+            bottom_end_x = bottom_start_x + self.bottom_width
+            bottom_end_y = bottom_start_y - bottom_drop
+            p3 = Point2D(bottom_end_x, bottom_end_y)
 
-                return [p1, p2, p3, p4]
-        else:  # left
-            if self.ditch_type == 'v_ditch':
-                p1 = Point2D(insertion.x, insertion.y)
+            # Top of backslope
+            p4 = Point2D(
+                insertion.x + foreslope_run + self.bottom_width + backslope_run,
+                insertion.y
+            )
 
-                p3 = Point2D(insertion.x - foreslope_run - backslope_run, insertion.y)
+            # Bottom surface vertices (offset downward by lining_thickness)
+            # Bottom of backslope
+            p5 = Point2D(p4.x, insertion.y - self.lining_thickness)
 
-                bottom_x = insertion.x - foreslope_run
-                bottom_y = insertion.y - lining_depth
-                p2 = Point2D(bottom_x, bottom_y)
+            # End of flat bottom (bottom surface)
+            p6 = Point2D(bottom_end_x, bottom_end_y - self.lining_thickness)
 
-                return [p1, p3, p2]
-            else:
-                foreslope_lining_run = lining_depth * self.foreslope_ratio
-                backslope_lining_run = lining_depth * self.backslope_ratio
+            # Start of flat bottom (bottom surface)
+            p7 = Point2D(bottom_start_x, bottom_start_y - self.lining_thickness)
 
-                p4 = Point2D(
-                    insertion.x - foreslope_run - self.bottom_width - backslope_lining_run,
-                    insertion.y - self.lining_thickness
-                )
+            # Bottom of foreslope
+            p8 = Point2D(insertion.x, insertion.y - self.lining_thickness)
 
-                bottom_drop = self.bottom_width * self.bottom_slope
-                bottom_end_y = insertion.y - self.depth + self.lining_thickness - bottom_drop
-                p3 = Point2D(insertion.x - foreslope_run - self.bottom_width, bottom_end_y)
+            return [p1, p2, p3, p4, p5, p6, p7, p8]
 
-                bottom_start_y = insertion.y - self.depth + self.lining_thickness
-                p2 = Point2D(insertion.x - foreslope_run, bottom_start_y)
+    def _create_left_lining(self, insertion: ConnectionPoint) -> List[Point2D]:
+        """Create lining material for left-side ditch.
 
-                p1 = Point2D(insertion.x - (foreslope_run - foreslope_lining_run), insertion.y - self.lining_thickness)
+        The lining is projected downward from the ditch bottom surface.
+        Top of lining follows the ditch profile, bottom is offset by lining_thickness.
 
-                return [p1, p4, p3, p2]
+        Returns vertices in counter-clockwise order.
+        """
+        foreslope_run = self.depth * self.foreslope_ratio
+        backslope_run = self.depth * self.backslope_ratio
+
+        if self.ditch_type == 'v_ditch':
+            # V-ditch lining
+            # Top of foreslope
+            p1 = Point2D(insertion.x, insertion.y)
+
+            # Bottom of foreslope (bottom surface of lining)
+            p6 = Point2D(insertion.x, insertion.y - self.lining_thickness)
+
+            # Bottom point (bottom surface)
+            bottom_x = insertion.x - foreslope_run
+            bottom_y = insertion.y - self.depth
+            p5 = Point2D(bottom_x, bottom_y - self.lining_thickness)
+
+            # Bottom of backslope (bottom surface of lining)
+            p4 = Point2D(insertion.x - foreslope_run - backslope_run, insertion.y - self.lining_thickness)
+
+            # Top of backslope
+            p3 = Point2D(insertion.x - foreslope_run - backslope_run, insertion.y)
+
+            # Bottom point (top surface)
+            p2 = Point2D(bottom_x, bottom_y)
+
+            return [p1, p6, p5, p4, p3, p2]
+        else:
+            # Trapezoid ditch lining
+            # Top surface vertices (following ditch profile)
+            # Top of foreslope
+            p1 = Point2D(insertion.x, insertion.y)
+
+            # Bottom of foreslope (bottom surface of lining)
+            p8 = Point2D(insertion.x, insertion.y - self.lining_thickness)
+
+            # Bottom of foreslope (start of flat bottom - bottom surface)
+            bottom_start_x = insertion.x - foreslope_run
+            bottom_start_y = insertion.y - self.depth
+            p7 = Point2D(bottom_start_x, bottom_start_y - self.lining_thickness)
+
+            # End of flat bottom (start of backslope - bottom surface)
+            bottom_drop = self.bottom_width * self.bottom_slope
+            bottom_end_x = bottom_start_x - self.bottom_width
+            bottom_end_y = bottom_start_y - bottom_drop
+            p6 = Point2D(bottom_end_x, bottom_end_y - self.lining_thickness)
+
+            # Bottom of backslope (bottom surface)
+            p5 = Point2D(
+                insertion.x - foreslope_run - self.bottom_width - backslope_run,
+                insertion.y - self.lining_thickness
+            )
+
+            # Top of backslope (top surface)
+            p4 = Point2D(
+                insertion.x - foreslope_run - self.bottom_width - backslope_run,
+                insertion.y
+            )
+
+            # End of flat bottom (start of backslope - top surface)
+            p3 = Point2D(bottom_end_x, bottom_end_y)
+
+            # Bottom of foreslope (start of flat bottom - top surface)
+            p2 = Point2D(bottom_start_x, bottom_start_y)
+
+            return [p1, p8, p7, p6, p5, p4, p3, p2]
 
     def validate(self) -> List[str]:
         """Validate ditch parameters.
