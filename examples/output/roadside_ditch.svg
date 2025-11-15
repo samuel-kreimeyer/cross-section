@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1550.0" height="111.2" viewBox="0 0 1550.0 111.2">
+  <title>Rural Road with Roadside Ditches</title>
+  <rect width="1550.0" height="111.2" fill="white"/>
+  <g transform="scale(1,-1)">
+    <g transform="translate(0,-111.2)">
+      <polygon points="775.00,62.20 775.00,59.70 595.00,56.10 595.00,58.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="775.00,59.70 775.00,55.95 595.00,52.35 595.00,56.10" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="775.00,55.95 775.00,45.95 595.00,42.35 595.00,52.35" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="595.00,58.60 595.00,56.60 463.00,54.20 475.00,56.20" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="595.00,56.60 595.00,49.10 418.00,46.70 463.00,54.20" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="475.00,56.20 205.00,56.20 295.00,25.00 355.00,26.20" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="445.00,48.70 227.50,48.70 295.00,32.50 355.00,33.70" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="205.00,56.20 205.00,55.70 25.00,85.70 25.00,86.20" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="775.00,62.20 955.00,58.60 955.00,56.10 775.00,59.70" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="775.00,59.70 955.00,56.10 955.00,52.35 775.00,55.95" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="775.00,55.95 955.00,52.35 955.00,42.35 775.00,45.95" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="955.00,58.60 1075.00,56.20 1087.00,54.20 955.00,56.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="955.00,56.60 1087.00,54.20 1132.00,46.70 955.00,49.10" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="1075.00,56.20 1195.00,26.20 1255.00,25.00 1345.00,56.20" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="1105.00,48.70 1195.00,33.70 1255.00,32.50 1322.50,48.70" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="1345.00,56.20 1525.00,86.20 1525.00,85.70 1345.00,55.70" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">Rural Road with Roadside Ditches</text>
+  <rect x="10" y="40" width="15" height="15" fill="#2C3E50"/>
+  <text x="30" y="52" font-family="Arial" font-size="12">AsphaltLayer</text>
+  <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
+  <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
+  <!-- Scale -->
+  <line x1="10" y1="81.19999999999948" x2="510.0" y2="81.19999999999948" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="76.19999999999948" x2="10" y2="86.19999999999948" stroke="black" stroke-width="2"/>
+  <line x1="510.0" y1="76.19999999999948" x2="510.0" y2="86.19999999999948" stroke="black" stroke-width="2"/>
+  <text x="260.0" y="101.19999999999948" font-family="Arial" font-size="12" text-anchor="middle">10m</text>
+</svg>
