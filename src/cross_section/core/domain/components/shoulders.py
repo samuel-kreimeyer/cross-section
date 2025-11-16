@@ -71,32 +71,53 @@ class Shoulder(RoadComponent):
     def get_attachment_point(
         self, insertion: ConnectionPoint, direction: Direction
     ) -> ConnectionPoint:
-        """Calculate the outside edge of the paved shoulder width.
+        """Calculate the outside edge of the shoulder.
 
-        The attachment point is at the outer edge of the paved width, where
-        the foreslope begins. This is where the next component (if any) would attach.
+        For fully_paved shoulders: attachment is at the outer edge of paved width.
+        For paved_top_slumped shoulders: attachment is at the outermost extent of
+        the base material (where foreslope begins).
 
         Args:
             insertion: This shoulder's insertion point
             direction: Assembly direction ('left' or 'right' from control point)
 
         Returns:
-            The attachment point at the outer edge of paved width
+            The attachment point at the outer edge of shoulder
         """
         drop = self.width * self.cross_slope
+        surface_at_paved_edge = insertion.y - drop
 
-        if direction == 'right':
-            return ConnectionPoint(
-                x=insertion.x + self.width,
-                y=insertion.y - drop,
-                description=f"Shoulder attachment ({direction})"
-            )
-        else:  # left
-            return ConnectionPoint(
-                x=insertion.x - self.width,
-                y=insertion.y - drop,
-                description=f"Shoulder attachment ({direction})"
-            )
+        if self.shoulder_type == 'paved_top_slumped':
+            # For slumped shoulders, attachment is at outermost extent of base
+            total_depth = sum(layer.thickness for layer in self.pavement_layers)
+            base_extension = total_depth * self.foreslope_ratio
+
+            if direction == 'right':
+                return ConnectionPoint(
+                    x=insertion.x + self.width + base_extension,
+                    y=surface_at_paved_edge,  # At paved edge elevation
+                    description=f"Shoulder attachment ({direction})"
+                )
+            else:  # left
+                return ConnectionPoint(
+                    x=insertion.x - self.width - base_extension,
+                    y=surface_at_paved_edge,
+                    description=f"Shoulder attachment ({direction})"
+                )
+        else:  # fully_paved
+            # For fully paved, attachment is at paved edge
+            if direction == 'right':
+                return ConnectionPoint(
+                    x=insertion.x + self.width,
+                    y=surface_at_paved_edge,
+                    description=f"Shoulder attachment ({direction})"
+                )
+            else:  # left
+                return ConnectionPoint(
+                    x=insertion.x - self.width,
+                    y=surface_at_paved_edge,
+                    description=f"Shoulder attachment ({direction})"
+                )
 
     def to_geometry(
         self, insertion: ConnectionPoint, direction: Direction
