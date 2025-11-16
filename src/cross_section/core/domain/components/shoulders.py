@@ -1,32 +1,36 @@
 """Shoulder components."""
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Literal
 from ..base import RoadComponent, Direction
-from ..pavement import PavementLayer, AsphaltLayer
+from ..pavement import PavementLayer, AsphaltLayer, CrushedRockLayer
 from ...geometry.primitives import ConnectionPoint, ComponentGeometry, Polygon, Point2D
+
+
+ShoulderType = Literal['fully_paved', 'paved_top_slumped']
 
 
 @dataclass
 class Shoulder(RoadComponent):
     """A paved or unpaved shoulder adjacent to travel lanes.
 
-    Shoulders have two slope sections:
-    1. Paved width: matches the cross_slope (typically 2%)
-    2. Foreslope: steeper slope beyond paved width (e.g., 6:1 = 16.67%)
+    Two types of paved shoulders are supported:
 
-    Each pavement layer forms a trapezoid - parallel to the surface within the paved
-    width, then extending until it intersects the foreslope line. This means lower
-    layers extend further horizontally.
+    1. **Fully paved (fully_paved)**: All layers extend to foreslope as trapezoids
+       - Each layer extends: paved_width + depth * foreslope_ratio
+       - All layers follow the same foreslope angle
 
-    Example: 2ft paved width, 2% cross slope, 6:1 foreslope, 1ft total pavement depth
-    - Top surface: 2ft wide
-    - Bottom of pavement: 2 + 1*6 = 8ft wide
+    2. **Paved top with slumped asphalt (paved_top_slumped)**:
+       - Asphalt layers slump at 1:1 (each layer extends by its thickness)
+       - Lower asphalt layers extend to match upper layer bottom width
+       - Crushed rock base extends from asphalt edge to foreslope
+       - Creates a more complex composite shape
 
     Attributes:
         width: Paved shoulder width in meters
         cross_slope: Cross slope of paved portion (positive slopes down away from lane)
         foreslope_ratio: Horizontal:vertical ratio for foreslope (e.g., 6.0 for 6:1)
+        shoulder_type: Type of shoulder ('fully_paved' or 'paved_top_slumped')
         paved: Whether shoulder is paved (if False, uses minimal base layer)
         pavement_layers: List of pavement layers (only if paved=True)
     """
@@ -34,6 +38,7 @@ class Shoulder(RoadComponent):
     width: float
     cross_slope: float = 0.02  # 2% default
     foreslope_ratio: float = 6.0  # 6:1 (6 horizontal : 1 vertical)
+    shoulder_type: ShoulderType = 'fully_paved'
     paved: bool = True
     pavement_layers: List[PavementLayer] = field(default_factory=lambda: [
         AsphaltLayer(
@@ -66,37 +71,75 @@ class Shoulder(RoadComponent):
     def get_attachment_point(
         self, insertion: ConnectionPoint, direction: Direction
     ) -> ConnectionPoint:
-        """Calculate the outside edge of the paved shoulder width.
+        """Calculate the outside edge of the shoulder.
 
-        The attachment point is at the outer edge of the paved width, where
-        the foreslope begins. This is where the next component (if any) would attach.
+        For fully_paved shoulders: attachment is at the outer edge of paved width.
+        For paved_top_slumped shoulders: attachment is at the outermost extent of
+        the base material (where foreslope begins).
 
         Args:
             insertion: This shoulder's insertion point
             direction: Assembly direction ('left' or 'right' from control point)
 
         Returns:
-            The attachment point at the outer edge of paved width
+            The attachment point at the outer edge of shoulder
         """
         drop = self.width * self.cross_slope
+        surface_at_paved_edge = insertion.y - drop
 
-        if direction == 'right':
-            return ConnectionPoint(
-                x=insertion.x + self.width,
-                y=insertion.y - drop,
-                description=f"Shoulder attachment ({direction})"
-            )
-        else:  # left
-            return ConnectionPoint(
-                x=insertion.x - self.width,
-                y=insertion.y - drop,
-                description=f"Shoulder attachment ({direction})"
-            )
+        if self.shoulder_type == 'paved_top_slumped':
+            # For slumped shoulders, attachment is at outermost extent of base
+            total_depth = sum(layer.thickness for layer in self.pavement_layers)
+            base_extension = total_depth * self.foreslope_ratio
+
+            if direction == 'right':
+                return ConnectionPoint(
+                    x=insertion.x + self.width + base_extension,
+                    y=surface_at_paved_edge,  # At paved edge elevation
+                    description=f"Shoulder attachment ({direction})"
+                )
+            else:  # left
+                return ConnectionPoint(
+                    x=insertion.x - self.width - base_extension,
+                    y=surface_at_paved_edge,
+                    description=f"Shoulder attachment ({direction})"
+                )
+        else:  # fully_paved
+            # For fully paved, attachment is at paved edge
+            if direction == 'right':
+                return ConnectionPoint(
+                    x=insertion.x + self.width,
+                    y=surface_at_paved_edge,
+                    description=f"Shoulder attachment ({direction})"
+                )
+            else:  # left
+                return ConnectionPoint(
+                    x=insertion.x - self.width,
+                    y=surface_at_paved_edge,
+                    description=f"Shoulder attachment ({direction})"
+                )
 
     def to_geometry(
         self, insertion: ConnectionPoint, direction: Direction
     ) -> ComponentGeometry:
-        """Create shoulder geometry with trapezoid-shaped pavement layers.
+        """Create shoulder geometry based on shoulder type.
+
+        Args:
+            insertion: This shoulder's insertion point
+            direction: Assembly direction ('left' or 'right' from control point)
+
+        Returns:
+            ComponentGeometry with one trapezoid polygon per pavement layer
+        """
+        if self.shoulder_type == 'fully_paved':
+            return self._create_fully_paved_geometry(insertion, direction)
+        else:  # 'paved_top_slumped'
+            return self._create_slumped_geometry(insertion, direction)
+
+    def _create_fully_paved_geometry(
+        self, insertion: ConnectionPoint, direction: Direction
+    ) -> ComponentGeometry:
+        """Create fully paved shoulder where all layers extend to foreslope.
 
         Each layer extends from the insertion point across the paved width, then
         continues until it intersects the foreslope. Lower layers extend further
@@ -158,6 +201,142 @@ class Shoulder(RoadComponent):
             polygons.append(Polygon(exterior=vertices))
             current_depth = layer_bottom_depth
 
+        return self._build_geometry(polygons, direction)
+
+    def _create_slumped_geometry(
+        self, insertion: ConnectionPoint, direction: Direction
+    ) -> ComponentGeometry:
+        """Create slumped shoulder where asphalt slumps at 1:1 and base extends to foreslope.
+
+        - Asphalt layers slump at 1:1 (each layer extends by its thickness)
+        - Lower asphalt layers' tops match upper layers' bottom widths
+        - Crushed rock base extends from asphalt edge to overall foreslope
+
+        Args:
+            insertion: This shoulder's insertion point
+            direction: Assembly direction ('left' or 'right' from control point)
+
+        Returns:
+            ComponentGeometry with trapezoid polygons for each layer
+        """
+        polygons = []
+        current_depth = 0.0
+
+        # Calculate surface elevation at paved edge
+        surface_at_paved_edge = insertion.y - self.width * self.cross_slope
+
+        # Separate asphalt and crushed rock layers
+        asphalt_layers = [layer for layer in self.pavement_layers if isinstance(layer, AsphaltLayer)]
+        base_layers = [layer for layer in self.pavement_layers if isinstance(layer, CrushedRockLayer)]
+
+        # Track current outside width (starts at paved width)
+        current_outside_width = self.width
+
+        # Process asphalt layers with 1:1 slump
+        for layer in asphalt_layers:
+            layer_top_depth = current_depth
+            layer_bottom_depth = current_depth + layer.thickness
+
+            # Inside edge (at insertion point)
+            inside_top_y = insertion.y - layer_top_depth
+            inside_bottom_y = insertion.y - layer_bottom_depth
+
+            # Outside edge elevations
+            outside_top_y = surface_at_paved_edge - layer_top_depth
+            outside_bottom_y = surface_at_paved_edge - layer_bottom_depth
+
+            # For asphalt: 1:1 slump means horizontal extension = thickness
+            top_outside_width = current_outside_width
+            bottom_outside_width = current_outside_width + layer.thickness
+
+            if direction == 'right':
+                outside_top_x = insertion.x + top_outside_width
+                outside_bottom_x = insertion.x + bottom_outside_width
+
+                vertices = [
+                    Point2D(insertion.x, inside_top_y),        # Inside, top
+                    Point2D(outside_top_x, outside_top_y),     # Outside, top
+                    Point2D(outside_bottom_x, outside_bottom_y), # Outside, bottom
+                    Point2D(insertion.x, inside_bottom_y),     # Inside, bottom
+                ]
+            else:  # left
+                outside_top_x = insertion.x - top_outside_width
+                outside_bottom_x = insertion.x - bottom_outside_width
+
+                vertices = [
+                    Point2D(insertion.x, inside_top_y),        # Inside, top
+                    Point2D(insertion.x, inside_bottom_y),     # Inside, bottom
+                    Point2D(outside_bottom_x, outside_bottom_y), # Outside, bottom
+                    Point2D(outside_top_x, outside_top_y),     # Outside, top
+                ]
+
+            polygons.append(Polygon(exterior=vertices))
+            current_depth = layer_bottom_depth
+            current_outside_width = bottom_outside_width
+
+        # Process crushed rock base layers extending to foreslope
+        # The base creates a 5-vertex irregular polygon filling the space between
+        # the inside edge, slumped asphalt edge, paved edge, and foreslope
+        for layer in base_layers:
+            layer_top_depth = current_depth
+            layer_bottom_depth = current_depth + layer.thickness
+
+            # Inside edge (at insertion point)
+            inside_top_y = insertion.y - layer_top_depth
+            inside_bottom_y = insertion.y - layer_bottom_depth
+
+            # Outside top at slumped asphalt edge
+            # This is where the asphalt layers ended (current_outside_width from asphalt processing)
+            outside_slumped_y = surface_at_paved_edge - layer_top_depth
+
+            # Top outside at paved edge (where first asphalt layer starts)
+            # This point is at the surface level at the paved edge
+            paved_edge_y = surface_at_paved_edge
+
+            # Bottom outside follows foreslope from paved edge
+            outside_bottom_y = surface_at_paved_edge - layer_bottom_depth
+            bottom_extension = layer_bottom_depth * self.foreslope_ratio
+
+            if direction == 'right':
+                # 5-vertex polygon:
+                # 1. Inside top (at base of asphalt stack)
+                # 2. Outside top at slumped asphalt edge
+                # 3. Outside at paved edge (surface level - connects to asphalt)
+                # 4. Outside bottom (foreslope intercept)
+                # 5. Inside bottom
+                vertices = [
+                    Point2D(insertion.x, inside_top_y),                              # 1: Inside top
+                    Point2D(insertion.x + current_outside_width, outside_slumped_y), # 2: Slumped edge top
+                    Point2D(insertion.x + self.width, paved_edge_y),                 # 3: Paved edge (surface)
+                    Point2D(insertion.x + self.width + bottom_extension, outside_bottom_y), # 4: Foreslope intercept
+                    Point2D(insertion.x, inside_bottom_y),                           # 5: Inside bottom
+                ]
+            else:  # left
+                vertices = [
+                    Point2D(insertion.x, inside_top_y),                              # 1: Inside top
+                    Point2D(insertion.x, inside_bottom_y),                           # 5: Inside bottom
+                    Point2D(insertion.x - self.width - bottom_extension, outside_bottom_y), # 4: Foreslope intercept
+                    Point2D(insertion.x - self.width, paved_edge_y),                 # 3: Paved edge (surface)
+                    Point2D(insertion.x - current_outside_width, outside_slumped_y), # 2: Slumped edge top
+                ]
+
+            polygons.append(Polygon(exterior=vertices))
+            current_depth = layer_bottom_depth
+
+        return self._build_geometry(polygons, direction)
+
+    def _build_geometry(
+        self, polygons: List[Polygon], direction: Direction
+    ) -> ComponentGeometry:
+        """Build ComponentGeometry with metadata from polygons.
+
+        Args:
+            polygons: List of layer polygons
+            direction: Assembly direction
+
+        Returns:
+            ComponentGeometry with metadata
+        """
         # Build layer metadata
         layer_info = []
         for i, layer in enumerate(self.pavement_layers):
@@ -181,6 +360,7 @@ class Shoulder(RoadComponent):
                 'width': self.width,
                 'cross_slope': self.cross_slope,
                 'foreslope_ratio': self.foreslope_ratio,
+                'shoulder_type': self.shoulder_type,
                 'paved': self.paved,
                 'assembly_direction': direction,
                 'layer_count': len(self.pavement_layers),
