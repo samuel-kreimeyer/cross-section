@@ -1,22 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1776.5" height="5144.6" viewBox="0 0 1776.5 5144.6">
+<svg xmlns="http://www.w3.org/2000/svg" width="1776.5" height="5130.1" viewBox="0 0 1776.5 5130.1">
   <title>Two-Lane Road: Cut Section (Left) vs Fill Section (Right)</title>
-  <rect width="1776.5" height="5144.6" fill="white"/>
+  <rect width="1776.5" height="5130.1" fill="white"/>
   <g transform="scale(1,-1)">
-    <g transform="translate(0,-5144.6)">
+    <g transform="translate(0,-5130.1)">
       <polygon points="794.50,5025.00 794.50,5022.50 614.50,5018.90 614.50,5021.40" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="794.50,5022.50 794.50,5018.75 614.50,5015.15 614.50,5018.90" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="794.50,5018.75 794.50,5008.75 614.50,5005.15 614.50,5015.15" fill="#7F8C8D" stroke="black" stroke-width="1"/>
       <polygon points="614.50,5021.40 614.50,5019.40 522.50,5017.60 524.50,5019.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="614.50,5019.40 614.50,5016.90 520.00,5015.10 522.50,5017.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="614.50,5016.90 614.50,5006.90 437.50,5005.10 524.50,5019.60 520.00,5015.10" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="175.00,5019.60 175.00,5019.10 25.00,5056.60 25.00,5057.10" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="175.00,5005.10 175.00,5004.60 25.00,5042.10 25.00,5042.60" fill="#BDC3C7" stroke="black" stroke-width="1"/>
       <polygon points="794.50,5025.00 974.50,5021.40 974.50,5018.90 794.50,5022.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="794.50,5022.50 974.50,5018.90 974.50,5015.15 794.50,5018.75" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="794.50,5018.75 974.50,5015.15 974.50,5005.15 794.50,5008.75" fill="#7F8C8D" stroke="black" stroke-width="1"/>
       <polygon points="974.50,5021.40 1064.50,5019.60 1066.50,5017.60 974.50,5019.40" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="974.50,5019.40 1066.50,5017.60 1069.00,5015.10 974.50,5016.90" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="974.50,5016.90 1069.00,5015.10 1064.50,5019.60 1151.50,5005.10 974.50,5006.90" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="1151.50,5019.60 1751.50,5119.60 1751.50,5119.10 1151.50,5019.10" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="1151.50,5005.10 1751.50,5105.10 1751.50,5104.60 1151.50,5004.60" fill="#BDC3C7" stroke="black" stroke-width="1"/>
     </g>
   </g>
   <!-- Legend -->
@@ -26,8 +26,8 @@
   <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
   <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
   <!-- Scale -->
-  <line x1="10" y1="5114.599999999999" x2="510.0" y2="5114.599999999999" stroke="black" stroke-width="2"/>
-  <line x1="10" y1="5109.599999999999" x2="10" y2="5119.599999999999" stroke="black" stroke-width="2"/>
-  <line x1="510.0" y1="5109.599999999999" x2="510.0" y2="5119.599999999999" stroke="black" stroke-width="2"/>
-  <text x="260.0" y="5134.599999999999" font-family="Arial" font-size="12" text-anchor="middle">10m</text>
+  <line x1="10" y1="5100.099999999999" x2="510.0" y2="5100.099999999999" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="5095.099999999999" x2="10" y2="5105.099999999999" stroke="black" stroke-width="2"/>
+  <line x1="510.0" y1="5095.099999999999" x2="510.0" y2="5105.099999999999" stroke="black" stroke-width="2"/>
+  <text x="260.0" y="5120.099999999999" font-family="Arial" font-size="12" text-anchor="middle">10m</text>
 </svg>

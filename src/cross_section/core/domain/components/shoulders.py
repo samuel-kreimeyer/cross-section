@@ -89,19 +89,24 @@ class Shoulder(RoadComponent):
 
         if self.shoulder_type == 'paved_top_slumped':
             # For slumped shoulders, attachment is at outermost extent of base
+            # The base extends along the foreslope from the paved edge
             total_depth = sum(layer.thickness for layer in self.pavement_layers)
             base_extension = total_depth * self.foreslope_ratio
+
+            # The attachment elevation follows the foreslope down from paved edge
+            # Starting at surface_at_paved_edge, dropping total_depth vertically
+            attachment_y = surface_at_paved_edge - total_depth
 
             if direction == 'right':
                 return ConnectionPoint(
                     x=insertion.x + self.width + base_extension,
-                    y=surface_at_paved_edge,  # At paved edge elevation
+                    y=attachment_y,
                     description=f"Shoulder attachment ({direction})"
                 )
             else:  # left
                 return ConnectionPoint(
                     x=insertion.x - self.width - base_extension,
-                    y=surface_at_paved_edge,
+                    y=attachment_y,
                     description=f"Shoulder attachment ({direction})"
                 )
         else:  # fully_paved
