@@ -16,6 +16,7 @@ class SimpleSVGExporter:
         'AsphaltLayer': '#2C3E50',      # Dark gray-blue
         'ConcreteLayer': '#95A5A6',      # Light gray
         'CrushedRockLayer': '#7F8C8D',   # Medium gray
+        'DitchVoid': '#E8F4F8',          # Very light blue (air/void)
         'default': '#BDC3C7'             # Very light gray
     }
 

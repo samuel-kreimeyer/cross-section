@@ -101,17 +101,31 @@ class Ditch(RoadComponent):
     ) -> ComponentGeometry:
         """Create ditch geometry.
 
-        Creates a polygon representing the ditch lining material (if specified).
-        The lining is projected downward from the ditch bottom surface.
+        Creates polygons representing the ditch excavation and lining material:
+        1. Void polygon - the excavation shape (always generated)
+        2. Lining polygon - the material layer (if lining specified)
 
         Args:
             insertion: This ditch's insertion point
             direction: Assembly direction ('left' or 'right' from control point)
 
         Returns:
-            ComponentGeometry with ditch lining polygon (if lining specified)
+            ComponentGeometry with ditch void and optional lining polygon
         """
         polygons = []
+        layers = []
+
+        # Always create void polygon to show the excavation
+        if direction == 'right':
+            void_vertices = self._create_right_geometry(insertion)
+        else:
+            void_vertices = self._create_left_geometry(insertion)
+        polygons.append(Polygon(exterior=void_vertices))
+        layers.append({
+            'layer_index': 0,
+            'type': 'DitchVoid',
+            'thickness': self.depth,
+        })
 
         # Add lining if specified (projected downward from ditch bottom)
         if self.lining is not None:
@@ -120,6 +134,11 @@ class Ditch(RoadComponent):
             else:
                 lining_vertices = self._create_left_lining(insertion)
             polygons.append(Polygon(exterior=lining_vertices))
+            layers.append({
+                'layer_index': 1,
+                'type': type(self.lining).__name__,
+                'thickness': self.lining_thickness,
+            })
 
         return ComponentGeometry(
             polygons=polygons,
@@ -134,13 +153,7 @@ class Ditch(RoadComponent):
                 'has_lining': self.lining is not None,
                 'lining_thickness': self.lining_thickness if self.lining else 0,
                 'assembly_direction': direction,
-                'layers': [
-                    {
-                        'layer_index': 0,
-                        'type': type(self.lining).__name__ if self.lining else None,
-                        'thickness': self.lining_thickness if self.lining else 0,
-                    }
-                ] if self.lining else []
+                'layers': layers
             }
         )
 
