@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2070.0" height="325.5" viewBox="0 0 2070.0 325.5">
+  <title>Two-Lane Road with Cut and Fill</title>
+  <rect width="2070.0" height="325.5" fill="white"/>
+  <g transform="scale(1,-1)">
+    <g transform="translate(0,-325.5)">
+      <polygon points="925.00,183.90 925.00,181.40 745.00,177.80 745.00,180.30" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="925.00,181.40 925.00,177.65 745.00,174.05 745.00,177.80" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="925.00,177.65 925.00,167.65 745.00,164.05 745.00,174.05" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="745.00,180.30 745.00,172.80 595.00,168.00 625.00,175.50" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="625.00,175.50 625.00,175.00 25.00,25.00 25.00,25.50" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="925.00,183.90 1105.00,180.30 1105.00,177.80 925.00,181.40" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="925.00,181.40 1105.00,177.80 1105.00,174.05 925.00,177.65" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="925.00,177.65 1105.00,174.05 1105.00,164.05 925.00,167.65" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="1105.00,180.30 1225.00,175.50 1255.00,168.00 1105.00,172.80" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polyline points="1225.00,175.50 1385.00,135.50 1545.00,175.50" fill="none" stroke="black" stroke-width="1.5"/>
+      <polygon points="1545.00,175.50 2045.00,300.50 2045.00,300.00 1545.00,175.00" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">Two-Lane Road with Cut and Fill</text>
+  <rect x="10" y="40" width="15" height="15" fill="#2C3E50"/>
+  <text x="30" y="52" font-family="Arial" font-size="12">AsphaltLayer</text>
+  <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
+  <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
+  <!-- Scale -->
+  <line x1="10" y1="295.5000000000002" x2="510.0" y2="295.5000000000002" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="290.5000000000002" x2="10" y2="300.5000000000002" stroke="black" stroke-width="2"/>
+  <line x1="510.0" y1="290.5000000000002" x2="510.0" y2="300.5000000000002" stroke="black" stroke-width="2"/>
+  <text x="260.0" y="315.5000000000002" font-family="Arial" font-size="12" text-anchor="middle">10m</text>
+</svg>
