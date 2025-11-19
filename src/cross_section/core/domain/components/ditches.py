@@ -101,31 +101,27 @@ class Ditch(RoadComponent):
     ) -> ComponentGeometry:
         """Create ditch geometry.
 
-        Creates polygons representing the ditch excavation and lining material:
-        1. Void polygon - the excavation shape (always generated)
-        2. Lining polygon - the material layer (if lining specified)
+        Creates geometry representing the ditch excavation and lining material:
+        1. Void boundary - polyline showing excavation profile (always generated)
+        2. Lining polygon - filled shape for material layer (if lining specified)
 
         Args:
             insertion: This ditch's insertion point
             direction: Assembly direction ('left' or 'right' from control point)
 
         Returns:
-            ComponentGeometry with ditch void and optional lining polygon
+            ComponentGeometry with ditch void polyline and optional lining polygon
         """
         polygons = []
+        polylines = []
         layers = []
 
-        # Always create void polygon to show the excavation
+        # Always create void boundary polyline to show the excavation profile
         if direction == 'right':
             void_vertices = self._create_right_geometry(insertion)
         else:
             void_vertices = self._create_left_geometry(insertion)
-        polygons.append(Polygon(exterior=void_vertices))
-        layers.append({
-            'layer_index': 0,
-            'type': 'DitchVoid',
-            'thickness': self.depth,
-        })
+        polylines.append(void_vertices)
 
         # Add lining if specified (projected downward from ditch bottom)
         if self.lining is not None:
@@ -135,13 +131,14 @@ class Ditch(RoadComponent):
                 lining_vertices = self._create_left_lining(insertion)
             polygons.append(Polygon(exterior=lining_vertices))
             layers.append({
-                'layer_index': 1,
+                'layer_index': 0,
                 'type': type(self.lining).__name__,
                 'thickness': self.lining_thickness,
             })
 
         return ComponentGeometry(
             polygons=polygons,
+            polylines=polylines,
             metadata={
                 'component_type': 'Ditch',
                 'ditch_type': self.ditch_type,

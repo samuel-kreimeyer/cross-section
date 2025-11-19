@@ -94,15 +94,31 @@ class ComponentGeometry:
 
     def bounds(self) -> tuple[float, float, float, float]:
         """
-        Calculate bounding box of all polygons.
+        Calculate bounding box of all polygons and polylines.
 
         Returns:
             Tuple of (min_x, min_y, max_x, max_y)
         """
-        if not self.polygons:
+        if not self.polygons and not self.polylines:
             return (0.0, 0.0, 0.0, 0.0)
 
-        all_bounds = [p.bounds() for p in self.polygons]
+        all_bounds = []
+
+        # Add polygon bounds
+        if self.polygons:
+            all_bounds.extend([p.bounds() for p in self.polygons])
+
+        # Add polyline bounds
+        if self.polylines:
+            for polyline in self.polylines:
+                if polyline:
+                    xs = [p.x for p in polyline]
+                    ys = [p.y for p in polyline]
+                    all_bounds.append((min(xs), min(ys), max(xs), max(ys)))
+
+        if not all_bounds:
+            return (0.0, 0.0, 0.0, 0.0)
+
         min_x = min(b[0] for b in all_bounds)
         min_y = min(b[1] for b in all_bounds)
         max_x = max(b[2] for b in all_bounds)

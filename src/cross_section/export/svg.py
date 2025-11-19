@@ -16,7 +16,6 @@ class SimpleSVGExporter:
         'AsphaltLayer': '#2C3E50',      # Dark gray-blue
         'ConcreteLayer': '#95A5A6',      # Light gray
         'CrushedRockLayer': '#7F8C8D',   # Medium gray
-        'DitchVoid': '#E8F4F8',          # Very light blue (air/void)
         'default': '#BDC3C7'             # Very light gray
     }
 
@@ -105,6 +104,21 @@ class SimpleSVGExporter:
                 points_str = " ".join(points)
                 output.write(f'      <polygon points="{points_str}" ')
                 output.write(f'fill="{color}" stroke="black" stroke-width="1"/>\n')
+
+            # Draw component's polylines (e.g., ditch void boundaries)
+            for polyline in component.polylines:
+                # Convert polyline vertices to SVG path
+                points = []
+                for point in polyline:
+                    # Transform coordinates
+                    x = (point.x - view_min_x) * self.scale
+                    y = (point.y - view_min_y) * self.scale * self.vertical_exaggeration
+                    points.append(f"{x:.2f},{y:.2f}")
+
+                # Draw polyline (no fill, just stroke)
+                points_str = " ".join(points)
+                output.write(f'      <polyline points="{points_str}" ')
+                output.write(f'fill="none" stroke="black" stroke-width="1.5"/>\n')
 
         output.write('    </g>\n')
         output.write('  </g>\n')
