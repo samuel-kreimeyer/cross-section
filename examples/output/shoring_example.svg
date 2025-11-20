@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1370.3" height="561.0" viewBox="0 0 1370.3 561.0">
+  <title>Two-Lane Road with Temporary Shoring</title>
+  <rect width="1370.3" height="561.0" fill="white"/>
+  <g transform="scale(1,-1)">
+    <g transform="translate(0,-561.0)">
+      <polygon points="735.15,286.40 735.15,283.90 555.15,280.30 555.15,282.80" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="735.15,283.90 735.15,280.15 555.15,276.55 555.15,280.30" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="735.15,280.15 735.15,270.15 555.15,266.55 555.15,276.55" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="555.15,282.80 555.15,275.30 405.15,270.50 435.15,278.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="435.15,278.00 435.15,125.50 425.00,125.50 425.00,278.00" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="425.00,125.50 425.00,125.00 25.00,25.00 25.00,25.50" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="735.15,286.40 915.15,282.80 915.15,280.30 735.15,283.90" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="735.15,283.90 915.15,280.30 915.15,276.55 735.15,280.15" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="735.15,280.15 915.15,276.55 915.15,266.55 735.15,270.15" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="915.15,282.80 1035.15,278.00 1065.15,270.50 915.15,275.30" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="1035.15,278.00 1045.30,278.00 1045.30,461.00 1035.15,461.00" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="1045.30,461.00 1345.30,536.00 1345.30,535.50 1045.30,460.50" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">Two-Lane Road with Temporary Shoring</text>
+  <rect x="10" y="40" width="15" height="15" fill="#2C3E50"/>
+  <text x="30" y="52" font-family="Arial" font-size="12">AsphaltLayer</text>
+  <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
+  <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
+  <!-- Scale -->
+  <line x1="10" y1="531.0" x2="260.0" y2="531.0" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="526.0" x2="10" y2="536.0" stroke="black" stroke-width="2"/>
+  <line x1="260.0" y1="526.0" x2="260.0" y2="536.0" stroke="black" stroke-width="2"/>
+  <text x="135.0" y="551.0" font-family="Arial" font-size="12" text-anchor="middle">5m</text>
+</svg>
