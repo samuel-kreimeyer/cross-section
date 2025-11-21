@@ -110,17 +110,22 @@ class Shoulder(RoadComponent):
                     description=f"Shoulder attachment ({direction})"
                 )
         else:  # fully_paved
-            # For fully paved, attachment is at paved edge
+            # For fully paved, attachment is at the outermost bottom corner
+            # This is where the foreslope intersects the bottom of the pavement structure
+            total_depth = sum(layer.thickness for layer in self.pavement_layers)
+            bottom_extension = total_depth * self.foreslope_ratio
+            attachment_y = surface_at_paved_edge - total_depth
+
             if direction == 'right':
                 return ConnectionPoint(
-                    x=insertion.x + self.width,
-                    y=surface_at_paved_edge,
+                    x=insertion.x + self.width + bottom_extension,
+                    y=attachment_y,
                     description=f"Shoulder attachment ({direction})"
                 )
             else:  # left
                 return ConnectionPoint(
-                    x=insertion.x - self.width,
-                    y=surface_at_paved_edge,
+                    x=insertion.x - self.width - bottom_extension,
+                    y=attachment_y,
                     description=f"Shoulder attachment ({direction})"
                 )
 
