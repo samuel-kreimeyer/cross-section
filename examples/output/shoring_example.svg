@@ -1,20 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1370.3" height="561.0" viewBox="0 0 1370.3 561.0">
+<svg xmlns="http://www.w3.org/2000/svg" width="1430.3" height="561.0" viewBox="0 0 1430.3 561.0">
   <title>Two-Lane Road with Temporary Shoring</title>
-  <rect width="1370.3" height="561.0" fill="white"/>
+  <rect width="1430.3" height="561.0" fill="white"/>
   <g transform="scale(1,-1)">
     <g transform="translate(0,-561.0)">
-      <polygon points="735.15,286.40 735.15,283.90 555.15,280.30 555.15,282.80" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="735.15,283.90 735.15,280.15 555.15,276.55 555.15,280.30" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="735.15,280.15 735.15,270.15 555.15,266.55 555.15,276.55" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="555.15,282.80 555.15,275.30 405.15,270.50 435.15,278.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="765.15,293.90 765.15,291.40 585.15,287.80 585.15,290.30" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="765.15,291.40 765.15,287.65 585.15,284.05 585.15,287.80" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="765.15,287.65 765.15,277.65 585.15,274.05 585.15,284.05" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="585.15,290.30 585.15,282.80 435.15,278.00 465.15,285.50" fill="#7F8C8D" stroke="black" stroke-width="1"/>
       <polygon points="435.15,278.00 435.15,125.50 425.00,125.50 425.00,278.00" fill="#BDC3C7" stroke="black" stroke-width="1"/>
       <polygon points="425.00,125.50 425.00,125.00 25.00,25.00 25.00,25.50" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polygon points="735.15,286.40 915.15,282.80 915.15,280.30 735.15,283.90" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="735.15,283.90 915.15,280.30 915.15,276.55 735.15,280.15" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="735.15,280.15 915.15,276.55 915.15,266.55 735.15,270.15" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="915.15,282.80 1035.15,278.00 1065.15,270.50 915.15,275.30" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="1035.15,278.00 1045.30,278.00 1045.30,461.00 1035.15,461.00" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polygon points="1045.30,461.00 1345.30,536.00 1345.30,535.50 1045.30,460.50" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="765.15,293.90 945.15,290.30 945.15,287.80 765.15,291.40" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="765.15,291.40 945.15,287.80 945.15,284.05 765.15,287.65" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="765.15,287.65 945.15,284.05 945.15,274.05 765.15,277.65" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="945.15,290.30 1065.15,285.50 1095.15,278.00 945.15,282.80" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="1095.15,278.00 1105.30,278.00 1105.30,461.00 1095.15,461.00" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="1105.30,461.00 1405.30,536.00 1405.30,535.50 1105.30,460.50" fill="#BDC3C7" stroke="black" stroke-width="1"/>
     </g>
   </g>
   <!-- Legend -->
