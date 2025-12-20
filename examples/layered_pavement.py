@@ -91,7 +91,7 @@ def main():
 
     # Validate the section
     print(f"Section: {section}")
-    print(f"\nValidation:")
+    print("\nValidation:")
     errors = section.validate()
     if errors:
         print("  Errors found:")
@@ -101,7 +101,7 @@ def main():
         print("  ✓ Section is valid")
 
     # Generate geometry
-    print(f"\nGenerating geometry...")
+    print("\nGenerating geometry...")
     geometry = section.to_geometry()
 
     print(f"  Total components: {geometry.metadata['total_component_count']}")
@@ -109,10 +109,10 @@ def main():
     print(f"  Right components: {geometry.metadata['right_component_count']}")
 
     # Show component and layer details
-    print(f"\nComponent details:")
+    print("\nComponent details:")
 
     # Left components (rigid pavement)
-    print(f"\n  Left Side (Rigid Pavement):")
+    print("\n  Left Side (Rigid Pavement):")
     for i in range(geometry.metadata['left_component_count']):
         comp_geom = geometry.components[i]
         print(f"    Lane {i + 1}:")
@@ -127,7 +127,7 @@ def main():
                       f"{layer['thickness']*1000:.0f}mm")
 
     # Right components (flexible pavement)
-    print(f"\n  Right Side (Flexible Pavement):")
+    print("\n  Right Side (Flexible Pavement):")
     for i in range(geometry.metadata['right_component_count']):
         idx = geometry.metadata['left_component_count'] + i
         comp_geom = geometry.components[idx]
@@ -154,7 +154,7 @@ def main():
     with open(svg_path, 'w') as f:
         exporter.export(geometry, f)
 
-    print(f"✓ SVG exported successfully!")
+    print("✓ SVG exported successfully!")
     print(f"\nOpen {svg_path} in a web browser to view the cross-section.")
 
 

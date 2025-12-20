@@ -99,7 +99,7 @@ def main():
 
     # Validate the section
     print(f"Section: {section}")
-    print(f"\nValidation:")
+    print("\nValidation:")
     errors = section.validate()
     if errors:
         print("  Errors found:")
@@ -109,7 +109,7 @@ def main():
         print("  ✓ Section is valid")
 
     # Generate geometry
-    print(f"\nGenerating geometry...")
+    print("\nGenerating geometry...")
     geometry = section.to_geometry()
 
     print(f"  Total components: {geometry.metadata['total_component_count']}")
@@ -117,10 +117,10 @@ def main():
     print(f"  Right components: {geometry.metadata['right_component_count']}")
 
     # Show component details
-    print(f"\nComponent details:")
+    print("\nComponent details:")
 
     # Left components
-    print(f"\n  Left Side (Inbound):")
+    print("\n  Left Side (Inbound):")
     for i in range(geometry.metadata['left_component_count']):
         comp_geom = geometry.components[i]
         comp_type = comp_geom.metadata.get('component_type')
@@ -134,7 +134,7 @@ def main():
 
         # Show how shoulder trapezoids work
         if comp_type == 'Shoulder':
-            print(f"      Trapezoid geometry (showing layer width extension):")
+            print("      Trapezoid geometry (showing layer width extension):")
             for j, polygon in enumerate(comp_geom.polygons):
                 # Get the x-coordinates to show the trapezoid widths
                 x_coords = [p.x for p in polygon.exterior]
@@ -142,7 +142,7 @@ def main():
                 print(f"        Layer {j}: ~{width_top:.2f}m wide")
 
     # Right components
-    print(f"\n  Right Side (Outbound):")
+    print("\n  Right Side (Outbound):")
     for i in range(geometry.metadata['right_component_count']):
         idx = geometry.metadata['left_component_count'] + i
         comp_geom = geometry.components[idx]
@@ -157,7 +157,7 @@ def main():
 
         # Show how shoulder trapezoids work
         if comp_type == 'Shoulder':
-            print(f"      Trapezoid geometry (showing layer width extension):")
+            print("      Trapezoid geometry (showing layer width extension):")
             for j, polygon in enumerate(comp_geom.polygons):
                 x_coords = [p.x for p in polygon.exterior]
                 width_top = abs(max(x_coords) - min(x_coords))
@@ -175,12 +175,12 @@ def main():
     with open(svg_path, 'w') as f:
         exporter.export(geometry, f)
 
-    print(f"✓ SVG exported successfully!")
+    print("✓ SVG exported successfully!")
     print(f"\nOpen {svg_path} in a web browser to view the cross-section.")
-    print(f"\nNote the trapezoid shapes in the shoulders:")
-    print(f"  - Surface layers are narrow (paved width only)")
-    print(f"  - Bottom layers extend further due to 6:1 foreslope")
-    print(f"  - This creates the characteristic tapered shoulder profile")
+    print("\nNote the trapezoid shapes in the shoulders:")
+    print("  - Surface layers are narrow (paved width only)")
+    print("  - Bottom layers extend further due to 6:1 foreslope")
+    print("  - This creates the characteristic tapered shoulder profile")
 
 
 if __name__ == "__main__":

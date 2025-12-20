@@ -87,7 +87,7 @@ def main():
 
     # Validate the section
     print(f"Section: {section}")
-    print(f"\nValidation:")
+    print("\nValidation:")
     errors = section.validate()
     if errors:
         print("  Errors found:")
@@ -97,7 +97,7 @@ def main():
         print("  ✓ Section is valid")
 
     # Generate geometry
-    print(f"\nGenerating geometry...")
+    print("\nGenerating geometry...")
     geometry = section.to_geometry()
 
     print(f"  Total components: {geometry.metadata['total_component_count']}")
@@ -105,10 +105,10 @@ def main():
     print(f"  Right components: {geometry.metadata['right_component_count']}")
 
     # Show component details
-    print(f"\nComponent details:")
+    print("\nComponent details:")
 
     # Left components
-    print(f"\n  Left Side (Inbound):")
+    print("\n  Left Side (Inbound):")
     for i in range(geometry.metadata['left_component_count']):
         comp_geom = geometry.components[i]
         comp_type = comp_geom.metadata.get('component_type')
@@ -131,7 +131,7 @@ def main():
             print(f"      Polygon vertices: {len(comp_geom.polygons[0].exterior)}")
 
     # Right components
-    print(f"\n  Right Side (Outbound):")
+    print("\n  Right Side (Outbound):")
     for i in range(geometry.metadata['right_component_count']):
         idx = geometry.metadata['left_component_count'] + i
         comp_geom = geometry.components[idx]
@@ -166,15 +166,15 @@ def main():
     with open(svg_path, 'w') as f:
         exporter.export(geometry, f)
 
-    print(f"✓ SVG exported successfully!")
+    print("✓ SVG exported successfully!")
     print(f"\nOpen {svg_path} in a web browser to view the cross-section.")
-    print(f"\nCurb and gutter geometry:")
-    print(f"  - Gutter: 18 inches wide, 12 inches thick")
-    print(f"  - Gutter slopes down 1 inch from attachment to curb")
-    print(f"  - Curb: 4 inches tall, 6 inches wide at base")
-    print(f"  - Curb top: 4 inches wide (battered face)")
-    print(f"  - Bottom has continuous slope from inside to outside")
-    print(f"  - 7-vertex polygon for complete curb and gutter profile")
+    print("\nCurb and gutter geometry:")
+    print("  - Gutter: 18 inches wide, 12 inches thick")
+    print("  - Gutter slopes down 1 inch from attachment to curb")
+    print("  - Curb: 4 inches tall, 6 inches wide at base")
+    print("  - Curb top: 4 inches wide (battered face)")
+    print("  - Bottom has continuous slope from inside to outside")
+    print("  - 7-vertex polygon for complete curb and gutter profile")
 
 
 if __name__ == "__main__":

@@ -62,7 +62,7 @@ class SimpleSVGExporter:
         svg_height = view_height * self.scale
 
         # Write SVG header
-        output.write(f'<svg xmlns="http://www.w3.org/2000/svg" ')
+        output.write('<svg xmlns="http://www.w3.org/2000/svg" ')
         output.write(f'width="{svg_width:.1f}" height="{svg_height:.1f}" ')
         output.write(f'viewBox="0 0 {svg_width:.1f} {svg_height:.1f}">\n')
 
@@ -118,7 +118,7 @@ class SimpleSVGExporter:
                 # Draw polyline (no fill, just stroke)
                 points_str = " ".join(points)
                 output.write(f'      <polyline points="{points_str}" ')
-                output.write(f'fill="none" stroke="black" stroke-width="1.5"/>\n')
+                output.write('fill="none" stroke="black" stroke-width="1.5"/>\n')
 
         output.write('    </g>\n')
         output.write('  </g>\n')
@@ -140,7 +140,7 @@ class SimpleSVGExporter:
 
         output.write('  <!-- Legend -->\n')
         output.write(f'  <text x="{legend_x}" y="{legend_y}" font-family="Arial" ')
-        output.write(f'font-size="14" font-weight="bold">')
+        output.write('font-size="14" font-weight="bold">')
         output.write(f'{geometry.metadata.get("name", "Section")}</text>\n')
 
         # Collect unique layer types
@@ -155,8 +155,14 @@ class SimpleSVGExporter:
         y = legend_y + line_height
         for layer_type in sorted(layer_types):
             color = self.COLORS.get(layer_type, self.COLORS['default'])
-            output.write(f'  <rect x="{legend_x}" y="{y}" width="15" height="15" fill="{color}"/>\n')
-            output.write(f'  <text x="{legend_x + 20}" y="{y + 12}" font-family="Arial" font-size="12">')
+            output.write(
+                f'  <rect x="{legend_x}" y="{y}" width="15" height="15" '
+                f'fill="{color}"/>\n'
+            )
+            output.write(
+                f'  <text x="{legend_x + 20}" y="{y + 12}" '
+                f'font-family="Arial" font-size="12">'
+            )
             output.write(f'{layer_type}</text>\n')
             y += line_height
 
@@ -177,12 +183,21 @@ class SimpleSVGExporter:
         y_pos = svg_height - 30
 
         output.write('  <!-- Scale -->\n')
-        output.write(f'  <line x1="{x_start}" y1="{y_pos}" x2="{x_start + scale_px}" y2="{y_pos}" ')
+        output.write(
+            f'  <line x1="{x_start}" y1="{y_pos}" '
+            f'x2="{x_start + scale_px}" y2="{y_pos}" '
+        )
         output.write('stroke="black" stroke-width="2"/>\n')
-        output.write(f'  <line x1="{x_start}" y1="{y_pos - 5}" x2="{x_start}" y2="{y_pos + 5}" ')
+        output.write(
+            f'  <line x1="{x_start}" y1="{y_pos - 5}" '
+            f'x2="{x_start}" y2="{y_pos + 5}" '
+        )
         output.write('stroke="black" stroke-width="2"/>\n')
         output.write(f'  <line x1="{x_start + scale_px}" y1="{y_pos - 5}" ')
-        output.write(f'x2="{x_start + scale_px}" y2="{y_pos + 5}" stroke="black" stroke-width="2"/>\n')
+        output.write(
+            f'x2="{x_start + scale_px}" y2="{y_pos + 5}" '
+            f'stroke="black" stroke-width="2"/>\n'
+        )
         output.write(f'  <text x="{x_start + scale_px/2}" y="{y_pos + 20}" ')
         output.write('font-family="Arial" font-size="12" text-anchor="middle">')
         output.write(f'{scale_length:.0f}m</text>\n')

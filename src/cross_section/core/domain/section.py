@@ -154,7 +154,10 @@ class RoadSection:
                 insertion = component.get_insertion_point(current_attachment, 'left')
                 current_attachment = component.get_attachment_point(insertion, 'left')
             except Exception as e:
-                errors.append(f"Left component {i} ({type(component).__name__}): Failed geometric calculation - {e}")
+                errors.append(
+                    f"Left component {i} ({type(component).__name__}): "
+                    f"Failed geometric calculation - {e}"
+                )
 
         # Validate geometric continuity for right side
         current_attachment = self.control_point.to_connection_point()
@@ -163,7 +166,10 @@ class RoadSection:
                 insertion = component.get_insertion_point(current_attachment, 'right')
                 current_attachment = component.get_attachment_point(insertion, 'right')
             except Exception as e:
-                errors.append(f"Right component {i} ({type(component).__name__}): Failed geometric calculation - {e}")
+                errors.append(
+                    f"Right component {i} ({type(component).__name__}): "
+                    f"Failed geometric calculation - {e}"
+                )
 
         return errors
 
@@ -213,4 +219,9 @@ class RoadSection:
 
     def __repr__(self) -> str:
         total = len(self.left_components) + len(self.right_components)
-        return f"RoadSection('{self.name}', {total} components: {len(self.left_components)} left, {len(self.right_components)} right)"
+        left_count = len(self.left_components)
+        right_count = len(self.right_components)
+        return (
+            f"RoadSection('{self.name}', {total} components: "
+            f"{left_count} left, {right_count} right)"
+        )

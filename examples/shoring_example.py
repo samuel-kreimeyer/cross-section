@@ -128,7 +128,7 @@ def main():
 
     # Validate the section
     print(f"Section: {section}")
-    print(f"\nValidation:")
+    print("\nValidation:")
     errors = section.validate()
     if errors:
         print("  Errors found:")
@@ -138,7 +138,7 @@ def main():
         print("  ✓ Section is valid")
 
     # Generate geometry
-    print(f"\nGenerating geometry...")
+    print("\nGenerating geometry...")
     geometry = section.to_geometry()
 
     print(f"  Total components: {geometry.metadata['total_component_count']}")
@@ -146,10 +146,10 @@ def main():
     print(f"  Right components: {geometry.metadata['right_component_count']}")
 
     # Show component details
-    print(f"\nComponent details:")
+    print("\nComponent details:")
 
     # Left components (FILL side)
-    print(f"\n  Left Side (FILL - Shoring wall extends down):")
+    print("\n  Left Side (FILL - Shoring wall extends down):")
     for i in range(geometry.metadata['left_component_count']):
         comp_geom = geometry.components[i]
         comp_type = comp_geom.metadata.get('component_type')
@@ -159,7 +159,7 @@ def main():
             print(f"       Width: {comp_geom.metadata.get('width'):.1f} m")
         elif comp_type == 'Shoulder':
             print(f"       Width: {comp_geom.metadata.get('width'):.1f} m")
-            print(f"       Type: Gravel (unpaved)")
+            print("       Type: Gravel (unpaved)")
         elif comp_type == 'Shoring':
             height = comp_geom.metadata.get('height')
             thickness = comp_geom.metadata.get('thickness')
@@ -167,7 +167,7 @@ def main():
             print(f"       Height: {height:.2f} m ({height * 3.28084:.1f} ft)")
             print(f"       Thickness: {thickness:.3f} m ({thickness * 39.3701:.1f} in)")
             print(f"       Mode: {mode} (wall extends {'down' if mode == 'fill' else 'up'})")
-            print(f"       Material: Corrugated steel sheets")
+            print("       Material: Corrugated steel sheets")
         elif comp_type == 'Slope':
             slope_ratio = comp_geom.metadata.get('slope_ratio')
             vertical_drop = comp_geom.metadata.get('vertical_drop')
@@ -177,7 +177,7 @@ def main():
             print(f"       Surface: {surface}")
 
     # Right components (CUT side)
-    print(f"\n  Right Side (CUT - Shoring wall extends up):")
+    print("\n  Right Side (CUT - Shoring wall extends up):")
     for i in range(geometry.metadata['right_component_count']):
         idx = geometry.metadata['left_component_count'] + i
         comp_geom = geometry.components[idx]
@@ -188,7 +188,7 @@ def main():
             print(f"       Width: {comp_geom.metadata.get('width'):.1f} m")
         elif comp_type == 'Shoulder':
             print(f"       Width: {comp_geom.metadata.get('width'):.1f} m")
-            print(f"       Type: Gravel (unpaved)")
+            print("       Type: Gravel (unpaved)")
         elif comp_type == 'Shoring':
             height = comp_geom.metadata.get('height')
             thickness = comp_geom.metadata.get('thickness')
@@ -196,7 +196,7 @@ def main():
             print(f"       Height: {height:.2f} m ({height * 3.28084:.1f} ft)")
             print(f"       Thickness: {thickness:.3f} m ({thickness * 39.3701:.1f} in)")
             print(f"       Mode: {mode} (wall extends {'down' if mode == 'fill' else 'up'})")
-            print(f"       Material: Corrugated steel sheets")
+            print("       Material: Corrugated steel sheets")
         elif comp_type == 'Slope':
             slope_ratio = comp_geom.metadata.get('slope_ratio')
             vertical_drop = comp_geom.metadata.get('vertical_drop')
@@ -217,17 +217,17 @@ def main():
     with open(svg_path, 'w') as f:
         exporter.export(geometry, f)
 
-    print(f"✓ SVG exported successfully!")
+    print("✓ SVG exported successfully!")
     print(f"\nOpen {svg_path} in a web browser to view the cross-section.")
-    print(f"\nShoring wall geometry:")
-    print(f"  Left side (FILL):")
-    print(f"    - Lane → Shoulder → 10ft Shoring Wall (down) → 4:1 Fill Slope")
-    print(f"    - Wall provides vertical transition before fill slope")
-    print(f"  Right side (CUT):")
-    print(f"    - Lane → Shoulder → 12ft Shoring Wall (up) → 4:1 Cut Slope")
-    print(f"    - Wall provides vertical transition in excavation")
-    print(f"\nTemporary shoring is commonly used during construction or")
-    print(f"in constrained right-of-way where steep transitions are needed.")
+    print("\nShoring wall geometry:")
+    print("  Left side (FILL):")
+    print("    - Lane → Shoulder → 10ft Shoring Wall (down) → 4:1 Fill Slope")
+    print("    - Wall provides vertical transition before fill slope")
+    print("  Right side (CUT):")
+    print("    - Lane → Shoulder → 12ft Shoring Wall (up) → 4:1 Cut Slope")
+    print("    - Wall provides vertical transition in excavation")
+    print("\nTemporary shoring is commonly used during construction or")
+    print("in constrained right-of-way where steep transitions are needed.")
 
 
 if __name__ == "__main__":

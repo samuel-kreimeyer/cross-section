@@ -28,7 +28,7 @@ class Slope(RoadComponent):
     surface_type: str = 'grass'
     thickness: float = 0.0  # Thickness of material (0 for surface only)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Calculate missing parameters if ratio is provided."""
         if self.slope_ratio is not None and self.vertical_drop is not None:
             # Calculate horizontal run from ratio and vertical drop
@@ -141,13 +141,17 @@ class Slope(RoadComponent):
 
         polygon = Polygon(exterior=vertices)
 
+        slope_ratio = (
+            self.slope_ratio if self.slope_ratio
+            else self.horizontal_run / abs(self.vertical_drop)
+        )
         return ComponentGeometry(
             polygons=[polygon],
             metadata={
                 'component_type': 'Slope',
                 'horizontal_run': self.horizontal_run,
                 'vertical_drop': self.vertical_drop,
-                'slope_ratio': self.slope_ratio if self.slope_ratio else self.horizontal_run / abs(self.vertical_drop),
+                'slope_ratio': slope_ratio,
                 'surface_type': self.surface_type,
                 'thickness': self.thickness,
                 'assembly_direction': direction,

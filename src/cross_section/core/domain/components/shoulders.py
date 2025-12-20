@@ -236,8 +236,14 @@ class Shoulder(RoadComponent):
         surface_at_paved_edge = insertion.y - self.width * self.cross_slope
 
         # Separate asphalt and crushed rock layers
-        asphalt_layers = [layer for layer in self.pavement_layers if isinstance(layer, AsphaltLayer)]
-        base_layers = [layer for layer in self.pavement_layers if isinstance(layer, CrushedRockLayer)]
+        asphalt_layers = [
+            layer for layer in self.pavement_layers
+            if isinstance(layer, AsphaltLayer)
+        ]
+        base_layers = [
+            layer for layer in self.pavement_layers
+            if isinstance(layer, CrushedRockLayer)
+        ]
 
         # Track current outside width (starts at paved width)
         current_outside_width = self.width
@@ -315,19 +321,35 @@ class Shoulder(RoadComponent):
                 # 4. Outside bottom (foreslope intercept)
                 # 5. Inside bottom
                 vertices = [
-                    Point2D(insertion.x, inside_top_y),                              # 1: Inside top
-                    Point2D(insertion.x + current_outside_width, outside_slumped_y), # 2: Slumped edge top
-                    Point2D(insertion.x + self.width, paved_edge_y),                 # 3: Paved edge (surface)
-                    Point2D(insertion.x + self.width + bottom_extension, outside_bottom_y), # 4: Foreslope intercept
-                    Point2D(insertion.x, inside_bottom_y),                           # 5: Inside bottom
+                    # 1: Inside top
+                    Point2D(insertion.x, inside_top_y),
+                    # 2: Slumped edge top
+                    Point2D(insertion.x + current_outside_width, outside_slumped_y),
+                    # 3: Paved edge (surface)
+                    Point2D(insertion.x + self.width, paved_edge_y),
+                    # 4: Foreslope intercept
+                    Point2D(
+                        insertion.x + self.width + bottom_extension,
+                        outside_bottom_y,
+                    ),
+                    # 5: Inside bottom
+                    Point2D(insertion.x, inside_bottom_y),
                 ]
             else:  # left
                 vertices = [
-                    Point2D(insertion.x, inside_top_y),                              # 1: Inside top
-                    Point2D(insertion.x, inside_bottom_y),                           # 5: Inside bottom
-                    Point2D(insertion.x - self.width - bottom_extension, outside_bottom_y), # 4: Foreslope intercept
-                    Point2D(insertion.x - self.width, paved_edge_y),                 # 3: Paved edge (surface)
-                    Point2D(insertion.x - current_outside_width, outside_slumped_y), # 2: Slumped edge top
+                    # 1: Inside top
+                    Point2D(insertion.x, inside_top_y),
+                    # 5: Inside bottom
+                    Point2D(insertion.x, inside_bottom_y),
+                    # 4: Foreslope intercept
+                    Point2D(
+                        insertion.x - self.width - bottom_extension,
+                        outside_bottom_y,
+                    ),
+                    # 3: Paved edge (surface)
+                    Point2D(insertion.x - self.width, paved_edge_y),
+                    # 2: Slumped edge top
+                    Point2D(insertion.x - current_outside_width, outside_slumped_y),
                 ]
 
             polygons.append(Polygon(exterior=vertices))
@@ -391,23 +413,44 @@ class Shoulder(RoadComponent):
         if self.width <= 0:
             errors.append("Shoulder width must be positive")
         elif self.width < 0.6:
-            errors.append("Shoulder width below typical minimum (0.6m/2ft) - verify design")
+            errors.append(
+                "Shoulder width below typical minimum (0.6m/2ft) "
+                "- verify design"
+            )
         elif self.width > 3.6:
-            errors.append("Shoulder width exceeds typical maximum (3.6m/12ft) - verify design")
+            errors.append(
+                "Shoulder width exceeds typical maximum (3.6m/12ft) "
+                "- verify design"
+            )
 
         # Cross slope validation
         if abs(self.cross_slope) > 0.06:
-            errors.append(f"Cross slope {self.cross_slope:.1%} exceeds typical maximum (6%) - verify design")
+            errors.append(
+                f"Cross slope {self.cross_slope:.1%} exceeds "
+                f"typical maximum (6%) - verify design"
+            )
         elif abs(self.cross_slope) < 0.015:
-            errors.append(f"Cross slope {self.cross_slope:.1%} below minimum for drainage (1.5%) - verify design")
+            errors.append(
+                f"Cross slope {self.cross_slope:.1%} below "
+                f"minimum for drainage (1.5%) - verify design"
+            )
 
         # Foreslope validation
         if self.foreslope_ratio < 2.0:
-            errors.append(f"Foreslope {self.foreslope_ratio}:1 is too steep - typical minimum is 2:1")
+            errors.append(
+                f"Foreslope {self.foreslope_ratio}:1 is too steep "
+                f"- typical minimum is 2:1"
+            )
         elif self.foreslope_ratio > 10.0:
-            errors.append(f"Foreslope {self.foreslope_ratio}:1 is very flat - typical maximum is 10:1")
+            errors.append(
+                f"Foreslope {self.foreslope_ratio}:1 is very flat "
+                f"- typical maximum is 10:1"
+            )
         elif self.foreslope_ratio < 4.0:
-            errors.append(f"Foreslope {self.foreslope_ratio}:1 may require barrier - verify design")
+            errors.append(
+                f"Foreslope {self.foreslope_ratio}:1 may require barrier "
+                f"- verify design"
+            )
 
         # Pavement layer validation (only if paved)
         if self.paved:
@@ -422,8 +465,14 @@ class Shoulder(RoadComponent):
                 # Check total pavement depth
                 total_depth = sum(layer.thickness for layer in self.pavement_layers)
                 if total_depth < 0.10:
-                    errors.append(f"Total pavement depth {total_depth:.3f}m below typical minimum for shoulders (0.10m)")
+                    errors.append(
+                        f"Total pavement depth {total_depth:.3f}m below "
+                        f"typical minimum for shoulders (0.10m)"
+                    )
                 elif total_depth > 0.50:
-                    errors.append(f"Total pavement depth {total_depth:.3f}m exceeds typical maximum for shoulders (0.50m)")
+                    errors.append(
+                        f"Total pavement depth {total_depth:.3f}m exceeds "
+                        f"typical maximum for shoulders (0.50m)"
+                    )
 
         return errors

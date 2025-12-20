@@ -116,7 +116,7 @@ def main():
 
     # Validate the section
     print(f"Section: {section}")
-    print(f"\nValidation:")
+    print("\nValidation:")
     errors = section.validate()
     if errors:
         print("  Errors found:")
@@ -126,7 +126,7 @@ def main():
         print("  ✓ Section is valid")
 
     # Generate geometry
-    print(f"\nGenerating geometry...")
+    print("\nGenerating geometry...")
     geometry = section.to_geometry()
 
     print(f"  Total components: {geometry.metadata['total_component_count']}")
@@ -134,10 +134,10 @@ def main():
     print(f"  Right components: {geometry.metadata['right_component_count']}")
 
     # Show component details
-    print(f"\nComponent details:")
+    print("\nComponent details:")
 
     # Left components
-    print(f"\n  Left Side (Inbound):")
+    print("\n  Left Side (Inbound):")
     for i in range(geometry.metadata['left_component_count']):
         comp_geom = geometry.components[i]
         comp_type = comp_geom.metadata.get('component_type')
@@ -152,7 +152,7 @@ def main():
 
         # Show how slumped shoulder geometry works
         if comp_type == 'Shoulder':
-            print(f"      Layer geometry (showing width extension):")
+            print("      Layer geometry (showing width extension):")
             for j, polygon in enumerate(comp_geom.polygons):
                 # Get the x-coordinates to show the trapezoid widths
                 x_coords = [p.x for p in polygon.exterior]
@@ -167,7 +167,7 @@ def main():
                     print(f"        Layer {j} ({layer_type}, {thickness*1000:.0f}mm): {width_top:.3f}m wide (to foreslope)")
 
     # Right components
-    print(f"\n  Right Side (Outbound):")
+    print("\n  Right Side (Outbound):")
     for i in range(geometry.metadata['right_component_count']):
         idx = geometry.metadata['left_component_count'] + i
         comp_geom = geometry.components[idx]
@@ -183,7 +183,7 @@ def main():
 
         # Show how slumped shoulder geometry works
         if comp_type == 'Shoulder':
-            print(f"      Layer geometry (showing width extension):")
+            print("      Layer geometry (showing width extension):")
             for j, polygon in enumerate(comp_geom.polygons):
                 x_coords = [p.x for p in polygon.exterior]
                 width_top = abs(max(x_coords) - min(x_coords))
@@ -208,15 +208,15 @@ def main():
     with open(svg_path, 'w') as f:
         exporter.export(geometry, f)
 
-    print(f"✓ SVG exported successfully!")
+    print("✓ SVG exported successfully!")
     print(f"\nOpen {svg_path} in a web browser to view the cross-section.")
-    print(f"\nNote the slumped shoulder geometry:")
-    print(f"  - Asphalt layers extend at 1:1 slope (horizontal = thickness)")
-    print(f"  - Each lower asphalt layer starts where the upper ended")
-    print(f"  - Surface: 2.4m wide")
-    print(f"  - After 3 asphalt layers (0.04+0.05+0.06 = 0.15m): 2.4 + 0.15 = 2.55m wide")
-    print(f"  - Crushed rock extends from 2.55m to the 4:1 foreslope")
-    print(f"  - Bottom at 0.35m depth: 2.4 + 0.35*4 = 3.8m wide")
+    print("\nNote the slumped shoulder geometry:")
+    print("  - Asphalt layers extend at 1:1 slope (horizontal = thickness)")
+    print("  - Each lower asphalt layer starts where the upper ended")
+    print("  - Surface: 2.4m wide")
+    print("  - After 3 asphalt layers (0.04+0.05+0.06 = 0.15m): 2.4 + 0.15 = 2.55m wide")
+    print("  - Crushed rock extends from 2.55m to the 4:1 foreslope")
+    print("  - Bottom at 0.35m depth: 2.4 + 0.35*4 = 3.8m wide")
 
 
 if __name__ == "__main__":

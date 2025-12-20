@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 from typing import List, Optional, Literal
 from ..base import RoadComponent, Direction
-from ..pavement import CrushedRockLayer, ConcreteLayer
 from ...geometry.primitives import ConnectionPoint, ComponentGeometry, Polygon, Point2D
 
 
@@ -40,7 +39,7 @@ class Ditch(RoadComponent):
     lining: Optional[object] = None  # CrushedRockLayer or ConcreteLayer
     lining_thickness: float = 0.15  # meters
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Validate and set ditch type based on bottom width."""
         if self.bottom_width == 0:
             self.ditch_type = 'v_ditch'
@@ -264,7 +263,10 @@ class Ditch(RoadComponent):
             p3 = Point2D(insertion.x + foreslope_run + backslope_run, insertion.y)
 
             # Bottom of backslope (bottom surface of lining)
-            p4 = Point2D(insertion.x + foreslope_run + backslope_run, insertion.y - self.lining_thickness)
+            p4 = Point2D(
+                insertion.x + foreslope_run + backslope_run,
+                insertion.y - self.lining_thickness,
+            )
 
             # Bottom point (bottom surface)
             p5 = Point2D(bottom_x, bottom_y - self.lining_thickness)
@@ -336,7 +338,10 @@ class Ditch(RoadComponent):
             p5 = Point2D(bottom_x, bottom_y - self.lining_thickness)
 
             # Bottom of backslope (bottom surface of lining)
-            p4 = Point2D(insertion.x - foreslope_run - backslope_run, insertion.y - self.lining_thickness)
+            p4 = Point2D(
+                insertion.x - foreslope_run - backslope_run,
+                insertion.y - self.lining_thickness,
+            )
 
             # Top of backslope
             p3 = Point2D(insertion.x - foreslope_run - backslope_run, insertion.y)
@@ -401,12 +406,18 @@ class Ditch(RoadComponent):
             errors.append(f"Ditch depth {self.depth:.2f}m is very deep - verify design")
 
         if self.foreslope_ratio < 2.0:
-            errors.append(f"Foreslope {self.foreslope_ratio}:1 is too steep - minimum typically 2:1")
+            errors.append(
+                f"Foreslope {self.foreslope_ratio}:1 is too steep "
+                f"- minimum typically 2:1"
+            )
         elif self.foreslope_ratio > 10.0:
             errors.append(f"Foreslope {self.foreslope_ratio}:1 is very flat")
 
         if self.backslope_ratio < 2.0:
-            errors.append(f"Backslope {self.backslope_ratio}:1 is too steep - minimum typically 2:1")
+            errors.append(
+                f"Backslope {self.backslope_ratio}:1 is too steep "
+                f"- minimum typically 2:1"
+            )
         elif self.backslope_ratio > 10.0:
             errors.append(f"Backslope {self.backslope_ratio}:1 is very flat")
 

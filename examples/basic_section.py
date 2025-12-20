@@ -37,7 +37,7 @@ def main():
 
     # Validate the section
     print(f"Section: {section}")
-    print(f"\nValidation:")
+    print("\nValidation:")
     errors = section.validate()
     if errors:
         print("  Errors found:")
@@ -47,14 +47,14 @@ def main():
         print("  ✓ Section is valid")
 
     # Generate geometry
-    print(f"\nGenerating geometry...")
+    print("\nGenerating geometry...")
     geometry = section.to_geometry()
 
     print(f"  Components: {len(geometry.components)}")
     print(f"  Section bounds: {geometry.bounds()}")
 
     # Show individual component details
-    print(f"\nComponent details:")
+    print("\nComponent details:")
     for i, comp_geom in enumerate(geometry.components):
         print(f"  Component {i}:")
         print(f"    Type: {comp_geom.metadata.get('component_type', 'Unknown')}")

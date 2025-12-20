@@ -1,7 +1,7 @@
 """Curb and gutter components."""
 
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 from ..base import RoadComponent, Direction
 from ..pavement import ConcreteLayer
 from ...geometry.primitives import ConnectionPoint, ComponentGeometry, Polygon, Point2D
@@ -31,9 +31,9 @@ class Curb(RoadComponent):
     curb_height: float = 0.15  # 150mm (6 inch) typical barrier curb
     curb_width_bottom: float = 0.15  # 150mm (6 inch) typical
     curb_width_top: float = 0.15  # 150mm (6 inch) typical (vertical face)
-    concrete: ConcreteLayer = None
+    concrete: Optional[ConcreteLayer] = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Set default concrete if not provided."""
         if self.concrete is None:
             self.concrete = ConcreteLayer(
@@ -237,23 +237,35 @@ class Curb(RoadComponent):
         if self.gutter_thickness <= 0:
             errors.append("Gutter thickness must be positive")
         elif self.gutter_thickness < 0.10:
-            errors.append(f"Gutter thickness {self.gutter_thickness:.3f}m below typical minimum (0.10m)")
+            errors.append(
+                f"Gutter thickness {self.gutter_thickness:.3f}m below "
+                f"typical minimum (0.10m)"
+            )
 
         if self.gutter_drop < 0:
             errors.append("Gutter drop must be non-negative")
         elif self.gutter_drop > 0.10:
-            errors.append(f"Gutter drop {self.gutter_drop:.3f}m exceeds typical maximum (0.10m)")
+            errors.append(
+                f"Gutter drop {self.gutter_drop:.3f}m exceeds "
+                f"typical maximum (0.10m)"
+            )
 
         # Curb validation
         if self.curb_height < 0:
             errors.append("Curb height must be non-negative")
         elif self.curb_height > 0.30:
-            errors.append(f"Curb height {self.curb_height:.3f}m exceeds typical maximum for barrier curbs (0.30m)")
+            errors.append(
+                f"Curb height {self.curb_height:.3f}m exceeds "
+                f"typical maximum for barrier curbs (0.30m)"
+            )
 
         if self.curb_width_bottom < 0:
             errors.append("Curb bottom width must be non-negative")
         elif self.curb_width_bottom > 0.30:
-            errors.append(f"Curb bottom width {self.curb_width_bottom:.3f}m exceeds typical maximum (0.30m)")
+            errors.append(
+                f"Curb bottom width {self.curb_width_bottom:.3f}m exceeds "
+                f"typical maximum (0.30m)"
+            )
 
         if self.curb_width_top < 0:
             errors.append("Curb top width must be non-negative")

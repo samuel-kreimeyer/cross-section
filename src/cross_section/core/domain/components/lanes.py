@@ -183,9 +183,15 @@ class TravelLane(RoadComponent):
 
         # Cross slope validation
         if abs(self.cross_slope) > 0.06:
-            errors.append(f"Cross slope {self.cross_slope:.1%} exceeds typical maximum (6%) - verify design")
+            errors.append(
+                f"Cross slope {self.cross_slope:.1%} exceeds "
+                f"typical maximum (6%) - verify design"
+            )
         elif abs(self.cross_slope) < 0.015:
-            errors.append(f"Cross slope {self.cross_slope:.1%} below minimum for drainage (1.5%) - verify design")
+            errors.append(
+                f"Cross slope {self.cross_slope:.1%} below "
+                f"minimum for drainage (1.5%) - verify design"
+            )
 
         # Pavement layer validation
         if not self.pavement_layers:
@@ -199,8 +205,14 @@ class TravelLane(RoadComponent):
             # Check total pavement depth
             total_depth = sum(layer.thickness for layer in self.pavement_layers)
             if total_depth < 0.15:
-                errors.append(f"Total pavement depth {total_depth:.3f}m below typical minimum (0.15m)")
+                errors.append(
+                    f"Total pavement depth {total_depth:.3f}m below "
+                    f"typical minimum (0.15m)"
+                )
             elif total_depth > 0.80:
-                errors.append(f"Total pavement depth {total_depth:.3f}m exceeds typical maximum (0.80m)")
+                errors.append(
+                    f"Total pavement depth {total_depth:.3f}m exceeds "
+                    f"typical maximum (0.80m)"
+                )
 
         return errors

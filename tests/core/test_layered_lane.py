@@ -77,8 +77,14 @@ class TestLayeredLane:
 
         # Verify layers are stacked by checking inside edge vertices (x=insertion.x)
         # At inside edge, cross slope doesn't affect the Y coordinates
-        surface_inside_y_values = [p.y for p in surface_poly.exterior if p.x == pytest.approx(insertion.x)]
-        base_inside_y_values = [p.y for p in geometry.polygons[1].exterior if p.x == pytest.approx(insertion.x)]
+        surface_inside_y_values = [
+            p.y for p in surface_poly.exterior
+            if p.x == pytest.approx(insertion.x)
+        ]
+        base_inside_y_values = [
+            p.y for p in geometry.polygons[1].exterior
+            if p.x == pytest.approx(insertion.x)
+        ]
 
         # Surface should have top and bottom at inside edge
         assert max(surface_inside_y_values) == pytest.approx(100.0)  # Top

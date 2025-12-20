@@ -1,6 +1,5 @@
 """Tests for pavement layer classes."""
 
-import pytest
 from cross_section.core.domain.pavement import AsphaltLayer, ConcreteLayer, CrushedRockLayer
 
 

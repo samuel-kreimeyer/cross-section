@@ -54,7 +54,7 @@ def main():
 
     # Validate the section
     print(f"Section: {section}")
-    print(f"\nValidation:")
+    print("\nValidation:")
     errors = section.validate()
     if errors:
         print("  Errors found:")
@@ -64,7 +64,7 @@ def main():
         print("  ✓ Section is valid")
 
     # Generate geometry
-    print(f"\nGenerating geometry...")
+    print("\nGenerating geometry...")
     geometry = section.to_geometry()
 
     print(f"  Total components: {geometry.metadata['total_component_count']}")
@@ -73,10 +73,10 @@ def main():
     print(f"  Section bounds: {geometry.bounds()}")
 
     # Show individual component details
-    print(f"\nComponent details:")
+    print("\nComponent details:")
 
     # Left components are first in the geometry list
-    print(f"\n  Left Side (extending in negative X):")
+    print("\n  Left Side (extending in negative X):")
     for i in range(geometry.metadata['left_component_count']):
         comp_geom = geometry.components[i]
         print(f"    Lane {i + 1}:")
@@ -87,7 +87,7 @@ def main():
         print(f"      Bounds: {comp_geom.bounds()}")
 
     # Right components follow in the geometry list
-    print(f"\n  Right Side (extending in positive X):")
+    print("\n  Right Side (extending in positive X):")
     for i in range(geometry.metadata['right_component_count']):
         idx = geometry.metadata['left_component_count'] + i
         comp_geom = geometry.components[idx]
@@ -98,7 +98,7 @@ def main():
         print(f"      Cross slope: {comp_geom.metadata.get('cross_slope')}")
         print(f"      Bounds: {comp_geom.bounds()}")
 
-    print(f"\n✓ Symmetric section successfully created!")
+    print("\n✓ Symmetric section successfully created!")
     print(f"  Total width: {geometry.bounds()[2] - geometry.bounds()[0]:.1f} m")
 
 

@@ -26,22 +26,41 @@ class AsphaltLayer:
         errors = []
 
         if self.thickness <= 0:
-            errors.append(f"Asphalt layer thickness must be positive (got {self.thickness}m)")
+            errors.append(
+                f"Asphalt layer thickness must be positive (got {self.thickness}m)"
+            )
         elif self.thickness < 0.04:
-            errors.append(f"Asphalt layer thickness {self.thickness}m is very thin - typical minimum is 40mm")
+            errors.append(
+                f"Asphalt layer thickness {self.thickness}m is very thin "
+                f"- typical minimum is 40mm"
+            )
         elif self.thickness > 0.15:
-            errors.append(f"Asphalt layer thickness {self.thickness}m exceeds typical single lift maximum (150mm)")
+            errors.append(
+                f"Asphalt layer thickness {self.thickness}m exceeds "
+                f"typical single lift maximum (150mm)"
+            )
 
         if self.aggregate_size <= 0:
-            errors.append(f"Aggregate size must be positive (got {self.aggregate_size}mm)")
+            errors.append(
+                f"Aggregate size must be positive (got {self.aggregate_size}mm)"
+            )
         elif self.aggregate_size > 37.5:
-            errors.append(f"Aggregate size {self.aggregate_size}mm exceeds typical maximum (37.5mm)")
+            errors.append(
+                f"Aggregate size {self.aggregate_size}mm exceeds "
+                f"typical maximum (37.5mm)"
+            )
 
         if self.binder_percentage < 4.0 or self.binder_percentage > 7.0:
-            errors.append(f"Binder percentage {self.binder_percentage}% outside typical range (4-7%)")
+            errors.append(
+                f"Binder percentage {self.binder_percentage}% "
+                f"outside typical range (4-7%)"
+            )
 
         if self.density < 2200 or self.density > 2500:
-            errors.append(f"Density {self.density} kg/m³ outside typical range (2200-2500 kg/m³)")
+            errors.append(
+                f"Density {self.density} kg/m³ outside typical range "
+                f"(2200-2500 kg/m³)"
+            )
 
         return errors
 
@@ -66,22 +85,39 @@ class ConcreteLayer:
         errors = []
 
         if self.thickness <= 0:
-            errors.append(f"Concrete layer thickness must be positive (got {self.thickness}m)")
+            errors.append(
+                f"Concrete layer thickness must be positive (got {self.thickness}m)"
+            )
         elif self.thickness < 0.15:
-            errors.append(f"Concrete layer thickness {self.thickness}m below typical minimum (150mm)")
+            errors.append(
+                f"Concrete layer thickness {self.thickness}m below "
+                f"typical minimum (150mm)"
+            )
         elif self.thickness > 0.40:
-            errors.append(f"Concrete layer thickness {self.thickness}m exceeds typical maximum (400mm)")
+            errors.append(
+                f"Concrete layer thickness {self.thickness}m exceeds "
+                f"typical maximum (400mm)"
+            )
 
         if self.compressive_strength < 20:
-            errors.append(f"Compressive strength {self.compressive_strength} MPa below minimum for pavement (20 MPa)")
+            errors.append(
+                f"Compressive strength {self.compressive_strength} MPa "
+                f"below minimum for pavement (20 MPa)"
+            )
         elif self.compressive_strength > 50:
-            errors.append(f"Compressive strength {self.compressive_strength} MPa is unusually high - verify design")
+            errors.append(
+                f"Compressive strength {self.compressive_strength} MPa "
+                f"is unusually high - verify design"
+            )
 
         if self.reinforced and self.steel_per_cy is None:
             errors.append("Reinforced concrete must specify steel_per_cy")
         elif self.reinforced and self.steel_per_cy is not None:
             if self.steel_per_cy < 20 or self.steel_per_cy > 100:
-                errors.append(f"Steel reinforcement {self.steel_per_cy} lbs/cy³ outside typical range (20-100 lbs/cy³)")
+                errors.append(
+                    f"Steel reinforcement {self.steel_per_cy} lbs/cy³ "
+                    f"outside typical range (20-100 lbs/cy³)"
+                )
         elif not self.reinforced and self.steel_per_cy is not None:
             errors.append("steel_per_cy should only be specified for reinforced concrete")
 
@@ -108,21 +144,41 @@ class CrushedRockLayer:
         errors = []
 
         if self.thickness <= 0:
-            errors.append(f"Crushed rock layer thickness must be positive (got {self.thickness}m)")
+            errors.append(
+                f"Crushed rock layer thickness must be positive "
+                f"(got {self.thickness}m)"
+            )
         elif self.thickness < 0.10:
-            errors.append(f"Crushed rock layer thickness {self.thickness}m below typical minimum (100mm)")
+            errors.append(
+                f"Crushed rock layer thickness {self.thickness}m below "
+                f"typical minimum (100mm)"
+            )
         elif self.thickness > 0.60:
-            errors.append(f"Crushed rock layer thickness {self.thickness}m exceeds typical maximum (600mm)")
+            errors.append(
+                f"Crushed rock layer thickness {self.thickness}m exceeds "
+                f"typical maximum (600mm)"
+            )
 
         if self.aggregate_size <= 0:
-            errors.append(f"Aggregate size must be positive (got {self.aggregate_size}mm)")
+            errors.append(
+                f"Aggregate size must be positive (got {self.aggregate_size}mm)"
+            )
         elif self.aggregate_size < 19:
-            errors.append(f"Aggregate size {self.aggregate_size}mm is small for base course (typical min 19mm)")
+            errors.append(
+                f"Aggregate size {self.aggregate_size}mm is small for "
+                f"base course (typical min 19mm)"
+            )
         elif self.aggregate_size > 63:
-            errors.append(f"Aggregate size {self.aggregate_size}mm exceeds typical maximum (63mm)")
+            errors.append(
+                f"Aggregate size {self.aggregate_size}mm exceeds "
+                f"typical maximum (63mm)"
+            )
 
         if self.density < 1800 or self.density > 2400:
-            errors.append(f"Density {self.density} kg/m³ outside typical range (1800-2400 kg/m³)")
+            errors.append(
+                f"Density {self.density} kg/m³ outside typical range "
+                f"(1800-2400 kg/m³)"
+            )
 
         return errors
 

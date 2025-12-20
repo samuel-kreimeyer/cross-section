@@ -131,7 +131,7 @@ def main():
 
     # Validate the section
     print(f"Section: {section}")
-    print(f"\nValidation:")
+    print("\nValidation:")
     errors = section.validate()
     if errors:
         print("  Errors found:")
@@ -141,7 +141,7 @@ def main():
         print("  ✓ Section is valid")
 
     # Generate geometry
-    print(f"\nGenerating geometry...")
+    print("\nGenerating geometry...")
     geometry = section.to_geometry()
 
     print(f"  Total components: {geometry.metadata['total_component_count']}")
@@ -149,10 +149,10 @@ def main():
     print(f"  Right components: {geometry.metadata['right_component_count']}")
 
     # Show component details
-    print(f"\nComponent details:")
+    print("\nComponent details:")
 
     # Left components (Cut section)
-    print(f"\n  Left Side (Cut Section - Inbound):")
+    print("\n  Left Side (Cut Section - Inbound):")
     for i in range(geometry.metadata['left_component_count']):
         comp_geom = geometry.components[i]
         comp_type = comp_geom.metadata.get('component_type')
@@ -184,7 +184,7 @@ def main():
             print(f"       Surface: {surface}")
 
     # Right components (Fill section)
-    print(f"\n  Right Side (Fill Section - Outbound):")
+    print("\n  Right Side (Fill Section - Outbound):")
     for i in range(geometry.metadata['right_component_count']):
         idx = geometry.metadata['left_component_count'] + i
         comp_geom = geometry.components[idx]
@@ -218,12 +218,12 @@ def main():
     with open(svg_path, 'w') as f:
         exporter.export(geometry, f)
 
-    print(f"✓ SVG exported successfully!")
+    print("✓ SVG exported successfully!")
     print(f"\nOpen {svg_path} in a web browser to view the cross-section.")
-    print(f"\nAsymmetric roadside features:")
-    print(f"  Left (Cut): Slumped shoulder → V-ditch (0.75m deep, unlined) → 4:1 backslope")
-    print(f"  Right (Fill): Slumped shoulder → 6:1 fill slope (2.0m down to existing ground)")
-    print(f"  Both shoulders use paved_top_slumped type with extended crushed rock base")
+    print("\nAsymmetric roadside features:")
+    print("  Left (Cut): Slumped shoulder → V-ditch (0.75m deep, unlined) → 4:1 backslope")
+    print("  Right (Fill): Slumped shoulder → 6:1 fill slope (2.0m down to existing ground)")
+    print("  Both shoulders use paved_top_slumped type with extended crushed rock base")
 
 
 if __name__ == "__main__":

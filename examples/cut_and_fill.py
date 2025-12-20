@@ -122,7 +122,7 @@ def main():
 
     # Validate the section
     print(f"Section: {section}")
-    print(f"\nValidation:")
+    print("\nValidation:")
     errors = section.validate()
     if errors:
         print("  Errors found:")
@@ -132,7 +132,7 @@ def main():
         print("  ✓ Section is valid")
 
     # Generate geometry
-    print(f"\nGenerating geometry...")
+    print("\nGenerating geometry...")
     geometry = section.to_geometry()
 
     print(f"  Total components: {geometry.metadata['total_component_count']}")
@@ -140,10 +140,10 @@ def main():
     print(f"  Right components: {geometry.metadata['right_component_count']}")
 
     # Show component details
-    print(f"\nComponent details:")
+    print("\nComponent details:")
 
     # Left components (FILL side)
-    print(f"\n  Left Side (FILL - Embankment):")
+    print("\n  Left Side (FILL - Embankment):")
     for i in range(geometry.metadata['left_component_count']):
         comp_geom = geometry.components[i]
         comp_type = comp_geom.metadata.get('component_type')
@@ -153,7 +153,7 @@ def main():
             print(f"       Width: {comp_geom.metadata.get('width'):.1f} m")
         elif comp_type == 'Shoulder':
             print(f"       Width: {comp_geom.metadata.get('width'):.1f} m")
-            print(f"       Type: Gravel (unpaved)")
+            print("       Type: Gravel (unpaved)")
             print(f"       Foreslope: {comp_geom.metadata.get('foreslope_ratio'):.1f}:1")
         elif comp_type == 'Slope':
             slope_ratio = comp_geom.metadata.get('slope_ratio')
@@ -164,7 +164,7 @@ def main():
             print(f"       Surface: {surface}")
 
     # Right components (CUT side)
-    print(f"\n  Right Side (CUT - Excavation):")
+    print("\n  Right Side (CUT - Excavation):")
     for i in range(geometry.metadata['right_component_count']):
         idx = geometry.metadata['left_component_count'] + i
         comp_geom = geometry.components[idx]
@@ -175,7 +175,7 @@ def main():
             print(f"       Width: {comp_geom.metadata.get('width'):.1f} m")
         elif comp_type == 'Shoulder':
             print(f"       Width: {comp_geom.metadata.get('width'):.1f} m")
-            print(f"       Type: Gravel (unpaved)")
+            print("       Type: Gravel (unpaved)")
             print(f"       Foreslope: {comp_geom.metadata.get('foreslope_ratio'):.1f}:1")
         elif comp_type == 'Ditch':
             ditch_type = comp_geom.metadata.get('ditch_type')
@@ -207,16 +207,16 @@ def main():
     with open(svg_path, 'w') as f:
         exporter.export(geometry, f)
 
-    print(f"✓ SVG exported successfully!")
+    print("✓ SVG exported successfully!")
     print(f"\nOpen {svg_path} in a web browser to view the cross-section.")
-    print(f"\nCut and Fill geometry:")
-    print(f"  Left side (FILL):")
-    print(f"    - Lane → Gravel Shoulder → 4:1 Fill Slope (3m down)")
-    print(f"    - Embankment descends to existing ground")
-    print(f"  Right side (CUT):")
-    print(f"    - Lane → Gravel Shoulder → V-Ditch (0.8m deep) → 4:1 Cut Slope (2.5m up)")
-    print(f"    - Excavation rises to existing ground")
-    print(f"\nThis demonstrates typical highway construction on side-hill terrain.")
+    print("\nCut and Fill geometry:")
+    print("  Left side (FILL):")
+    print("    - Lane → Gravel Shoulder → 4:1 Fill Slope (3m down)")
+    print("    - Embankment descends to existing ground")
+    print("  Right side (CUT):")
+    print("    - Lane → Gravel Shoulder → V-Ditch (0.8m deep) → 4:1 Cut Slope (2.5m up)")
+    print("    - Excavation rises to existing ground")
+    print("\nThis demonstrates typical highway construction on side-hill terrain.")
 
 
 if __name__ == "__main__":

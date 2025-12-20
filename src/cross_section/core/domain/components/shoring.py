@@ -103,39 +103,61 @@ class Shoring(RoadComponent):
         Returns:
             ComponentGeometry with a single polygon representing the shoring wall
         """
-        attachment = self.get_attachment_point(insertion, direction)
-
         if self.mode == 'fill':
             # Fill: wall extends downward from insertion point
             if direction == 'right':
                 vertices = [
                     Point2D(insertion.x, insertion.y),  # Top inside
-                    Point2D(insertion.x + self.thickness, insertion.y),  # Top outside
-                    Point2D(insertion.x + self.thickness, insertion.y - self.height),  # Bottom outside
-                    Point2D(insertion.x, insertion.y - self.height),  # Bottom inside
+                    # Top outside
+                    Point2D(insertion.x + self.thickness, insertion.y),
+                    # Bottom outside
+                    Point2D(
+                        insertion.x + self.thickness,
+                        insertion.y - self.height,
+                    ),
+                    # Bottom inside
+                    Point2D(insertion.x, insertion.y - self.height),
                 ]
             else:  # left
                 vertices = [
                     Point2D(insertion.x, insertion.y),  # Top inside
-                    Point2D(insertion.x, insertion.y - self.height),  # Bottom inside
-                    Point2D(insertion.x - self.thickness, insertion.y - self.height),  # Bottom outside
-                    Point2D(insertion.x - self.thickness, insertion.y),  # Top outside
+                    # Bottom inside
+                    Point2D(insertion.x, insertion.y - self.height),
+                    # Bottom outside
+                    Point2D(
+                        insertion.x - self.thickness,
+                        insertion.y - self.height,
+                    ),
+                    # Top outside
+                    Point2D(insertion.x - self.thickness, insertion.y),
                 ]
         else:  # cut
             # Cut: wall extends upward from insertion point
             if direction == 'right':
                 vertices = [
                     Point2D(insertion.x, insertion.y),  # Bottom inside
-                    Point2D(insertion.x + self.thickness, insertion.y),  # Bottom outside
-                    Point2D(insertion.x + self.thickness, insertion.y + self.height),  # Top outside
-                    Point2D(insertion.x, insertion.y + self.height),  # Top inside
+                    # Bottom outside
+                    Point2D(insertion.x + self.thickness, insertion.y),
+                    # Top outside
+                    Point2D(
+                        insertion.x + self.thickness,
+                        insertion.y + self.height,
+                    ),
+                    # Top inside
+                    Point2D(insertion.x, insertion.y + self.height),
                 ]
             else:  # left
                 vertices = [
                     Point2D(insertion.x, insertion.y),  # Bottom inside
-                    Point2D(insertion.x, insertion.y + self.height),  # Top inside
-                    Point2D(insertion.x - self.thickness, insertion.y + self.height),  # Top outside
-                    Point2D(insertion.x - self.thickness, insertion.y),  # Bottom outside
+                    # Top inside
+                    Point2D(insertion.x, insertion.y + self.height),
+                    # Top outside
+                    Point2D(
+                        insertion.x - self.thickness,
+                        insertion.y + self.height,
+                    ),
+                    # Bottom outside
+                    Point2D(insertion.x - self.thickness, insertion.y),
                 ]
 
         polygon = Polygon(exterior=vertices)
@@ -182,7 +204,8 @@ class Shoring(RoadComponent):
             )
         elif self.thickness > 0.5:
             errors.append(
-                f"Thickness {self.thickness:.3f}m is very large for steel sheet pile - verify design"
+                f"Thickness {self.thickness:.3f}m is very large "
+                f"for steel sheet pile - verify design"
             )
 
         # Mode validation

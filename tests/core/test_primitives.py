@@ -1,8 +1,11 @@
 """Tests for geometry primitives."""
 
-import pytest
-import math
-from cross_section.core.geometry.primitives import Point2D, Polygon, ConnectionPoint, ComponentGeometry
+from cross_section.core.geometry.primitives import (
+    Point2D,
+    Polygon,
+    ConnectionPoint,
+    ComponentGeometry,
+)
 
 
 class TestPoint2D:
