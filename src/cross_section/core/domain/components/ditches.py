@@ -1,12 +1,12 @@
 """Ditch components for roadside drainage."""
 
 from dataclasses import dataclass
-from typing import List, Optional, Literal
-from ..base import RoadComponent, Direction
-from ...geometry.primitives import ConnectionPoint, ComponentGeometry, Polygon, Point2D
+from typing import Literal
 
+from ...geometry.primitives import ComponentGeometry, ConnectionPoint, Point2D, Polygon
+from ..base import Direction, RoadComponent
 
-DitchType = Literal['v_ditch', 'trapezoid']
+DitchType = Literal["v_ditch", "trapezoid"]
 
 
 @dataclass
@@ -35,16 +35,16 @@ class Ditch(RoadComponent):
     backslope_ratio: float = 3.0  # 3:1 typical (steeper going up)
     bottom_width: float = 1.2  # meters (0 for V-ditch)
     bottom_slope: float = 0.02  # 2% cross slope on bottom
-    ditch_type: DitchType = 'trapezoid'
-    lining: Optional[object] = None  # CrushedRockLayer or ConcreteLayer
+    ditch_type: DitchType = "trapezoid"
+    lining: object | None = None  # CrushedRockLayer or ConcreteLayer
     lining_thickness: float = 0.15  # meters
 
     def __post_init__(self) -> None:
         """Validate and set ditch type based on bottom width."""
         if self.bottom_width == 0:
-            self.ditch_type = 'v_ditch'
+            self.ditch_type = "v_ditch"
         else:
-            self.ditch_type = 'trapezoid'
+            self.ditch_type = "trapezoid"
 
     def get_insertion_point(
         self, previous_attachment: ConnectionPoint, direction: Direction
@@ -61,7 +61,7 @@ class Ditch(RoadComponent):
         return ConnectionPoint(
             x=previous_attachment.x,
             y=previous_attachment.y,
-            description=f"Ditch insertion ({direction})"
+            description=f"Ditch insertion ({direction})",
         )
 
     def get_attachment_point(
@@ -82,22 +82,20 @@ class Ditch(RoadComponent):
         total_width = foreslope_run + self.bottom_width + backslope_run
 
         # Attachment is at the same elevation as insertion (top of backslope)
-        if direction == 'right':
+        if direction == "right":
             return ConnectionPoint(
                 x=insertion.x + total_width,
                 y=insertion.y,
-                description=f"Ditch attachment ({direction})"
+                description=f"Ditch attachment ({direction})",
             )
         else:  # left
             return ConnectionPoint(
                 x=insertion.x - total_width,
                 y=insertion.y,
-                description=f"Ditch attachment ({direction})"
+                description=f"Ditch attachment ({direction})",
             )
 
-    def to_geometry(
-        self, insertion: ConnectionPoint, direction: Direction
-    ) -> ComponentGeometry:
+    def to_geometry(self, insertion: ConnectionPoint, direction: Direction) -> ComponentGeometry:
         """Create ditch geometry.
 
         Creates geometry representing the ditch excavation and lining material:
@@ -116,7 +114,7 @@ class Ditch(RoadComponent):
         layers = []
 
         # Always create void boundary polyline to show the excavation profile
-        if direction == 'right':
+        if direction == "right":
             void_vertices = self._create_right_geometry(insertion)
         else:
             void_vertices = self._create_left_geometry(insertion)
@@ -124,36 +122,38 @@ class Ditch(RoadComponent):
 
         # Add lining if specified (projected downward from ditch bottom)
         if self.lining is not None:
-            if direction == 'right':
+            if direction == "right":
                 lining_vertices = self._create_right_lining(insertion)
             else:
                 lining_vertices = self._create_left_lining(insertion)
             polygons.append(Polygon(exterior=lining_vertices))
-            layers.append({
-                'layer_index': 0,
-                'type': type(self.lining).__name__,
-                'thickness': self.lining_thickness,
-            })
+            layers.append(
+                {
+                    "layer_index": 0,
+                    "type": type(self.lining).__name__,
+                    "thickness": self.lining_thickness,
+                }
+            )
 
         return ComponentGeometry(
             polygons=polygons,
             polylines=polylines,
             metadata={
-                'component_type': 'Ditch',
-                'ditch_type': self.ditch_type,
-                'depth': self.depth,
-                'foreslope_ratio': self.foreslope_ratio,
-                'backslope_ratio': self.backslope_ratio,
-                'bottom_width': self.bottom_width,
-                'bottom_slope': self.bottom_slope,
-                'has_lining': self.lining is not None,
-                'lining_thickness': self.lining_thickness if self.lining else 0,
-                'assembly_direction': direction,
-                'layers': layers
-            }
+                "component_type": "Ditch",
+                "ditch_type": self.ditch_type,
+                "depth": self.depth,
+                "foreslope_ratio": self.foreslope_ratio,
+                "backslope_ratio": self.backslope_ratio,
+                "bottom_width": self.bottom_width,
+                "bottom_slope": self.bottom_slope,
+                "has_lining": self.lining is not None,
+                "lining_thickness": self.lining_thickness if self.lining else 0,
+                "assembly_direction": direction,
+                "layers": layers,
+            },
         )
 
-    def _create_right_geometry(self, insertion: ConnectionPoint) -> List[Point2D]:
+    def _create_right_geometry(self, insertion: ConnectionPoint) -> list[Point2D]:
         """Create geometry for right-side ditch.
 
         Returns vertices in counter-clockwise order.
@@ -164,7 +164,7 @@ class Ditch(RoadComponent):
         # Top of foreslope (insertion point)
         p1 = Point2D(insertion.x, insertion.y)
 
-        if self.ditch_type == 'v_ditch':
+        if self.ditch_type == "v_ditch":
             # Bottom point (where foreslope and backslope meet)
             bottom_x = insertion.x + foreslope_run
             bottom_y = insertion.y - self.depth
@@ -190,13 +190,12 @@ class Ditch(RoadComponent):
 
             # Top of backslope
             p4 = Point2D(
-                insertion.x + foreslope_run + self.bottom_width + backslope_run,
-                insertion.y
+                insertion.x + foreslope_run + self.bottom_width + backslope_run, insertion.y
             )
 
             return [p1, p2, p3, p4]
 
-    def _create_left_geometry(self, insertion: ConnectionPoint) -> List[Point2D]:
+    def _create_left_geometry(self, insertion: ConnectionPoint) -> list[Point2D]:
         """Create geometry for left-side ditch.
 
         Returns vertices in counter-clockwise order.
@@ -207,7 +206,7 @@ class Ditch(RoadComponent):
         # Top of foreslope (insertion point)
         p1 = Point2D(insertion.x, insertion.y)
 
-        if self.ditch_type == 'v_ditch':
+        if self.ditch_type == "v_ditch":
             # Top of backslope
             p3 = Point2D(insertion.x - foreslope_run - backslope_run, insertion.y)
 
@@ -221,8 +220,7 @@ class Ditch(RoadComponent):
             # Trapezoid ditch
             # Top of backslope
             p4 = Point2D(
-                insertion.x - foreslope_run - self.bottom_width - backslope_run,
-                insertion.y
+                insertion.x - foreslope_run - self.bottom_width - backslope_run, insertion.y
             )
 
             # End of flat bottom (start of backslope)
@@ -238,7 +236,7 @@ class Ditch(RoadComponent):
 
             return [p1, p4, p3, p2]
 
-    def _create_right_lining(self, insertion: ConnectionPoint) -> List[Point2D]:
+    def _create_right_lining(self, insertion: ConnectionPoint) -> list[Point2D]:
         """Create lining material for right-side ditch.
 
         The lining is projected downward from the ditch bottom surface.
@@ -249,7 +247,7 @@ class Ditch(RoadComponent):
         foreslope_run = self.depth * self.foreslope_ratio
         backslope_run = self.depth * self.backslope_ratio
 
-        if self.ditch_type == 'v_ditch':
+        if self.ditch_type == "v_ditch":
             # V-ditch lining
             # Top of foreslope
             p1 = Point2D(insertion.x, insertion.y)
@@ -294,8 +292,7 @@ class Ditch(RoadComponent):
 
             # Top of backslope
             p4 = Point2D(
-                insertion.x + foreslope_run + self.bottom_width + backslope_run,
-                insertion.y
+                insertion.x + foreslope_run + self.bottom_width + backslope_run, insertion.y
             )
 
             # Bottom surface vertices (offset downward by lining_thickness)
@@ -313,7 +310,7 @@ class Ditch(RoadComponent):
 
             return [p1, p2, p3, p4, p5, p6, p7, p8]
 
-    def _create_left_lining(self, insertion: ConnectionPoint) -> List[Point2D]:
+    def _create_left_lining(self, insertion: ConnectionPoint) -> list[Point2D]:
         """Create lining material for left-side ditch.
 
         The lining is projected downward from the ditch bottom surface.
@@ -324,7 +321,7 @@ class Ditch(RoadComponent):
         foreslope_run = self.depth * self.foreslope_ratio
         backslope_run = self.depth * self.backslope_ratio
 
-        if self.ditch_type == 'v_ditch':
+        if self.ditch_type == "v_ditch":
             # V-ditch lining
             # Top of foreslope
             p1 = Point2D(insertion.x, insertion.y)
@@ -373,13 +370,12 @@ class Ditch(RoadComponent):
             # Bottom of backslope (bottom surface)
             p5 = Point2D(
                 insertion.x - foreslope_run - self.bottom_width - backslope_run,
-                insertion.y - self.lining_thickness
+                insertion.y - self.lining_thickness,
             )
 
             # Top of backslope (top surface)
             p4 = Point2D(
-                insertion.x - foreslope_run - self.bottom_width - backslope_run,
-                insertion.y
+                insertion.x - foreslope_run - self.bottom_width - backslope_run, insertion.y
             )
 
             # End of flat bottom (start of backslope - top surface)
@@ -390,7 +386,7 @@ class Ditch(RoadComponent):
 
             return [p1, p8, p7, p6, p5, p4, p3, p2]
 
-    def validate(self) -> List[str]:
+    def validate(self) -> list[str]:
         """Validate ditch parameters.
 
         Returns:
@@ -407,16 +403,14 @@ class Ditch(RoadComponent):
 
         if self.foreslope_ratio < 2.0:
             errors.append(
-                f"Foreslope {self.foreslope_ratio}:1 is too steep "
-                f"- minimum typically 2:1"
+                f"Foreslope {self.foreslope_ratio}:1 is too steep - minimum typically 2:1"
             )
         elif self.foreslope_ratio > 10.0:
             errors.append(f"Foreslope {self.foreslope_ratio}:1 is very flat")
 
         if self.backslope_ratio < 2.0:
             errors.append(
-                f"Backslope {self.backslope_ratio}:1 is too steep "
-                f"- minimum typically 2:1"
+                f"Backslope {self.backslope_ratio}:1 is too steep - minimum typically 2:1"
             )
         elif self.backslope_ratio > 10.0:
             errors.append(f"Backslope {self.backslope_ratio}:1 is very flat")

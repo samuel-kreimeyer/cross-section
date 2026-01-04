@@ -1,11 +1,12 @@
 """Base classes for road components."""
 
 from abc import ABC, abstractmethod
-from typing import List, Literal
-from ..geometry.primitives import ConnectionPoint, ComponentGeometry
+from typing import Literal
+
+from ..geometry.primitives import ComponentGeometry, ConnectionPoint
 
 # Type alias for assembly direction
-Direction = Literal['left', 'right']
+Direction = Literal["left", "right"]
 
 
 class RoadComponent(ABC):
@@ -54,9 +55,7 @@ class RoadComponent(ABC):
         pass
 
     @abstractmethod
-    def to_geometry(
-        self, insertion: ConnectionPoint, direction: Direction
-    ) -> ComponentGeometry:
+    def to_geometry(self, insertion: ConnectionPoint, direction: Direction) -> ComponentGeometry:
         """Create this component's geometry.
 
         Args:
@@ -69,7 +68,7 @@ class RoadComponent(ABC):
         pass
 
     @abstractmethod
-    def validate(self) -> List[str]:
+    def validate(self) -> list[str]:
         """Validate this component's parameters.
 
         Returns:

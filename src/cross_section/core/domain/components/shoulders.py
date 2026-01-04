@@ -1,13 +1,13 @@
 """Shoulder components."""
 
 from dataclasses import dataclass, field
-from typing import List, Literal
-from ..base import RoadComponent, Direction
-from ..pavement import PavementLayer, AsphaltLayer, CrushedRockLayer
-from ...geometry.primitives import ConnectionPoint, ComponentGeometry, Polygon, Point2D
+from typing import Literal
 
+from ...geometry.primitives import ComponentGeometry, ConnectionPoint, Point2D, Polygon
+from ..base import Direction, RoadComponent
+from ..pavement import AsphaltLayer, CrushedRockLayer, PavementLayer
 
-ShoulderType = Literal['fully_paved', 'paved_top_slumped']
+ShoulderType = Literal["fully_paved", "paved_top_slumped"]
 
 
 @dataclass
@@ -38,17 +38,19 @@ class Shoulder(RoadComponent):
     width: float
     cross_slope: float = 0.02  # 2% default
     foreslope_ratio: float = 6.0  # 6:1 (6 horizontal : 1 vertical)
-    shoulder_type: ShoulderType = 'fully_paved'
+    shoulder_type: ShoulderType = "fully_paved"
     paved: bool = True
-    pavement_layers: List[PavementLayer] = field(default_factory=lambda: [
-        AsphaltLayer(
-            thickness=0.05,  # 50mm surface course
-            aggregate_size=12.5,
-            binder_type='PG 64-22',
-            binder_percentage=5.5,
-            density=2400
-        )
-    ])
+    pavement_layers: list[PavementLayer] = field(
+        default_factory=lambda: [
+            AsphaltLayer(
+                thickness=0.05,  # 50mm surface course
+                aggregate_size=12.5,
+                binder_type="PG 64-22",
+                binder_percentage=5.5,
+                density=2400,
+            )
+        ]
+    )
 
     def get_insertion_point(
         self, previous_attachment: ConnectionPoint, direction: Direction
@@ -65,7 +67,7 @@ class Shoulder(RoadComponent):
         return ConnectionPoint(
             x=previous_attachment.x,
             y=previous_attachment.y,
-            description=f"Shoulder insertion ({direction})"
+            description=f"Shoulder insertion ({direction})",
         )
 
     def get_attachment_point(
@@ -87,7 +89,7 @@ class Shoulder(RoadComponent):
         drop = self.width * self.cross_slope
         surface_at_paved_edge = insertion.y - drop
 
-        if self.shoulder_type == 'paved_top_slumped':
+        if self.shoulder_type == "paved_top_slumped":
             # For slumped shoulders, attachment is at outermost extent of base
             # The base extends along the foreslope from the paved edge
             total_depth = sum(layer.thickness for layer in self.pavement_layers)
@@ -97,17 +99,17 @@ class Shoulder(RoadComponent):
             # Starting at surface_at_paved_edge, dropping total_depth vertically
             attachment_y = surface_at_paved_edge - total_depth
 
-            if direction == 'right':
+            if direction == "right":
                 return ConnectionPoint(
                     x=insertion.x + self.width + base_extension,
                     y=attachment_y,
-                    description=f"Shoulder attachment ({direction})"
+                    description=f"Shoulder attachment ({direction})",
                 )
             else:  # left
                 return ConnectionPoint(
                     x=insertion.x - self.width - base_extension,
                     y=attachment_y,
-                    description=f"Shoulder attachment ({direction})"
+                    description=f"Shoulder attachment ({direction})",
                 )
         else:  # fully_paved
             # For fully paved, attachment is at the outermost bottom corner
@@ -116,22 +118,20 @@ class Shoulder(RoadComponent):
             bottom_extension = total_depth * self.foreslope_ratio
             attachment_y = surface_at_paved_edge - total_depth
 
-            if direction == 'right':
+            if direction == "right":
                 return ConnectionPoint(
                     x=insertion.x + self.width + bottom_extension,
                     y=attachment_y,
-                    description=f"Shoulder attachment ({direction})"
+                    description=f"Shoulder attachment ({direction})",
                 )
             else:  # left
                 return ConnectionPoint(
                     x=insertion.x - self.width - bottom_extension,
                     y=attachment_y,
-                    description=f"Shoulder attachment ({direction})"
+                    description=f"Shoulder attachment ({direction})",
                 )
 
-    def to_geometry(
-        self, insertion: ConnectionPoint, direction: Direction
-    ) -> ComponentGeometry:
+    def to_geometry(self, insertion: ConnectionPoint, direction: Direction) -> ComponentGeometry:
         """Create shoulder geometry based on shoulder type.
 
         Args:
@@ -141,7 +141,7 @@ class Shoulder(RoadComponent):
         Returns:
             ComponentGeometry with one trapezoid polygon per pavement layer
         """
-        if self.shoulder_type == 'fully_paved':
+        if self.shoulder_type == "fully_paved":
             return self._create_fully_paved_geometry(insertion, direction)
         else:  # 'paved_top_slumped'
             return self._create_slumped_geometry(insertion, direction)
@@ -185,16 +185,16 @@ class Shoulder(RoadComponent):
             top_extension = layer_top_depth * self.foreslope_ratio
             bottom_extension = layer_bottom_depth * self.foreslope_ratio
 
-            if direction == 'right':
+            if direction == "right":
                 # Outside x-coordinates extend beyond paved width
                 outside_top_x = insertion.x + self.width + top_extension
                 outside_bottom_x = insertion.x + self.width + bottom_extension
 
                 vertices = [
-                    Point2D(insertion.x, inside_top_y),        # Inside, top
-                    Point2D(outside_top_x, outside_top_y),     # Outside, top
-                    Point2D(outside_bottom_x, outside_bottom_y), # Outside, bottom
-                    Point2D(insertion.x, inside_bottom_y),     # Inside, bottom
+                    Point2D(insertion.x, inside_top_y),  # Inside, top
+                    Point2D(outside_top_x, outside_top_y),  # Outside, top
+                    Point2D(outside_bottom_x, outside_bottom_y),  # Outside, bottom
+                    Point2D(insertion.x, inside_bottom_y),  # Inside, bottom
                 ]
             else:  # left
                 # For left side, extend in negative X direction
@@ -202,10 +202,10 @@ class Shoulder(RoadComponent):
                 outside_bottom_x = insertion.x - self.width - bottom_extension
 
                 vertices = [
-                    Point2D(insertion.x, inside_top_y),        # Inside, top
-                    Point2D(insertion.x, inside_bottom_y),     # Inside, bottom
-                    Point2D(outside_bottom_x, outside_bottom_y), # Outside, bottom
-                    Point2D(outside_top_x, outside_top_y),     # Outside, top
+                    Point2D(insertion.x, inside_top_y),  # Inside, top
+                    Point2D(insertion.x, inside_bottom_y),  # Inside, bottom
+                    Point2D(outside_bottom_x, outside_bottom_y),  # Outside, bottom
+                    Point2D(outside_top_x, outside_top_y),  # Outside, top
                 ]
 
             polygons.append(Polygon(exterior=vertices))
@@ -237,12 +237,10 @@ class Shoulder(RoadComponent):
 
         # Separate asphalt and crushed rock layers
         asphalt_layers = [
-            layer for layer in self.pavement_layers
-            if isinstance(layer, AsphaltLayer)
+            layer for layer in self.pavement_layers if isinstance(layer, AsphaltLayer)
         ]
         base_layers = [
-            layer for layer in self.pavement_layers
-            if isinstance(layer, CrushedRockLayer)
+            layer for layer in self.pavement_layers if isinstance(layer, CrushedRockLayer)
         ]
 
         # Track current outside width (starts at paved width)
@@ -265,25 +263,25 @@ class Shoulder(RoadComponent):
             top_outside_width = current_outside_width
             bottom_outside_width = current_outside_width + layer.thickness
 
-            if direction == 'right':
+            if direction == "right":
                 outside_top_x = insertion.x + top_outside_width
                 outside_bottom_x = insertion.x + bottom_outside_width
 
                 vertices = [
-                    Point2D(insertion.x, inside_top_y),        # Inside, top
-                    Point2D(outside_top_x, outside_top_y),     # Outside, top
-                    Point2D(outside_bottom_x, outside_bottom_y), # Outside, bottom
-                    Point2D(insertion.x, inside_bottom_y),     # Inside, bottom
+                    Point2D(insertion.x, inside_top_y),  # Inside, top
+                    Point2D(outside_top_x, outside_top_y),  # Outside, top
+                    Point2D(outside_bottom_x, outside_bottom_y),  # Outside, bottom
+                    Point2D(insertion.x, inside_bottom_y),  # Inside, bottom
                 ]
             else:  # left
                 outside_top_x = insertion.x - top_outside_width
                 outside_bottom_x = insertion.x - bottom_outside_width
 
                 vertices = [
-                    Point2D(insertion.x, inside_top_y),        # Inside, top
-                    Point2D(insertion.x, inside_bottom_y),     # Inside, bottom
-                    Point2D(outside_bottom_x, outside_bottom_y), # Outside, bottom
-                    Point2D(outside_top_x, outside_top_y),     # Outside, top
+                    Point2D(insertion.x, inside_top_y),  # Inside, top
+                    Point2D(insertion.x, inside_bottom_y),  # Inside, bottom
+                    Point2D(outside_bottom_x, outside_bottom_y),  # Outside, bottom
+                    Point2D(outside_top_x, outside_top_y),  # Outside, top
                 ]
 
             polygons.append(Polygon(exterior=vertices))
@@ -313,7 +311,7 @@ class Shoulder(RoadComponent):
             outside_bottom_y = surface_at_paved_edge - layer_bottom_depth
             bottom_extension = layer_bottom_depth * self.foreslope_ratio
 
-            if direction == 'right':
+            if direction == "right":
                 # 5-vertex polygon:
                 # 1. Inside top (at base of asphalt stack)
                 # 2. Outside top at slumped asphalt edge
@@ -357,9 +355,7 @@ class Shoulder(RoadComponent):
 
         return self._build_geometry(polygons, direction)
 
-    def _build_geometry(
-        self, polygons: List[Polygon], direction: Direction
-    ) -> ComponentGeometry:
+    def _build_geometry(self, polygons: list[Polygon], direction: Direction) -> ComponentGeometry:
         """Build ComponentGeometry with metadata from polygons.
 
         Args:
@@ -373,35 +369,35 @@ class Shoulder(RoadComponent):
         layer_info = []
         for i, layer in enumerate(self.pavement_layers):
             layer_dict = {
-                'layer_index': i,
-                'type': type(layer).__name__,
-                'thickness': layer.thickness,
+                "layer_index": i,
+                "type": type(layer).__name__,
+                "thickness": layer.thickness,
             }
-            if hasattr(layer, 'binder_type'):
-                layer_dict['binder_type'] = layer.binder_type
-            if hasattr(layer, 'compressive_strength'):
-                layer_dict['compressive_strength'] = layer.compressive_strength
-            if hasattr(layer, 'material_type'):
-                layer_dict['material_type'] = layer.material_type
+            if hasattr(layer, "binder_type"):
+                layer_dict["binder_type"] = layer.binder_type
+            if hasattr(layer, "compressive_strength"):
+                layer_dict["compressive_strength"] = layer.compressive_strength
+            if hasattr(layer, "material_type"):
+                layer_dict["material_type"] = layer.material_type
             layer_info.append(layer_dict)
 
         return ComponentGeometry(
             polygons=polygons,
             metadata={
-                'component_type': 'Shoulder',
-                'width': self.width,
-                'cross_slope': self.cross_slope,
-                'foreslope_ratio': self.foreslope_ratio,
-                'shoulder_type': self.shoulder_type,
-                'paved': self.paved,
-                'assembly_direction': direction,
-                'layer_count': len(self.pavement_layers),
-                'total_depth': sum(layer.thickness for layer in self.pavement_layers),
-                'layers': layer_info
-            }
+                "component_type": "Shoulder",
+                "width": self.width,
+                "cross_slope": self.cross_slope,
+                "foreslope_ratio": self.foreslope_ratio,
+                "shoulder_type": self.shoulder_type,
+                "paved": self.paved,
+                "assembly_direction": direction,
+                "layer_count": len(self.pavement_layers),
+                "total_depth": sum(layer.thickness for layer in self.pavement_layers),
+                "layers": layer_info,
+            },
         )
 
-    def validate(self) -> List[str]:
+    def validate(self) -> list[str]:
         """Validate shoulder parameters and pavement layers.
 
         Returns:
@@ -413,21 +409,14 @@ class Shoulder(RoadComponent):
         if self.width <= 0:
             errors.append("Shoulder width must be positive")
         elif self.width < 0.6:
-            errors.append(
-                "Shoulder width below typical minimum (0.6m/2ft) "
-                "- verify design"
-            )
+            errors.append("Shoulder width below typical minimum (0.6m/2ft) - verify design")
         elif self.width > 3.6:
-            errors.append(
-                "Shoulder width exceeds typical maximum (3.6m/12ft) "
-                "- verify design"
-            )
+            errors.append("Shoulder width exceeds typical maximum (3.6m/12ft) - verify design")
 
         # Cross slope validation
         if abs(self.cross_slope) > 0.06:
             errors.append(
-                f"Cross slope {self.cross_slope:.1%} exceeds "
-                f"typical maximum (6%) - verify design"
+                f"Cross slope {self.cross_slope:.1%} exceeds typical maximum (6%) - verify design"
             )
         elif abs(self.cross_slope) < 0.015:
             errors.append(
@@ -438,19 +427,14 @@ class Shoulder(RoadComponent):
         # Foreslope validation
         if self.foreslope_ratio < 2.0:
             errors.append(
-                f"Foreslope {self.foreslope_ratio}:1 is too steep "
-                f"- typical minimum is 2:1"
+                f"Foreslope {self.foreslope_ratio}:1 is too steep - typical minimum is 2:1"
             )
         elif self.foreslope_ratio > 10.0:
             errors.append(
-                f"Foreslope {self.foreslope_ratio}:1 is very flat "
-                f"- typical maximum is 10:1"
+                f"Foreslope {self.foreslope_ratio}:1 is very flat - typical maximum is 10:1"
             )
         elif self.foreslope_ratio < 4.0:
-            errors.append(
-                f"Foreslope {self.foreslope_ratio}:1 may require barrier "
-                f"- verify design"
-            )
+            errors.append(f"Foreslope {self.foreslope_ratio}:1 may require barrier - verify design")
 
         # Pavement layer validation (only if paved)
         if self.paved:

@@ -22,8 +22,8 @@
   <rect x="10" y="80" width="15" height="15" fill="#7F8C8D"/>
   <text x="30" y="92" font-family="Arial" font-size="12">CrushedRockLayer</text>
   <!-- Scale -->
-  <line x1="10" y1="706.0000000000042" x2="210.0" y2="706.0000000000042" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="706.0000000000042" x2="314.7999902464003" y2="706.0000000000042" stroke="black" stroke-width="2"/>
   <line x1="10" y1="701.0000000000042" x2="10" y2="711.0000000000042" stroke="black" stroke-width="2"/>
-  <line x1="210.0" y1="701.0000000000042" x2="210.0" y2="711.0000000000042" stroke="black" stroke-width="2"/>
-  <text x="110.0" y="726.0000000000042" font-family="Arial" font-size="12" text-anchor="middle">2m</text>
+  <line x1="314.7999902464003" y1="701.0000000000042" x2="314.7999902464003" y2="711.0000000000042" stroke="black" stroke-width="2"/>
+  <text x="162.39999512320014" y="726.0000000000042" font-family="Arial" font-size="12" text-anchor="middle">10ft</text>
 </svg>

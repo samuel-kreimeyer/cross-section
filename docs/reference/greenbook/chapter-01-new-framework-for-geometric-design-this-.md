@@ -1,0 +1,14 @@
+# CHAPTER 1  NEW FRAMEWORK FOR GEOMETRIC DESIGN: THIS PAGE INTENTIONALLY LEFT BLANK. & LIST OF FIGURES
+
+- Source: GreenBook.pdf
+- Generated: 2026-01-03T08:11:58+00:00
+- Chunk: 3/28
+- Estimated tokens: ~39
+- Total pages: 1048
+- Type: sections
+
+## THIS PAGE INTENTIONALLY LEFT BLANK.
+
+![Image](images/image_000016_e9ec2cda76cb09337c10179ee726701fd10214f6f219ccc9450826d12a619765.png)
+
+## LIST OF FIGURES

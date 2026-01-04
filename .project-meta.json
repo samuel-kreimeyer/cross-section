@@ -1,0 +1,10 @@
+{
+  "name": "cross-section",
+  "status": "implementation",
+  "category": "civil-engineering",
+  "type": "product",
+  "active": true,
+  "description": "Modular system for creating road/highway cross-sections",
+  "tech": ["Python", "CadQuery", "Shapely", "pytest"],
+  "links_to": ["design-criteria", "super-elevator"]
+}

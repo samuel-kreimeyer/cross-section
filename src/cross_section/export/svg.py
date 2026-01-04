@@ -1,6 +1,7 @@
 """Simple SVG exporter - Pure Python, no dependencies."""
 
-from typing import TextIO
+from typing import Literal, TextIO
+
 from ..core.domain.section import SectionGeometry
 
 
@@ -13,21 +14,28 @@ class SimpleSVGExporter:
 
     # Color palette for different layer types
     COLORS = {
-        'AsphaltLayer': '#2C3E50',      # Dark gray-blue
-        'ConcreteLayer': '#95A5A6',      # Light gray
-        'CrushedRockLayer': '#7F8C8D',   # Medium gray
-        'default': '#BDC3C7'             # Very light gray
+        "AsphaltLayer": "#2C3E50",  # Dark gray-blue
+        "ConcreteLayer": "#95A5A6",  # Light gray
+        "CrushedRockLayer": "#7F8C8D",  # Medium gray
+        "default": "#BDC3C7",  # Very light gray
     }
 
-    def __init__(self, scale: float = 100.0, vertical_exaggeration: float = 1.0):
+    def __init__(
+        self,
+        scale: float = 100.0,
+        vertical_exaggeration: float = 1.0,
+        units: Literal["imperial", "metric"] = "imperial",
+    ):
         """Initialize SVG exporter.
 
         Args:
             scale: Pixels per meter (default 100 = 1m = 100px)
             vertical_exaggeration: Factor to exaggerate vertical dimensions for visibility
+            units: Unit system for scale labeling ('imperial' or 'metric')
         """
         self.scale = scale
         self.vertical_exaggeration = vertical_exaggeration
+        self.units = units
 
     def export(self, geometry: SectionGeometry, output: TextIO) -> None:
         """Export section geometry to SVG.
@@ -39,7 +47,7 @@ class SimpleSVGExporter:
         if not geometry.components:
             output.write('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">')
             output.write('<text x="10" y="50">Empty section</text>')
-            output.write('</svg>')
+            output.write("</svg>")
             return
 
         # Calculate bounds
@@ -67,7 +75,7 @@ class SimpleSVGExporter:
         output.write(f'viewBox="0 0 {svg_width:.1f} {svg_height:.1f}">\n')
 
         # Add title
-        output.write(f'  <title>{geometry.metadata.get("name", "Road Section")}</title>\n')
+        output.write(f"  <title>{geometry.metadata.get('name', 'Road Section')}</title>\n")
 
         # Add white background
         output.write(f'  <rect width="{svg_width:.1f}" height="{svg_height:.1f}" fill="white"/>\n')
@@ -81,16 +89,16 @@ class SimpleSVGExporter:
             for poly_idx, polygon in enumerate(component.polygons):
                 # Get layer info from metadata if available
                 layer_info = None
-                if 'layers' in component.metadata:
-                    layers = component.metadata['layers']
+                if "layers" in component.metadata:
+                    layers = component.metadata["layers"]
                     if poly_idx < len(layers):
                         layer_info = layers[poly_idx]
 
                 # Determine color based on layer type
-                if layer_info and 'type' in layer_info:
-                    color = self.COLORS.get(layer_info['type'], self.COLORS['default'])
+                if layer_info and "type" in layer_info:
+                    color = self.COLORS.get(layer_info["type"], self.COLORS["default"])
                 else:
-                    color = self.COLORS['default']
+                    color = self.COLORS["default"]
 
                 # Convert polygon vertices to SVG path
                 points = []
@@ -106,7 +114,8 @@ class SimpleSVGExporter:
                 output.write(f'fill="{color}" stroke="black" stroke-width="1"/>\n')
 
             # Draw component's polylines (e.g., ditch void boundaries)
-            for polyline in component.polylines:
+            polyline_styles = component.metadata.get("polyline_styles", [])
+            for poly_idx, polyline in enumerate(component.polylines):
                 # Convert polyline vertices to SVG path
                 points = []
                 for point in polyline:
@@ -118,10 +127,21 @@ class SimpleSVGExporter:
                 # Draw polyline (no fill, just stroke)
                 points_str = " ".join(points)
                 output.write(f'      <polyline points="{points_str}" ')
-                output.write('fill="none" stroke="black" stroke-width="1.5"/>\n')
+                style = polyline_styles[poly_idx] if poly_idx < len(polyline_styles) else {}
+                dasharray = style.get("stroke_dasharray")
+                stroke_width = style.get("stroke_width", "1.5")
+                if dasharray:
+                    output.write(
+                        f'fill="none" stroke="black" stroke-width="{stroke_width}" '
+                        f'stroke-dasharray="{dasharray}"/>\n'
+                    )
+                else:
+                    output.write(
+                        f'fill="none" stroke="black" stroke-width="{stroke_width}"/>\n'
+                    )
 
-        output.write('    </g>\n')
-        output.write('  </g>\n')
+        output.write("    </g>\n")
+        output.write("  </g>\n")
 
         # Add legend (not transformed)
         self._add_legend(output, geometry, svg_width, svg_height)
@@ -129,75 +149,82 @@ class SimpleSVGExporter:
         # Add scale indicator
         self._add_scale(output, svg_height, view_width)
 
-        output.write('</svg>\n')
+        output.write("</svg>\n")
 
-    def _add_legend(self, output: TextIO, geometry: SectionGeometry,
-                    svg_width: float, svg_height: float) -> None:
+    def _add_legend(
+        self, output: TextIO, geometry: SectionGeometry, svg_width: float, svg_height: float
+    ) -> None:
         """Add legend showing layer types."""
         legend_x = 10
         legend_y = 20
         line_height = 20
 
-        output.write('  <!-- Legend -->\n')
+        output.write("  <!-- Legend -->\n")
         output.write(f'  <text x="{legend_x}" y="{legend_y}" font-family="Arial" ')
         output.write('font-size="14" font-weight="bold">')
-        output.write(f'{geometry.metadata.get("name", "Section")}</text>\n')
+        output.write(f"{geometry.metadata.get('name', 'Section')}</text>\n")
 
         # Collect unique layer types
         layer_types = set()
         for component in geometry.components:
-            if 'layers' in component.metadata:
-                for layer in component.metadata['layers']:
-                    if 'type' in layer:
-                        layer_types.add(layer['type'])
+            if "layers" in component.metadata:
+                for layer in component.metadata["layers"]:
+                    if "type" in layer:
+                        layer_types.add(layer["type"])
 
         # Draw legend items
         y = legend_y + line_height
         for layer_type in sorted(layer_types):
-            color = self.COLORS.get(layer_type, self.COLORS['default'])
+            color = self.COLORS.get(layer_type, self.COLORS["default"])
             output.write(
-                f'  <rect x="{legend_x}" y="{y}" width="15" height="15" '
-                f'fill="{color}"/>\n'
+                f'  <rect x="{legend_x}" y="{y}" width="15" height="15" fill="{color}"/>\n'
             )
             output.write(
-                f'  <text x="{legend_x + 20}" y="{y + 12}" '
-                f'font-family="Arial" font-size="12">'
+                f'  <text x="{legend_x + 20}" y="{y + 12}" font-family="Arial" font-size="12">'
             )
-            output.write(f'{layer_type}</text>\n')
+            output.write(f"{layer_type}</text>\n")
             y += line_height
 
     def _add_scale(self, output: TextIO, svg_height: float, view_width: float) -> None:
         """Add scale indicator."""
-        # Determine scale bar length (1m, 2m, 5m, or 10m)
-        if view_width < 5:
-            scale_length = 1.0
-        elif view_width < 15:
-            scale_length = 2.0
-        elif view_width < 30:
-            scale_length = 5.0
+        # Determine scale bar length based on unit system
+        if self.units == "imperial":
+            feet_per_meter = 3.28084
+            view_width_ft = view_width * feet_per_meter
+            if view_width_ft < 20:
+                scale_length_ft = 5.0
+            elif view_width_ft < 50:
+                scale_length_ft = 10.0
+            elif view_width_ft < 100:
+                scale_length_ft = 20.0
+            else:
+                scale_length_ft = 50.0
+            scale_length = scale_length_ft / feet_per_meter
+            scale_label = f"{scale_length_ft:.0f}ft"
         else:
-            scale_length = 10.0
+            if view_width < 5:
+                scale_length = 1.0
+            elif view_width < 15:
+                scale_length = 2.0
+            elif view_width < 30:
+                scale_length = 5.0
+            else:
+                scale_length = 10.0
+            scale_label = f"{scale_length:.0f}m"
 
         scale_px = scale_length * self.scale
         x_start = 10
         y_pos = svg_height - 30
 
-        output.write('  <!-- Scale -->\n')
-        output.write(
-            f'  <line x1="{x_start}" y1="{y_pos}" '
-            f'x2="{x_start + scale_px}" y2="{y_pos}" '
-        )
+        output.write("  <!-- Scale -->\n")
+        output.write(f'  <line x1="{x_start}" y1="{y_pos}" x2="{x_start + scale_px}" y2="{y_pos}" ')
         output.write('stroke="black" stroke-width="2"/>\n')
-        output.write(
-            f'  <line x1="{x_start}" y1="{y_pos - 5}" '
-            f'x2="{x_start}" y2="{y_pos + 5}" '
-        )
+        output.write(f'  <line x1="{x_start}" y1="{y_pos - 5}" x2="{x_start}" y2="{y_pos + 5}" ')
         output.write('stroke="black" stroke-width="2"/>\n')
         output.write(f'  <line x1="{x_start + scale_px}" y1="{y_pos - 5}" ')
         output.write(
-            f'x2="{x_start + scale_px}" y2="{y_pos + 5}" '
-            f'stroke="black" stroke-width="2"/>\n'
+            f'x2="{x_start + scale_px}" y2="{y_pos + 5}" stroke="black" stroke-width="2"/>\n'
         )
-        output.write(f'  <text x="{x_start + scale_px/2}" y="{y_pos + 20}" ')
+        output.write(f'  <text x="{x_start + scale_px / 2}" y="{y_pos + 20}" ')
         output.write('font-family="Arial" font-size="12" text-anchor="middle">')
-        output.write(f'{scale_length:.0f}m</text>\n')
+        output.write(f"{scale_label}</text>\n")

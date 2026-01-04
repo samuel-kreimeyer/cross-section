@@ -1,9 +1,9 @@
 """Road section assembly and coordination."""
 
 from dataclasses import dataclass, field
-from typing import List
-from .base import RoadComponent, Direction
-from ..geometry.primitives import ConnectionPoint, ComponentGeometry
+
+from ..geometry.primitives import ComponentGeometry, ConnectionPoint
+from .base import Direction, RoadComponent
 
 
 @dataclass
@@ -37,7 +37,7 @@ class SectionGeometry:
         metadata: Section-level metadata
     """
 
-    components: List[ComponentGeometry] = field(default_factory=list)
+    components: list[ComponentGeometry] = field(default_factory=list)
     metadata: dict = field(default_factory=dict)
 
     def bounds(self) -> tuple[float, float, float, float]:
@@ -82,8 +82,8 @@ class RoadSection:
 
     name: str
     control_point: ControlPoint
-    left_components: List[RoadComponent] = field(default_factory=list)
-    right_components: List[RoadComponent] = field(default_factory=list)
+    left_components: list[RoadComponent] = field(default_factory=list)
+    right_components: list[RoadComponent] = field(default_factory=list)
 
     def add_component_left(self, component: RoadComponent) -> None:
         """Add a component to the left side of the control point.
@@ -112,12 +112,12 @@ class RoadSection:
             component: The component to add
             direction: Which side to add the component ('left' or 'right')
         """
-        if direction == 'left':
+        if direction == "left":
             self.add_component_left(component)
         else:
             self.add_component_right(component)
 
-    def validate(self) -> List[str]:
+    def validate(self) -> list[str]:
         """Validate the complete section.
 
         This validates:
@@ -151,8 +151,8 @@ class RoadSection:
         current_attachment = self.control_point.to_connection_point()
         for i, component in enumerate(self.left_components):
             try:
-                insertion = component.get_insertion_point(current_attachment, 'left')
-                current_attachment = component.get_attachment_point(insertion, 'left')
+                insertion = component.get_insertion_point(current_attachment, "left")
+                current_attachment = component.get_attachment_point(insertion, "left")
             except Exception as e:
                 errors.append(
                     f"Left component {i} ({type(component).__name__}): "
@@ -163,8 +163,8 @@ class RoadSection:
         current_attachment = self.control_point.to_connection_point()
         for i, component in enumerate(self.right_components):
             try:
-                insertion = component.get_insertion_point(current_attachment, 'right')
-                current_attachment = component.get_attachment_point(insertion, 'right')
+                insertion = component.get_insertion_point(current_attachment, "right")
+                current_attachment = component.get_attachment_point(insertion, "right")
             except Exception as e:
                 errors.append(
                     f"Right component {i} ({type(component).__name__}): "
@@ -190,31 +190,31 @@ class RoadSection:
         # Assemble left components (extending in negative X direction)
         current_attachment = self.control_point.to_connection_point()
         for component in self.left_components:
-            insertion = component.get_insertion_point(current_attachment, 'left')
-            component_geom = component.to_geometry(insertion, 'left')
+            insertion = component.get_insertion_point(current_attachment, "left")
+            component_geom = component.to_geometry(insertion, "left")
             geometries.append(component_geom)
-            current_attachment = component.get_attachment_point(insertion, 'left')
+            current_attachment = component.get_attachment_point(insertion, "left")
 
         # Assemble right components (extending in positive X direction)
         current_attachment = self.control_point.to_connection_point()
         for component in self.right_components:
-            insertion = component.get_insertion_point(current_attachment, 'right')
-            component_geom = component.to_geometry(insertion, 'right')
+            insertion = component.get_insertion_point(current_attachment, "right")
+            component_geom = component.to_geometry(insertion, "right")
             geometries.append(component_geom)
-            current_attachment = component.get_attachment_point(insertion, 'right')
+            current_attachment = component.get_attachment_point(insertion, "right")
 
         return SectionGeometry(
             components=geometries,
             metadata={
-                'name': self.name,
-                'control_point': {
-                    'x': self.control_point.x,
-                    'elevation': self.control_point.elevation
+                "name": self.name,
+                "control_point": {
+                    "x": self.control_point.x,
+                    "elevation": self.control_point.elevation,
                 },
-                'left_component_count': len(self.left_components),
-                'right_component_count': len(self.right_components),
-                'total_component_count': len(self.left_components) + len(self.right_components)
-            }
+                "left_component_count": len(self.left_components),
+                "right_component_count": len(self.right_components),
+                "total_component_count": len(self.left_components) + len(self.right_components),
+            },
         )
 
     def __repr__(self) -> str:

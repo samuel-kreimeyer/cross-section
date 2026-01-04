@@ -1,9 +1,9 @@
 """Slope components for roadside features."""
 
 from dataclasses import dataclass
-from typing import List, Optional
-from ..base import RoadComponent, Direction
-from ...geometry.primitives import ConnectionPoint, ComponentGeometry, Polygon, Point2D
+
+from ...geometry.primitives import ComponentGeometry, ConnectionPoint, Point2D, Polygon
+from ..base import Direction, RoadComponent
 
 
 @dataclass
@@ -22,10 +22,10 @@ class Slope(RoadComponent):
         thickness: Thickness of slope material if applicable (0 for just surface)
     """
 
-    horizontal_run: Optional[float] = None
-    vertical_drop: Optional[float] = None
-    slope_ratio: Optional[float] = None  # H:V ratio (horizontal : vertical)
-    surface_type: str = 'grass'
+    horizontal_run: float | None = None
+    vertical_drop: float | None = None
+    slope_ratio: float | None = None  # H:V ratio (horizontal : vertical)
+    surface_type: str = "grass"
     thickness: float = 0.0  # Thickness of material (0 for surface only)
 
     def __post_init__(self) -> None:
@@ -58,7 +58,7 @@ class Slope(RoadComponent):
         return ConnectionPoint(
             x=previous_attachment.x,
             y=previous_attachment.y,
-            description=f"Slope insertion ({direction})"
+            description=f"Slope insertion ({direction})",
         )
 
     def get_attachment_point(
@@ -75,22 +75,20 @@ class Slope(RoadComponent):
         """
         attachment_y = insertion.y - self.vertical_drop
 
-        if direction == 'right':
+        if direction == "right":
             return ConnectionPoint(
                 x=insertion.x + self.horizontal_run,
                 y=attachment_y,
-                description=f"Slope attachment ({direction})"
+                description=f"Slope attachment ({direction})",
             )
         else:  # left
             return ConnectionPoint(
                 x=insertion.x - self.horizontal_run,
                 y=attachment_y,
-                description=f"Slope attachment ({direction})"
+                description=f"Slope attachment ({direction})",
             )
 
-    def to_geometry(
-        self, insertion: ConnectionPoint, direction: Direction
-    ) -> ComponentGeometry:
+    def to_geometry(self, insertion: ConnectionPoint, direction: Direction) -> ComponentGeometry:
         """Create slope geometry.
 
         Creates a triangular or trapezoidal polygon representing the slope.
@@ -108,7 +106,7 @@ class Slope(RoadComponent):
 
         if self.thickness == 0:
             # Simple surface line (represented as very thin polygon)
-            if direction == 'right':
+            if direction == "right":
                 vertices = [
                     Point2D(insertion.x, insertion.y),
                     Point2D(attachment.x, attachment.y),
@@ -124,7 +122,7 @@ class Slope(RoadComponent):
                 ]
         else:
             # Material with thickness
-            if direction == 'right':
+            if direction == "right":
                 vertices = [
                     Point2D(insertion.x, insertion.y),  # Top inside
                     Point2D(attachment.x, attachment.y),  # Top outside
@@ -142,23 +140,22 @@ class Slope(RoadComponent):
         polygon = Polygon(exterior=vertices)
 
         slope_ratio = (
-            self.slope_ratio if self.slope_ratio
-            else self.horizontal_run / abs(self.vertical_drop)
+            self.slope_ratio if self.slope_ratio else self.horizontal_run / abs(self.vertical_drop)
         )
         return ComponentGeometry(
             polygons=[polygon],
             metadata={
-                'component_type': 'Slope',
-                'horizontal_run': self.horizontal_run,
-                'vertical_drop': self.vertical_drop,
-                'slope_ratio': slope_ratio,
-                'surface_type': self.surface_type,
-                'thickness': self.thickness,
-                'assembly_direction': direction,
-            }
+                "component_type": "Slope",
+                "horizontal_run": self.horizontal_run,
+                "vertical_drop": self.vertical_drop,
+                "slope_ratio": slope_ratio,
+                "surface_type": self.surface_type,
+                "thickness": self.thickness,
+                "assembly_direction": direction,
+            },
         )
 
-    def validate(self) -> List[str]:
+    def validate(self) -> list[str]:
         """Validate slope parameters.
 
         Returns:
@@ -176,19 +173,13 @@ class Slope(RoadComponent):
         actual_ratio = self.horizontal_run / abs(self.vertical_drop)
 
         if actual_ratio < 1.0:
-            errors.append(
-                f"Slope ratio {actual_ratio:.1f}:1 is steeper than 1:1 - may be unsafe"
-            )
+            errors.append(f"Slope ratio {actual_ratio:.1f}:1 is steeper than 1:1 - may be unsafe")
         elif actual_ratio > 20.0:
-            errors.append(
-                f"Slope ratio {actual_ratio:.1f}:1 is very flat - verify design"
-            )
+            errors.append(f"Slope ratio {actual_ratio:.1f}:1 is very flat - verify design")
 
         if self.thickness < 0:
             errors.append("Thickness must be non-negative")
         elif self.thickness > 1.0:
-            errors.append(
-                f"Thickness {self.thickness:.3f}m is very large - verify design"
-            )
+            errors.append(f"Thickness {self.thickness:.3f}m is very large - verify design")
 
         return errors

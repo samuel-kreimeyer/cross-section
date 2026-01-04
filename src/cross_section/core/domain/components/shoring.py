@@ -1,9 +1,9 @@
 """Shoring and temporary retaining wall components."""
 
 from dataclasses import dataclass
-from typing import List
-from ..base import RoadComponent, Direction
-from ...geometry.primitives import ConnectionPoint, ComponentGeometry, Polygon, Point2D
+
+from ...geometry.primitives import ComponentGeometry, ConnectionPoint, Point2D, Polygon
+from ..base import Direction, RoadComponent
 
 
 @dataclass
@@ -28,7 +28,7 @@ class Shoring(RoadComponent):
 
     height: float = 1.219  # 4 feet in meters
     thickness: float = 0.203  # 8 inches in meters
-    mode: str = 'fill'  # 'fill' or 'cut'
+    mode: str = "fill"  # 'fill' or 'cut'
 
     def get_insertion_point(
         self, previous_attachment: ConnectionPoint, direction: Direction
@@ -45,11 +45,11 @@ class Shoring(RoadComponent):
         Returns:
             The insertion point (same as previous attachment)
         """
-        mode_description = "top" if self.mode == 'fill' else "bottom"
+        mode_description = "top" if self.mode == "fill" else "bottom"
         return ConnectionPoint(
             x=previous_attachment.x,
             y=previous_attachment.y,
-            description=f"Shoring insertion ({mode_description}, {direction})"
+            description=f"Shoring insertion ({mode_description}, {direction})",
         )
 
     def get_attachment_point(
@@ -67,29 +67,27 @@ class Shoring(RoadComponent):
         Returns:
             The attachment point for the next component
         """
-        if self.mode == 'fill':
+        if self.mode == "fill":
             # Fill: attachment is at bottom (down from insertion)
             attachment_y = insertion.y - self.height
         else:  # cut
             # Cut: attachment is at top (up from insertion)
             attachment_y = insertion.y + self.height
 
-        if direction == 'right':
+        if direction == "right":
             return ConnectionPoint(
                 x=insertion.x + self.thickness,
                 y=attachment_y,
-                description=f"Shoring attachment ({self.mode}, {direction})"
+                description=f"Shoring attachment ({self.mode}, {direction})",
             )
         else:  # left
             return ConnectionPoint(
                 x=insertion.x - self.thickness,
                 y=attachment_y,
-                description=f"Shoring attachment ({self.mode}, {direction})"
+                description=f"Shoring attachment ({self.mode}, {direction})",
             )
 
-    def to_geometry(
-        self, insertion: ConnectionPoint, direction: Direction
-    ) -> ComponentGeometry:
+    def to_geometry(self, insertion: ConnectionPoint, direction: Direction) -> ComponentGeometry:
         """Create shoring wall geometry as a rectangular polygon.
 
         The geometry represents the corrugated steel sheet wall as a solid
@@ -103,9 +101,9 @@ class Shoring(RoadComponent):
         Returns:
             ComponentGeometry with a single polygon representing the shoring wall
         """
-        if self.mode == 'fill':
+        if self.mode == "fill":
             # Fill: wall extends downward from insertion point
-            if direction == 'right':
+            if direction == "right":
                 vertices = [
                     Point2D(insertion.x, insertion.y),  # Top inside
                     # Top outside
@@ -133,7 +131,7 @@ class Shoring(RoadComponent):
                 ]
         else:  # cut
             # Cut: wall extends upward from insertion point
-            if direction == 'right':
+            if direction == "right":
                 vertices = [
                     Point2D(insertion.x, insertion.y),  # Bottom inside
                     # Bottom outside
@@ -165,16 +163,16 @@ class Shoring(RoadComponent):
         return ComponentGeometry(
             polygons=[polygon],
             metadata={
-                'component_type': 'Shoring',
-                'height': self.height,
-                'thickness': self.thickness,
-                'mode': self.mode,
-                'assembly_direction': direction,
-                'material': 'corrugated_steel',
-            }
+                "component_type": "Shoring",
+                "height": self.height,
+                "thickness": self.thickness,
+                "mode": self.mode,
+                "assembly_direction": direction,
+                "material": "corrugated_steel",
+            },
         )
 
-    def validate(self) -> List[str]:
+    def validate(self) -> list[str]:
         """Validate shoring parameters.
 
         Returns:
@@ -186,9 +184,7 @@ class Shoring(RoadComponent):
         if self.height <= 0:
             errors.append("Height must be positive")
         elif self.height < 0.3:
-            errors.append(
-                f"Height {self.height:.3f}m is very short for shoring - verify design"
-            )
+            errors.append(f"Height {self.height:.3f}m is very short for shoring - verify design")
         elif self.height > 15.0:
             errors.append(
                 f"Height {self.height:.3f}m exceeds typical maximum for sheet pile shoring (15m) - "
@@ -199,9 +195,7 @@ class Shoring(RoadComponent):
         if self.thickness <= 0:
             errors.append("Thickness must be positive")
         elif self.thickness < 0.05:
-            errors.append(
-                f"Thickness {self.thickness:.3f}m is very thin - verify design"
-            )
+            errors.append(f"Thickness {self.thickness:.3f}m is very thin - verify design")
         elif self.thickness > 0.5:
             errors.append(
                 f"Thickness {self.thickness:.3f}m is very large "
@@ -209,7 +203,7 @@ class Shoring(RoadComponent):
             )
 
         # Mode validation
-        if self.mode not in ['fill', 'cut']:
+        if self.mode not in ["fill", "cut"]:
             errors.append(f"Mode must be 'fill' or 'cut', got '{self.mode}'")
 
         return errors

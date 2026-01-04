@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="458.3" height="403.5" viewBox="0 0 458.3 403.5">
+  <title>MSE Wall Demo - cut</title>
+  <rect width="458.3" height="403.5" fill="white"/>
+  <g transform="scale(1,-1)">
+    <g transform="translate(0,-403.5)">
+      <polygon points="87.43,316.03 105.72,316.03 105.72,96.58 87.43,96.58" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="60.00,96.58 133.15,96.58 133.15,60.00 60.00,60.00" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="69.14,343.46 124.01,343.46 124.01,282.50 69.14,282.50" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="105.72,316.03 398.33,169.73 105.72,169.73" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">MSE Wall Demo - cut</text>
+  <!-- Scale -->
+  <line x1="10" y1="373.464" x2="192.8799941478402" y2="373.464" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="368.464" x2="10" y2="378.464" stroke="black" stroke-width="2"/>
+  <line x1="192.8799941478402" y1="368.464" x2="192.8799941478402" y2="378.464" stroke="black" stroke-width="2"/>
+  <text x="101.4399970739201" y="393.464" font-family="Arial" font-size="12" text-anchor="middle">5ft</text>
+</svg>

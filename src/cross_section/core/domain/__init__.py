@@ -1,9 +1,9 @@
 """Domain model - Pure Python (vendorable to VIKTOR)."""
 
-from .base import RoadComponent, Direction
-from .section import RoadSection, ControlPoint, SectionGeometry
-from .components import TravelLane, Shoulder, Curb, Slope, Ditch, Shoring
+from .base import Direction, RoadComponent
+from .components import Curb, Ditch, Shoring, Shoulder, Slope, TravelLane
 from .pavement import AsphaltLayer, ConcreteLayer, CrushedRockLayer, PavementLayer
+from .section import ControlPoint, RoadSection, SectionGeometry
 
 __all__ = [
     "RoadComponent",

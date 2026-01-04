@@ -1,10 +1,10 @@
 """Curb and gutter components."""
 
 from dataclasses import dataclass
-from typing import List, Optional
-from ..base import RoadComponent, Direction
+
+from ...geometry.primitives import ComponentGeometry, ConnectionPoint, Point2D, Polygon
+from ..base import Direction, RoadComponent
 from ..pavement import ConcreteLayer
-from ...geometry.primitives import ConnectionPoint, ComponentGeometry, Polygon, Point2D
 
 
 @dataclass
@@ -31,7 +31,7 @@ class Curb(RoadComponent):
     curb_height: float = 0.15  # 150mm (6 inch) typical barrier curb
     curb_width_bottom: float = 0.15  # 150mm (6 inch) typical
     curb_width_top: float = 0.15  # 150mm (6 inch) typical (vertical face)
-    concrete: Optional[ConcreteLayer] = None
+    concrete: ConcreteLayer | None = None
 
     def __post_init__(self) -> None:
         """Set default concrete if not provided."""
@@ -40,7 +40,7 @@ class Curb(RoadComponent):
                 thickness=self.gutter_thickness,
                 compressive_strength=28.0,  # 28 MPa (4000 psi) typical
                 reinforced=False,
-                steel_per_cy=None
+                steel_per_cy=None,
             )
 
     def get_insertion_point(
@@ -58,7 +58,7 @@ class Curb(RoadComponent):
         return ConnectionPoint(
             x=previous_attachment.x,
             y=previous_attachment.y,
-            description=f"Curb insertion ({direction})"
+            description=f"Curb insertion ({direction})",
         )
 
     def get_attachment_point(
@@ -78,22 +78,20 @@ class Curb(RoadComponent):
         total_width = self.gutter_width + self.curb_width_bottom
         attachment_y = insertion.y - self.gutter_drop
 
-        if direction == 'right':
+        if direction == "right":
             return ConnectionPoint(
                 x=insertion.x + total_width,
                 y=attachment_y,
-                description=f"Curb attachment ({direction})"
+                description=f"Curb attachment ({direction})",
             )
         else:  # left
             return ConnectionPoint(
                 x=insertion.x - total_width,
                 y=attachment_y,
-                description=f"Curb attachment ({direction})"
+                description=f"Curb attachment ({direction})",
             )
 
-    def to_geometry(
-        self, insertion: ConnectionPoint, direction: Direction
-    ) -> ComponentGeometry:
+    def to_geometry(self, insertion: ConnectionPoint, direction: Direction) -> ComponentGeometry:
         """Create curb and gutter geometry as a single polygon.
 
         The geometry includes both the gutter (sloped horizontal portion) and
@@ -106,7 +104,7 @@ class Curb(RoadComponent):
         Returns:
             ComponentGeometry with a single polygon representing curb and gutter
         """
-        if direction == 'right':
+        if direction == "right":
             vertices = self._create_right_geometry(insertion)
         else:
             vertices = self._create_left_geometry(insertion)
@@ -116,27 +114,27 @@ class Curb(RoadComponent):
         return ComponentGeometry(
             polygons=[polygon],
             metadata={
-                'component_type': 'Curb',
-                'gutter_width': self.gutter_width,
-                'gutter_thickness': self.gutter_thickness,
-                'gutter_drop': self.gutter_drop,
-                'curb_height': self.curb_height,
-                'curb_width_bottom': self.curb_width_bottom,
-                'curb_width_top': self.curb_width_top,
-                'assembly_direction': direction,
-                'concrete_strength': self.concrete.compressive_strength,
-                'layers': [
+                "component_type": "Curb",
+                "gutter_width": self.gutter_width,
+                "gutter_thickness": self.gutter_thickness,
+                "gutter_drop": self.gutter_drop,
+                "curb_height": self.curb_height,
+                "curb_width_bottom": self.curb_width_bottom,
+                "curb_width_top": self.curb_width_top,
+                "assembly_direction": direction,
+                "concrete_strength": self.concrete.compressive_strength,
+                "layers": [
                     {
-                        'layer_index': 0,
-                        'type': 'ConcreteLayer',
-                        'thickness': self.gutter_thickness,
-                        'compressive_strength': self.concrete.compressive_strength,
+                        "layer_index": 0,
+                        "type": "ConcreteLayer",
+                        "thickness": self.gutter_thickness,
+                        "compressive_strength": self.concrete.compressive_strength,
                     }
-                ]
-            }
+                ],
+            },
         )
 
-    def _create_right_geometry(self, insertion: ConnectionPoint) -> List[Point2D]:
+    def _create_right_geometry(self, insertion: ConnectionPoint) -> list[Point2D]:
         """Create geometry for right-side curb.
 
         Returns vertices in counter-clockwise order for right side.
@@ -151,26 +149,22 @@ class Curb(RoadComponent):
 
         # Front of curb at top (battered face - narrower than bottom)
         p3 = Point2D(
-            insertion.x + self.gutter_width + self.curb_width_top,
-            gutter_outer_y + self.curb_height
+            insertion.x + self.gutter_width + self.curb_width_top, gutter_outer_y + self.curb_height
         )
 
         # Back of curb at top
         p4 = Point2D(
             insertion.x + self.gutter_width + self.curb_width_bottom,
-            gutter_outer_y + self.curb_height
+            gutter_outer_y + self.curb_height,
         )
 
         # Back of curb at gutter surface level
-        p5 = Point2D(
-            insertion.x + self.gutter_width + self.curb_width_bottom,
-            gutter_outer_y
-        )
+        p5 = Point2D(insertion.x + self.gutter_width + self.curb_width_bottom, gutter_outer_y)
 
         # Bottom outside of curb (continuous with gutter bottom)
         p6 = Point2D(
             insertion.x + self.gutter_width + self.curb_width_bottom,
-            insertion.y - self.gutter_thickness
+            insertion.y - self.gutter_thickness,
         )
 
         # Bottom inside of gutter (straight slope from inside to outside)
@@ -178,7 +172,7 @@ class Curb(RoadComponent):
 
         return [p1, p2, p3, p4, p5, p6, p7]
 
-    def _create_left_geometry(self, insertion: ConnectionPoint) -> List[Point2D]:
+    def _create_left_geometry(self, insertion: ConnectionPoint) -> list[Point2D]:
         """Create geometry for left-side curb.
 
         Returns vertices in counter-clockwise order for left side.
@@ -194,25 +188,21 @@ class Curb(RoadComponent):
         gutter_outer_y = insertion.y - self.gutter_drop
         p6 = Point2D(
             insertion.x - self.gutter_width - self.curb_width_bottom,
-            insertion.y - self.gutter_thickness
+            insertion.y - self.gutter_thickness,
         )
 
         # Back of curb at gutter surface level
-        p5 = Point2D(
-            insertion.x - self.gutter_width - self.curb_width_bottom,
-            gutter_outer_y
-        )
+        p5 = Point2D(insertion.x - self.gutter_width - self.curb_width_bottom, gutter_outer_y)
 
         # Back of curb at top
         p4 = Point2D(
             insertion.x - self.gutter_width - self.curb_width_bottom,
-            gutter_outer_y + self.curb_height
+            gutter_outer_y + self.curb_height,
         )
 
         # Front of curb at top (battered face - narrower than bottom)
         p3 = Point2D(
-            insertion.x - self.gutter_width - self.curb_width_top,
-            gutter_outer_y + self.curb_height
+            insertion.x - self.gutter_width - self.curb_width_top, gutter_outer_y + self.curb_height
         )
 
         # Top outside of gutter (at outer edge, with drop)
@@ -220,7 +210,7 @@ class Curb(RoadComponent):
 
         return [p1, p7, p6, p5, p4, p3, p2]
 
-    def validate(self) -> List[str]:
+    def validate(self) -> list[str]:
         """Validate curb and gutter parameters.
 
         Returns:
@@ -238,17 +228,13 @@ class Curb(RoadComponent):
             errors.append("Gutter thickness must be positive")
         elif self.gutter_thickness < 0.10:
             errors.append(
-                f"Gutter thickness {self.gutter_thickness:.3f}m below "
-                f"typical minimum (0.10m)"
+                f"Gutter thickness {self.gutter_thickness:.3f}m below typical minimum (0.10m)"
             )
 
         if self.gutter_drop < 0:
             errors.append("Gutter drop must be non-negative")
         elif self.gutter_drop > 0.10:
-            errors.append(
-                f"Gutter drop {self.gutter_drop:.3f}m exceeds "
-                f"typical maximum (0.10m)"
-            )
+            errors.append(f"Gutter drop {self.gutter_drop:.3f}m exceeds typical maximum (0.10m)")
 
         # Curb validation
         if self.curb_height < 0:
@@ -263,8 +249,7 @@ class Curb(RoadComponent):
             errors.append("Curb bottom width must be non-negative")
         elif self.curb_width_bottom > 0.30:
             errors.append(
-                f"Curb bottom width {self.curb_width_bottom:.3f}m exceeds "
-                f"typical maximum (0.30m)"
+                f"Curb bottom width {self.curb_width_bottom:.3f}m exceeds typical maximum (0.30m)"
             )
 
         if self.curb_width_top < 0:

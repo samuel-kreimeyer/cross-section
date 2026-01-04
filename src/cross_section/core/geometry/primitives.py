@@ -1,8 +1,7 @@
 """Pure Python geometry primitives - no external dependencies."""
 
-from dataclasses import dataclass, field
-from typing import List, Optional
 import math
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -28,8 +27,8 @@ class Point2D:
 class Polygon:
     """2D polygon - pure Python, no library dependencies."""
 
-    exterior: List[Point2D]
-    holes: Optional[List[List[Point2D]]] = None
+    exterior: list[Point2D]
+    holes: list[list[Point2D]] | None = None
 
     def bounds(self) -> tuple[float, float, float, float]:
         """
@@ -88,8 +87,8 @@ class ConnectionPoint:
 class ComponentGeometry:
     """Geometric representation of a road component."""
 
-    polygons: List[Polygon] = field(default_factory=list)
-    polylines: List[List[Point2D]] = field(default_factory=list)
+    polygons: list[Polygon] = field(default_factory=list)
+    polylines: list[list[Point2D]] = field(default_factory=list)
     metadata: dict = field(default_factory=dict)
 
     def bounds(self) -> tuple[float, float, float, float]:

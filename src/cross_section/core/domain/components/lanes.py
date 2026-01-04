@@ -1,10 +1,11 @@
 """Lane components."""
 
 from dataclasses import dataclass, field
-from typing import List, Literal
-from ..base import RoadComponent, Direction
-from ..pavement import PavementLayer, AsphaltLayer
-from ...geometry.primitives import ConnectionPoint, ComponentGeometry, Polygon, Point2D
+from typing import Literal
+
+from ...geometry.primitives import ComponentGeometry, ConnectionPoint, Point2D, Polygon
+from ..base import Direction, RoadComponent
+from ..pavement import AsphaltLayer, PavementLayer
 
 
 @dataclass
@@ -23,16 +24,18 @@ class TravelLane(RoadComponent):
 
     width: float
     cross_slope: float = 0.02  # 2% default cross slope
-    traffic_direction: Literal['inbound', 'outbound'] = 'outbound'
-    pavement_layers: List[PavementLayer] = field(default_factory=lambda: [
-        AsphaltLayer(
-            thickness=0.05,  # 50mm surface course
-            aggregate_size=12.5,
-            binder_type='PG 64-22',
-            binder_percentage=5.5,
-            density=2400
-        )
-    ])
+    traffic_direction: Literal["inbound", "outbound"] = "outbound"
+    pavement_layers: list[PavementLayer] = field(
+        default_factory=lambda: [
+            AsphaltLayer(
+                thickness=0.05,  # 50mm surface course
+                aggregate_size=12.5,
+                binder_type="PG 64-22",
+                binder_percentage=5.5,
+                density=2400,
+            )
+        ]
+    )
 
     def get_insertion_point(
         self, previous_attachment: ConnectionPoint, direction: Direction
@@ -49,7 +52,7 @@ class TravelLane(RoadComponent):
         return ConnectionPoint(
             x=previous_attachment.x,
             y=previous_attachment.y,
-            description=f"TravelLane insertion ({direction}, {self.traffic_direction})"
+            description=f"TravelLane insertion ({direction}, {self.traffic_direction})",
         )
 
     def get_attachment_point(
@@ -70,22 +73,20 @@ class TravelLane(RoadComponent):
 
         # For right-side: extends in +X direction, slopes down
         # For left-side: extends in -X direction, slopes down
-        if direction == 'right':
+        if direction == "right":
             return ConnectionPoint(
                 x=insertion.x + self.width,
                 y=insertion.y - drop,  # Slopes down away from crown
-                description=f"TravelLane attachment ({direction}, {self.traffic_direction})"
+                description=f"TravelLane attachment ({direction}, {self.traffic_direction})",
             )
         else:  # left
             return ConnectionPoint(
                 x=insertion.x - self.width,
                 y=insertion.y - drop,  # Also slopes down away from crown
-                description=f"TravelLane attachment ({direction}, {self.traffic_direction})"
+                description=f"TravelLane attachment ({direction}, {self.traffic_direction})",
             )
 
-    def to_geometry(
-        self, insertion: ConnectionPoint, direction: Direction
-    ) -> ComponentGeometry:
+    def to_geometry(self, insertion: ConnectionPoint, direction: Direction) -> ComponentGeometry:
         """Create lane geometry with stacked pavement layers.
 
         Each pavement layer is represented as a separate polygon.
@@ -116,19 +117,19 @@ class TravelLane(RoadComponent):
             outside_bottom = attachment.y - layer_bottom
 
             # Create polygon vertices (counter-clockwise)
-            if direction == 'right':
+            if direction == "right":
                 vertices = [
-                    Point2D(insertion.x, inside_top),      # Inside, top
-                    Point2D(attachment.x, outside_top),    # Outside, top
-                    Point2D(attachment.x, outside_bottom), # Outside, bottom
-                    Point2D(insertion.x, inside_bottom),   # Inside, bottom
+                    Point2D(insertion.x, inside_top),  # Inside, top
+                    Point2D(attachment.x, outside_top),  # Outside, top
+                    Point2D(attachment.x, outside_bottom),  # Outside, bottom
+                    Point2D(insertion.x, inside_bottom),  # Inside, bottom
                 ]
             else:  # left
                 vertices = [
-                    Point2D(insertion.x, inside_top),      # Inside, top
-                    Point2D(insertion.x, inside_bottom),   # Inside, bottom
-                    Point2D(attachment.x, outside_bottom), # Outside, bottom
-                    Point2D(attachment.x, outside_top),    # Outside, top
+                    Point2D(insertion.x, inside_top),  # Inside, top
+                    Point2D(insertion.x, inside_bottom),  # Inside, bottom
+                    Point2D(attachment.x, outside_bottom),  # Outside, bottom
+                    Point2D(attachment.x, outside_top),  # Outside, top
                 ]
 
             polygons.append(Polygon(exterior=vertices))
@@ -138,34 +139,34 @@ class TravelLane(RoadComponent):
         layer_info = []
         for i, layer in enumerate(self.pavement_layers):
             layer_dict = {
-                'layer_index': i,
-                'type': type(layer).__name__,
-                'thickness': layer.thickness,
+                "layer_index": i,
+                "type": type(layer).__name__,
+                "thickness": layer.thickness,
             }
             # Add layer-specific attributes
-            if hasattr(layer, 'binder_type'):
-                layer_dict['binder_type'] = layer.binder_type
-            if hasattr(layer, 'compressive_strength'):
-                layer_dict['compressive_strength'] = layer.compressive_strength
-            if hasattr(layer, 'material_type'):
-                layer_dict['material_type'] = layer.material_type
+            if hasattr(layer, "binder_type"):
+                layer_dict["binder_type"] = layer.binder_type
+            if hasattr(layer, "compressive_strength"):
+                layer_dict["compressive_strength"] = layer.compressive_strength
+            if hasattr(layer, "material_type"):
+                layer_dict["material_type"] = layer.material_type
             layer_info.append(layer_dict)
 
         return ComponentGeometry(
             polygons=polygons,
             metadata={
-                'component_type': 'TravelLane',
-                'width': self.width,
-                'cross_slope': self.cross_slope,
-                'assembly_direction': direction,
-                'traffic_direction': self.traffic_direction,
-                'layer_count': len(self.pavement_layers),
-                'total_depth': sum(layer.thickness for layer in self.pavement_layers),
-                'layers': layer_info
-            }
+                "component_type": "TravelLane",
+                "width": self.width,
+                "cross_slope": self.cross_slope,
+                "assembly_direction": direction,
+                "traffic_direction": self.traffic_direction,
+                "layer_count": len(self.pavement_layers),
+                "total_depth": sum(layer.thickness for layer in self.pavement_layers),
+                "layers": layer_info,
+            },
         )
 
-    def validate(self) -> List[str]:
+    def validate(self) -> list[str]:
         """Validate lane parameters and pavement layers.
 
         Returns:
@@ -184,8 +185,7 @@ class TravelLane(RoadComponent):
         # Cross slope validation
         if abs(self.cross_slope) > 0.06:
             errors.append(
-                f"Cross slope {self.cross_slope:.1%} exceeds "
-                f"typical maximum (6%) - verify design"
+                f"Cross slope {self.cross_slope:.1%} exceeds typical maximum (6%) - verify design"
             )
         elif abs(self.cross_slope) < 0.015:
             errors.append(
@@ -206,13 +206,11 @@ class TravelLane(RoadComponent):
             total_depth = sum(layer.thickness for layer in self.pavement_layers)
             if total_depth < 0.15:
                 errors.append(
-                    f"Total pavement depth {total_depth:.3f}m below "
-                    f"typical minimum (0.15m)"
+                    f"Total pavement depth {total_depth:.3f}m below typical minimum (0.15m)"
                 )
             elif total_depth > 0.80:
                 errors.append(
-                    f"Total pavement depth {total_depth:.3f}m exceeds "
-                    f"typical maximum (0.80m)"
+                    f"Total pavement depth {total_depth:.3f}m exceeds typical maximum (0.80m)"
                 )
 
         return errors

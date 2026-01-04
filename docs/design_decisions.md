@@ -219,7 +219,7 @@ Key patterns used in the architecture:
 - **Strategy Pattern**: Pluggable exporters for different formats
 - **Adapter Pattern**: Convert core geometry to library-specific formats
 
-**See [ARCHITECTURE.md](../ARCHITECTURE.md) for complete pattern implementations and examples.**
+**See [architecture.md](development/architecture.md) for complete pattern implementations and examples.**
 
 ---
 

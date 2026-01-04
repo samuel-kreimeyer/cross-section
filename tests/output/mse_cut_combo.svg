@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1253.9" height="595.5" viewBox="0 0 1253.9 595.5">
+  <title>MSE Wall Demo - cut with components</title>
+  <rect width="1253.9" height="595.5" fill="white"/>
+  <g transform="scale(1,-1)">
+    <g transform="translate(0,-595.5)">
+      <polygon points="60.00,178.51 498.91,169.73 498.91,163.73 60.00,172.51" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="498.91,169.73 718.37,169.73 718.37,163.73 498.91,163.73" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="498.91,163.73 718.37,163.73 718.37,145.73 498.91,145.73" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="572.06,169.73 572.06,178.87 593.40,209.35 599.50,267.26 617.78,267.26 623.88,209.35 645.22,178.87 645.22,169.73" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="690.94,96.58 764.09,96.58 764.09,60.00 690.94,60.00" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="700.08,343.46 754.94,343.46 754.94,282.50 700.08,282.50" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="718.37,316.03 736.66,316.03 736.66,96.58 718.37,96.58" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,316.03 1029.26,316.03 1029.26,96.58 736.66,96.58 736.66,316.03" fill="none" stroke="black" stroke-width="1.5" stroke-dasharray="6,4"/>
+      <polyline points="736.66,316.03 1029.26,316.03" fill="none" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,297.74 1029.26,297.74" fill="none" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,279.46 1029.26,279.46" fill="none" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,261.17 1029.26,261.17" fill="none" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,242.88 1029.26,242.88" fill="none" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,224.59 1029.26,224.59" fill="none" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,206.30 1029.26,206.30" fill="none" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,188.02 1029.26,188.02" fill="none" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,169.73 1029.26,169.73" fill="none" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,151.44 1029.26,151.44" fill="none" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,133.15 1029.26,133.15" fill="none" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,114.86 1029.26,114.86" fill="none" stroke="black" stroke-width="1"/>
+      <polyline points="736.66,96.58 1029.26,96.58" fill="none" stroke="black" stroke-width="1"/>
+      <polygon points="754.94,316.03 1193.86,535.49 1193.86,534.29 754.94,314.83" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">MSE Wall Demo - cut with components</text>
+  <rect x="10" y="40" width="15" height="15" fill="#2C3E50"/>
+  <text x="30" y="52" font-family="Arial" font-size="12">AsphaltLayer</text>
+  <!-- Scale -->
+  <line x1="10" y1="565.488" x2="375.7599882956804" y2="565.488" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="560.488" x2="10" y2="570.488" stroke="black" stroke-width="2"/>
+  <line x1="375.7599882956804" y1="560.488" x2="375.7599882956804" y2="570.488" stroke="black" stroke-width="2"/>
+  <text x="192.8799941478402" y="585.488" font-family="Arial" font-size="12" text-anchor="middle">10ft</text>
+</svg>

@@ -48,30 +48,36 @@ class TestShoulder:
         assert insertion.y == 100.0
 
     def test_attachment_point_right(self):
-        """Test attachment point at outer edge of paved width (right side)."""
+        """Test attachment point at outermost bottom corner (right side)."""
         shoulder = Shoulder(width=2.4, cross_slope=0.02)
         cp = ControlPoint(x=3.6, elevation=99.928).to_connection_point()
 
         insertion = shoulder.get_insertion_point(cp, 'right')
         attachment = shoulder.get_attachment_point(insertion, 'right')
 
-        # Should be at paved edge
-        assert attachment.x == pytest.approx(3.6 + 2.4)
-        # Should drop by width * cross_slope
-        expected_drop = 2.4 * 0.02
+        total_depth = sum(layer.thickness for layer in shoulder.pavement_layers)
+        expected_extension = total_depth * shoulder.foreslope_ratio
+
+        # Should be at outermost extent of the bottom of pavement
+        assert attachment.x == pytest.approx(3.6 + 2.4 + expected_extension)
+        # Should drop by cross slope plus total pavement depth
+        expected_drop = (2.4 * 0.02) + total_depth
         assert attachment.y == pytest.approx(99.928 - expected_drop)
 
     def test_attachment_point_left(self):
-        """Test attachment point at outer edge of paved width (left side)."""
+        """Test attachment point at outermost bottom corner (left side)."""
         shoulder = Shoulder(width=2.4, cross_slope=0.02)
         cp = ControlPoint(x=-3.6, elevation=99.928).to_connection_point()
 
         insertion = shoulder.get_insertion_point(cp, 'left')
         attachment = shoulder.get_attachment_point(insertion, 'left')
 
-        # Should extend in negative X
-        assert attachment.x == pytest.approx(-3.6 - 2.4)
-        expected_drop = 2.4 * 0.02
+        total_depth = sum(layer.thickness for layer in shoulder.pavement_layers)
+        expected_extension = total_depth * shoulder.foreslope_ratio
+
+        # Should extend in negative X to outermost extent of the bottom of pavement
+        assert attachment.x == pytest.approx(-3.6 - 2.4 - expected_extension)
+        expected_drop = (2.4 * 0.02) + total_depth
         assert attachment.y == pytest.approx(99.928 - expected_drop)
 
     def test_trapezoid_geometry(self):
