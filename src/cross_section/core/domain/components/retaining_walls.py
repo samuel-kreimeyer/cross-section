@@ -89,6 +89,8 @@ class RetainingWall(RoadComponent):
         if self.show_backfill:
             polygons.append(self._backfill_polygon(context))
 
+        overlap_allow = [2] if self.show_backfill else []
+
         return ComponentGeometry(
             polygons=polygons,
             metadata={
@@ -102,6 +104,7 @@ class RetainingWall(RoadComponent):
                 "foundation_back": self.foundation_back,
                 "show_backfill": self.show_backfill,
                 "backfill_slope_ratio": self.backfill_slope_ratio,
+                "overlap_allow_polygons": overlap_allow,
             },
         )
 
@@ -308,6 +311,9 @@ class MSEWall(RoadComponent):
                 "show_backfill": self.show_backfill,
                 "structural_fill_min_width": self.structural_fill_min_width,
                 "structural_fill_slope_ratio": self.structural_fill_slope_ratio,
+                "hatch_boundary_index": 0 if self.show_backfill else None,
+                "hatch_spacing": self.structural_fill_hatch_spacing,
+                "hatch_orientation": "horizontal",
                 "polyline_styles": polyline_styles,
             },
         )

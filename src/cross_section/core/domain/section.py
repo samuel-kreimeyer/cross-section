@@ -117,13 +117,14 @@ class RoadSection:
         else:
             self.add_component_right(component)
 
-    def validate(self) -> list[str]:
+    def validate(self, include_geometry: bool = False) -> list[str]:
         """Validate the complete section.
 
         This validates:
         - Each component's individual parameters
         - Geometric continuity between components
         - Section-level rules
+        - Optional geometric overlap checks (Shapely-backed)
 
         Returns:
             List of error messages (empty if valid)
@@ -171,6 +172,15 @@ class RoadSection:
                     f"Failed geometric calculation - {e}"
                 )
 
+        if include_geometry:
+            from ..geometry.validate import ShapelyNotAvailable, validate_section_geometry
+
+            try:
+                section_geometry = self.to_geometry()
+                errors.extend(validate_section_geometry(section_geometry.components))
+            except ShapelyNotAvailable as exc:
+                errors.append(str(exc))
+
         return errors
 
     def to_geometry(self) -> SectionGeometry:
@@ -192,6 +202,9 @@ class RoadSection:
         for component in self.left_components:
             insertion = component.get_insertion_point(current_attachment, "left")
             component_geom = component.to_geometry(insertion, "left")
+            component_geom.metadata.setdefault("assembly_direction", "left")
+            component_geom.metadata.setdefault("sequence_group", "left")
+            component_geom.metadata.setdefault("sequence_index", len(geometries))
             geometries.append(component_geom)
             current_attachment = component.get_attachment_point(insertion, "left")
 
@@ -200,6 +213,9 @@ class RoadSection:
         for component in self.right_components:
             insertion = component.get_insertion_point(current_attachment, "right")
             component_geom = component.to_geometry(insertion, "right")
+            component_geom.metadata.setdefault("assembly_direction", "right")
+            component_geom.metadata.setdefault("sequence_group", "right")
+            component_geom.metadata.setdefault("sequence_index", len(geometries))
             geometries.append(component_geom)
             current_attachment = component.get_attachment_point(insertion, "right")
 
