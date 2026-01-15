@@ -1,0 +1,101 @@
+# Implementation Plan: Spec-Aligned Domain Model and Geometry Soundness
+
+## Goal
+Deliver a core library with a simple, domain-aligned API for roadway cross sections. Tests must enforce geometry soundness during development, while shapely remains optional at runtime.
+
+## Plan
+
+### 1) Spec alignment and refinement (docs first)
+- Update `docs/reference/component_spec.md` to explicitly define:
+  - Core vs extended components
+  - Required behaviors and validation rules
+  - Component metadata contracts
+- Add a concise geometry invariant document (new file or section):
+  - Coordinate conventions and sign rules
+  - Crown/grade point behavior
+  - Overlap/gap tolerance rules
+  - Polygon winding requirements
+  - Surface-only element representation (no artificial thickness)
+
+Deliverables:
+- Updated spec with explicit scope and priorities.
+- Geometry invariants documented.
+
+### 2) Core API surface cleanup
+- Define a stable import surface (e.g., `cross_section.api` or re-exports in `cross_section/__init__.py`).
+- Add aliases/deprecations only after the API is stable.
+
+Deliverables:
+- Single stable API module exporting domain objects.
+
+### 3) Domain model expansion (close spec gaps)
+Prioritize components that eliminate manual geometry in scenarios.
+
+3.1 TraveledWay / LaneGroup
+- Represent ordered lanes with shared pavement structure and crown logic.
+- Support a `TurnLane` subtype.
+- Integrate cleanly with `RoadSection`.
+
+3.2 TurnLane
+- Add lane subtype with validation rules and metadata.
+
+3.3 Shoulder enhancements
+- Support partial paving and aggregate flats/slumps:
+  - `paved_width`, `aggregate_flat_width`, `slumped_width`
+  - `surface_slope` vs `fill_slope`
+- Add surface-only geometry representation.
+
+3.4 Sidewalk, Buffer, Gutter
+- Implement components aligned to the spec.
+- Compose curb+gutter as a convenience component.
+
+3.5 Rehab components (overlay / notch / widening)
+- Add `ExistingPavement`, `PavementOverlay`, `PavementWidening`, `NotchCut`.
+- Ensure clean integration with `RoadSection` or a `RehabSection`.
+
+Deliverables:
+- Components sufficient to re-implement current scenarios via API.
+
+### 4) Geometry representation updates
+- Add a `SurfaceProfile`/`PolylineComponent` for surface-only elements.
+- Update validation to exclude surface-only elements from area overlap checks, while still checking polyline crossings.
+
+Deliverables:
+- Surface-only elements no longer require thin polygons.
+
+### 5) Validation + test enforcement
+- Keep shapely optional at runtime, but enforce in tests:
+  - Add a test fixture that fails if shapely is missing for geometry tests.
+  - Ensure CI installs `cross-section[validation]` (or equivalent).
+- Expand unit tests for new components and invariants:
+  - Attachment continuity
+  - Overlap/gap rules within sequence groups
+  - Bounds and metadata correctness
+
+Deliverables:
+- Tests fail without shapely in dev/CI.
+- Geometry soundness is enforced by the test suite.
+
+### 6) Scenario refactors to API usage
+Replace manual geometry with domain API usage.
+
+- `tests/scenarios/crowned_road.py`: use `RoadSection`, `TravelLane`, `Shoulder`, `Ditch`
+- `tests/scenarios/three_lane_urban.py`: use `TraveledWay`, `TurnLane`, `Curb+Gutter`, `Buffer`, `Sidewalk`, `Slope`
+- `tests/scenarios/ardot_undivided_notch_and_widen.py`: use rehab components and enhanced shoulders
+- Preserve annotations, but drive dimensions from API outputs
+
+Deliverables:
+- Scenario tests fully exercise the domain API.
+
+### 7) Deprecation and migration (after API stabilizes)
+- Add deprecation notices for old names/parameters.
+- Provide a migration guide in `docs/development`.
+
+Deliverables:
+- Clear migration path for user code and examples.
+
+## Definition of Done
+- All scenarios use the domain API (no manual `ComponentGeometry` construction).
+- Shapely is required for tests and CI geometry validation.
+- Spec and implementation match for core components.
+- A stable API surface exists for users.

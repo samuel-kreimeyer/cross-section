@@ -195,7 +195,7 @@ class RoadSection:
         Returns:
             SectionGeometry containing all component geometries (left side first, then right side)
         """
-        geometries = []
+        geometries: list[ComponentGeometry] = []
 
         # Assemble left components (extending in negative X direction)
         current_attachment = self.control_point.to_connection_point()

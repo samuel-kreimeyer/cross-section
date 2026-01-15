@@ -21,9 +21,9 @@ class _ShapelyBindings:
 
 def _require_shapely() -> _ShapelyBindings:
     try:
-        from shapely.geometry import LineString, Polygon as ShapelyPolygon
-        from shapely.ops import unary_union
-        from shapely.validation import explain_validity
+        from shapely.geometry import LineString, Polygon as ShapelyPolygon  # type: ignore[import-untyped]
+        from shapely.ops import unary_union  # type: ignore[import-untyped]
+        from shapely.validation import explain_validity  # type: ignore[import-untyped]
     except ImportError as exc:
         raise ShapelyNotAvailable(
             "Shapely is not installed. Install with `pip install cross-section[validation]`."

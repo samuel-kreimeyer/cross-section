@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="550.7" height="86.5" viewBox="0 0 550.7 86.5">
+  <title>Crowned Road with Ditches</title>
+  <rect width="550.7" height="86.5" fill="white"/>
+  <g transform="scale(1,-1)">
+    <g transform="translate(0,-86.5)">
+      <polygon points="163.88,26.02 275.37,28.25 275.37,23.67 163.88,21.44" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="275.37,28.25 386.85,26.02 386.85,21.44 275.37,23.67" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="89.56,24.53 163.88,26.02 163.88,21.44 89.56,19.96" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="386.85,26.02 461.17,24.53 461.17,19.96 386.85,21.44" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polyline points="89.56,24.53 52.40,15.24 15.24,24.53" fill="none" stroke="black" stroke-width="1.5"/>
+      <polyline points="461.17,24.53 498.34,15.24 535.50,24.53" fill="none" stroke="black" stroke-width="1.5"/>
+      <!-- Annotations -->
+      <g id="dimension-5ee757cb">
+        <line x1="89.56" y1="28.25" x2="89.56" y2="43.49" stroke="black" stroke-width="0.5"/>
+        <line x1="163.88" y1="28.25" x2="163.88" y2="43.49" stroke="black" stroke-width="0.5"/>
+        <line x1="89.56" y1="43.49" x2="163.88" y2="43.49" stroke="black" stroke-width="1"/>
+        <polygon points="89.56,43.49 84.56,40.99 84.56,45.99" fill="black" transform="rotate(180.0,89.56,43.49)"/>
+        <polygon points="163.88,43.49 158.88,40.99 158.88,45.99" fill="black" transform="rotate(0.0,163.88,43.49)"/>
+        <text x="126.72" y="45.32" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,90.63) scale(1,-1)" fill="black">8'-0"</text>
+      </g>
+      <g id="dimension-735e046a">
+        <line x1="163.88" y1="32.82" x2="163.88" y2="48.06" stroke="black" stroke-width="0.5"/>
+        <line x1="275.37" y1="32.82" x2="275.37" y2="48.06" stroke="black" stroke-width="0.5"/>
+        <line x1="163.88" y1="48.06" x2="275.37" y2="48.06" stroke="black" stroke-width="1"/>
+        <polygon points="163.88,48.06 158.88,45.56 158.88,50.56" fill="black" transform="rotate(180.0,163.88,48.06)"/>
+        <polygon points="275.37,48.06 270.37,45.56 270.37,50.56" fill="black" transform="rotate(0.0,275.37,48.06)"/>
+        <text x="219.63" y="49.89" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,99.77) scale(1,-1)" fill="black">12'-0"</text>
+      </g>
+      <g id="dimension-51992b3c">
+        <line x1="275.37" y1="32.82" x2="275.37" y2="48.06" stroke="black" stroke-width="0.5"/>
+        <line x1="386.85" y1="32.82" x2="386.85" y2="48.06" stroke="black" stroke-width="0.5"/>
+        <line x1="275.37" y1="48.06" x2="386.85" y2="48.06" stroke="black" stroke-width="1"/>
+        <polygon points="275.37,48.06 270.37,45.56 270.37,50.56" fill="black" transform="rotate(180.0,275.37,48.06)"/>
+        <polygon points="386.85,48.06 381.85,45.56 381.85,50.56" fill="black" transform="rotate(0.0,386.85,48.06)"/>
+        <text x="331.11" y="49.89" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,99.77) scale(1,-1)" fill="black">12'-0"</text>
+      </g>
+      <g id="dimension-86383165">
+        <line x1="386.85" y1="28.25" x2="386.85" y2="43.49" stroke="black" stroke-width="0.5"/>
+        <line x1="461.17" y1="28.25" x2="461.17" y2="43.49" stroke="black" stroke-width="0.5"/>
+        <line x1="386.85" y1="43.49" x2="461.17" y2="43.49" stroke="black" stroke-width="1"/>
+        <polygon points="386.85,43.49 381.85,40.99 381.85,45.99" fill="black" transform="rotate(180.0,386.85,43.49)"/>
+        <polygon points="461.17,43.49 456.17,40.99 456.17,45.99" fill="black" transform="rotate(0.0,461.17,43.49)"/>
+        <text x="424.01" y="45.32" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,90.63) scale(1,-1)" fill="black">8'-0"</text>
+      </g>
+      <g id="dimension-07ad7d14">
+        <line x1="89.56" y1="32.82" x2="89.56" y2="69.39" stroke="black" stroke-width="0.5"/>
+        <line x1="461.17" y1="32.82" x2="461.17" y2="69.39" stroke="black" stroke-width="0.5"/>
+        <line x1="89.56" y1="69.39" x2="461.17" y2="69.39" stroke="black" stroke-width="1"/>
+        <polygon points="89.56,69.39 84.56,66.89 84.56,71.89" fill="black" transform="rotate(180.0,89.56,69.39)"/>
+        <polygon points="461.17,69.39 456.17,66.89 456.17,71.89" fill="black" transform="rotate(0.0,461.17,69.39)"/>
+        <text x="275.37" y="71.22" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,142.45) scale(1,-1)" fill="black">40'-0"</text>
+      </g>
+      <g id="leader-aee8a8d4">
+        <polyline points="275.37,32.82 305.85,41.96 351.57,41.96" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="275.37,32.82 270.37,30.32 270.37,35.32" fill="black" transform="rotate(-163.30075576600652,275.37,32.82)"/>
+        <text x="356.57" y="41.96" font-family="Arial" font-size="4.6" text-anchor="start" transform="translate(0,83.92) scale(1,-1)" fill="black">Crown</text>
+      </g>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">Crowned Road with Ditches</text>
+  <!-- Scale -->
+  <line x1="10" y1="56.46322559999999" x2="195.80607405420562" y2="56.46322559999999" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="51.46322559999999" x2="10" y2="61.46322559999999" stroke="black" stroke-width="2"/>
+  <line x1="195.80607405420562" y1="51.46322559999999" x2="195.80607405420562" y2="61.46322559999999" stroke="black" stroke-width="2"/>
+  <text x="102.90303702710281" y="76.46322559999999" font-family="Arial" font-size="12" text-anchor="middle">20ft</text>
+</svg>

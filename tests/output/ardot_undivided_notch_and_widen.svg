@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1157.6" height="151.8" viewBox="0 0 1157.6 151.8">
+  <title>ARDOT Undivided Notch and Widen</title>
+  <rect width="1157.6" height="151.8" fill="white"/>
+  <g transform="scale(1,-1)">
+    <g transform="translate(0,-151.8)">
+      <polygon points="578.82,93.54 578.82,84.39 485.92,82.53 485.92,91.68" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="578.82,93.23 578.82,91.68 485.92,93.54 485.92,95.09" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="485.92,93.23 485.92,91.68 477.40,91.34 468.11,90.97 468.11,92.52 477.40,92.89" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="485.92,91.68 485.92,90.13 477.40,89.79 468.11,89.42 468.11,90.97 477.40,91.34" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="485.92,90.13 485.92,87.81 477.40,87.47 468.11,87.10 468.11,89.42 477.40,89.79" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="485.92,87.81 485.92,83.16 477.40,82.82 468.11,82.45 468.11,87.10 477.40,87.47" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="468.11,92.52 468.11,90.97 440.24,90.22 449.53,91.77" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="468.11,90.97 468.11,82.45 389.14,81.71 440.24,90.22" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="389.14,81.71 389.14,81.40 370.56,80.66 370.56,80.96" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="370.56,80.96 370.56,80.66 259.08,76.20 259.08,76.50" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="259.08,76.50 259.08,76.20 15.24,15.24 15.24,15.54" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="578.82,93.54 671.72,91.68 671.72,82.53 578.82,84.39" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="578.82,93.23 671.72,95.09 671.72,93.54 578.82,91.68" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="671.72,93.23 680.24,92.89 689.53,92.52 689.53,90.97 680.24,91.34 671.72,91.68" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="671.72,91.68 680.24,91.34 689.53,90.97 689.53,89.42 680.24,89.79 671.72,90.13" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="671.72,90.13 680.24,89.79 689.53,89.42 689.53,87.10 680.24,87.47 671.72,87.81" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="671.72,87.81 680.24,87.47 689.53,87.10 689.53,82.45 680.24,82.82 671.72,83.16" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="689.53,92.52 708.11,91.77 717.40,90.22 689.53,90.97" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="689.53,90.97 717.40,90.22 768.50,81.71 689.53,82.45" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="768.50,81.71 787.08,80.96 787.08,80.66 768.50,81.40" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="787.08,80.96 898.56,76.50 898.56,76.20 787.08,80.66" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="898.56,76.50 1142.40,15.54 1142.40,15.24 898.56,76.20" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <!-- Annotations -->
+      <g id="dimension-bc4bc7ae">
+        <line x1="468.11" y1="98.11" x2="468.11" y2="113.35" stroke="black" stroke-width="0.5"/>
+        <line x1="578.82" y1="98.11" x2="578.82" y2="113.35" stroke="black" stroke-width="0.5"/>
+        <line x1="468.11" y1="113.35" x2="578.82" y2="113.35" stroke="black" stroke-width="1"/>
+        <polygon points="468.11,113.35 463.11,110.85 463.11,115.85" fill="black" transform="rotate(180.0,468.11,113.35)"/>
+        <polygon points="578.82,113.35 573.82,110.85 573.82,115.85" fill="black" transform="rotate(0.0,578.82,113.35)"/>
+        <text x="523.47" y="115.18" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,230.36) scale(1,-1)" fill="black">11'-0"</text>
+      </g>
+      <g id="dimension-488dd70f">
+        <line x1="578.82" y1="98.11" x2="578.82" y2="113.35" stroke="black" stroke-width="0.5"/>
+        <line x1="689.53" y1="98.11" x2="689.53" y2="113.35" stroke="black" stroke-width="0.5"/>
+        <line x1="578.82" y1="113.35" x2="689.53" y2="113.35" stroke="black" stroke-width="1"/>
+        <polygon points="578.82,113.35 573.82,110.85 573.82,115.85" fill="black" transform="rotate(180.0,578.82,113.35)"/>
+        <polygon points="689.53,113.35 684.53,110.85 684.53,115.85" fill="black" transform="rotate(0.0,689.53,113.35)"/>
+        <text x="634.18" y="115.18" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,230.36) scale(1,-1)" fill="black">11'-0"</text>
+      </g>
+      <g id="dimension-2903213d">
+        <line x1="430.95" y1="93.54" x2="430.95" y2="108.78" stroke="black" stroke-width="0.5"/>
+        <line x1="468.11" y1="93.54" x2="468.11" y2="108.78" stroke="black" stroke-width="0.5"/>
+        <line x1="430.95" y1="108.78" x2="468.11" y2="108.78" stroke="black" stroke-width="1"/>
+        <polygon points="430.95,108.78 425.95,106.28 425.95,111.28" fill="black" transform="rotate(180.0,430.95,108.78)"/>
+        <polygon points="468.11,108.78 463.11,106.28 463.11,111.28" fill="black" transform="rotate(0.0,468.11,108.78)"/>
+        <text x="449.53" y="110.61" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,221.21) scale(1,-1)" fill="black">4'-0"</text>
+      </g>
+      <g id="dimension-9557ea89">
+        <line x1="689.53" y1="93.54" x2="689.53" y2="108.78" stroke="black" stroke-width="0.5"/>
+        <line x1="726.69" y1="93.54" x2="726.69" y2="108.78" stroke="black" stroke-width="0.5"/>
+        <line x1="689.53" y1="108.78" x2="726.69" y2="108.78" stroke="black" stroke-width="1"/>
+        <polygon points="689.53,108.78 684.53,106.28 684.53,111.28" fill="black" transform="rotate(180.0,689.53,108.78)"/>
+        <polygon points="726.69,108.78 721.69,106.28 721.69,111.28" fill="black" transform="rotate(0.0,726.69,108.78)"/>
+        <text x="708.11" y="110.61" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,221.21) scale(1,-1)" fill="black">4'-0"</text>
+      </g>
+      <g id="dimension-c6944525">
+        <line x1="430.95" y1="98.11" x2="430.95" y2="134.69" stroke="black" stroke-width="0.5"/>
+        <line x1="726.69" y1="98.11" x2="726.69" y2="134.69" stroke="black" stroke-width="0.5"/>
+        <line x1="430.95" y1="134.69" x2="726.69" y2="134.69" stroke="black" stroke-width="1"/>
+        <polygon points="430.95,134.69 425.95,132.19 425.95,137.19" fill="black" transform="rotate(180.0,430.95,134.69)"/>
+        <polygon points="726.69,134.69 721.69,132.19 721.69,137.19" fill="black" transform="rotate(0.0,726.69,134.69)"/>
+        <text x="578.82" y="136.51" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,273.03) scale(1,-1)" fill="black">30'-0"</text>
+      </g>
+      <g id="leader-214afb47">
+        <polyline points="578.82,97.33 609.30,103.43 655.02,103.43" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="578.82,97.33 573.82,94.83 573.82,99.83" fill="black" transform="rotate(-168.69006752597969,578.82,97.33)"/>
+        <text x="660.02" y="103.43" font-family="Arial" font-size="4.6" text-anchor="start" transform="translate(0,206.86) scale(1,-1)" fill="black">Overlay (2")</text>
+      </g>
+      <g id="leader-a2768b82">
+        <polyline points="477.02,91.99 461.78,85.89 431.30,85.89" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="477.02,91.99 472.02,89.49 472.02,94.49" fill="black" transform="rotate(21.80140948635209,477.02,91.99)"/>
+        <text x="436.30" y="85.89" font-family="Arial" font-size="4.6" text-anchor="start" transform="translate(0,171.79) scale(1,-1)" fill="black">1' Widening (Full Depth)</text>
+      </g>
+      <g id="leader-f56df837">
+        <polyline points="485.92,98.11 495.06,102.68 516.40,102.68" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="485.92,98.11 480.92,95.61 480.92,100.61" fill="black" transform="rotate(-153.43494882292117,485.92,98.11)"/>
+        <text x="521.40" y="102.68" font-family="Arial" font-size="4.6" text-anchor="start" transform="translate(0,205.36) scale(1,-1)" fill="black">11" Notch</text>
+      </g>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">ARDOT Undivided Notch and Widen</text>
+  <rect x="10" y="40" width="15" height="15" fill="#2C3E50"/>
+  <text x="30" y="52" font-family="Arial" font-size="12">AsphaltLayer</text>
+  <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
+  <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
+  <!-- Scale -->
+  <line x1="10" y1="121.75382400000063" x2="474.51518513551406" y2="121.75382400000063" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="116.75382400000063" x2="10" y2="126.75382400000063" stroke="black" stroke-width="2"/>
+  <line x1="474.51518513551406" y1="116.75382400000063" x2="474.51518513551406" y2="126.75382400000063" stroke="black" stroke-width="2"/>
+  <text x="242.25759256775703" y="141.75382400000063" font-family="Arial" font-size="12" text-anchor="middle">50ft</text>
+</svg>

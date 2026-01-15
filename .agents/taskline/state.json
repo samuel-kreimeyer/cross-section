@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "repository": {
+    "path": "/home/sam/Projects/cross-section",
+    "name": "cross-section"
+  },
+  "last_check": {
+    "timestamp": "2026-01-10T16:23:14.627617",
+    "commit_hash": "a5c58ce59b79338ba5620aa0efb51e000b8a7b2d",
+    "branch": "main",
+    "exit_code": 1,
+    "issues_found": 211,
+    "checks_run": [
+      "schema",
+      "types",
+      "lint",
+      "risk",
+      "docs"
+    ]
+  },
+  "history": [],
+  "metadata": {
+    "created": "2026-01-10T16:23:14.627612",
+    "last_modified": "2026-01-10T16:23:14.627621"
+  }
+}

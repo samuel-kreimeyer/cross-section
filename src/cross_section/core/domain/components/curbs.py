@@ -111,6 +111,9 @@ class Curb(RoadComponent):
 
         polygon = Polygon(exterior=vertices)
 
+        # Concrete is guaranteed non-None after __post_init__
+        assert self.concrete is not None  # nosec B101 # Type guard for mypy
+
         return ComponentGeometry(
             polygons=[polygon],
             metadata={

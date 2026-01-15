@@ -373,6 +373,9 @@ class Barrier(RoadComponent):
     def _build_concrete_polygon(
         self, insertion: ConnectionPoint, direction: Direction, total_width: float
     ) -> Polygon:
+        # This method is only called for concrete barriers
+        assert isinstance(self.spec, ConcreteBarrierSpec)  # nosec B101 # Type guard for mypy
+
         base_offset = self.front_prepared_width
         points: list[Point2D] = []
 
@@ -392,7 +395,7 @@ class Barrier(RoadComponent):
         self, insertion: ConnectionPoint, direction: Direction
     ) -> tuple[list[Polygon], list[list[Point2D]]]:
         spec = self.spec
-        assert isinstance(spec, GuardrailSpec)
+        assert isinstance(spec, GuardrailSpec)  # nosec B101 # Type guard for mypy
 
         total_width = self._total_width()
         base_offset = self.front_prepared_width
@@ -447,7 +450,7 @@ class Barrier(RoadComponent):
         self, insertion: ConnectionPoint, direction: Direction
     ) -> tuple[list[Polygon], list[list[Point2D]]]:
         spec = self.spec
-        assert isinstance(spec, CableBarrierSpec)
+        assert isinstance(spec, CableBarrierSpec)  # nosec B101 # Type guard for mypy
 
         total_width = self._total_width()
         base_offset = self.front_prepared_width

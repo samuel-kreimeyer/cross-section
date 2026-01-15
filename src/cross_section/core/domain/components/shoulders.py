@@ -1,7 +1,7 @@
 """Shoulder components."""
 
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import Literal, cast
 
 from ...geometry.primitives import ComponentGeometry, ConnectionPoint, Point2D, Polygon
 from ..base import Direction, RoadComponent
@@ -236,20 +236,24 @@ class Shoulder(RoadComponent):
         surface_at_paved_edge = insertion.y - self.width * self.cross_slope
 
         # Separate asphalt and crushed rock layers
-        asphalt_layers = [
-            layer for layer in self.pavement_layers if isinstance(layer, AsphaltLayer)
+        asphalt_layers: list[AsphaltLayer] = [
+            cast(AsphaltLayer, layer)
+            for layer in self.pavement_layers
+            if isinstance(layer, AsphaltLayer)
         ]
-        base_layers = [
-            layer for layer in self.pavement_layers if isinstance(layer, CrushedRockLayer)
+        base_layers: list[CrushedRockLayer] = [
+            cast(CrushedRockLayer, layer)
+            for layer in self.pavement_layers
+            if isinstance(layer, CrushedRockLayer)
         ]
 
         # Track current outside width (starts at paved width)
         current_outside_width = self.width
 
         # Process asphalt layers with 1:1 slump
-        for layer in asphalt_layers:
+        for asphalt_layer in asphalt_layers:
             layer_top_depth = current_depth
-            layer_bottom_depth = current_depth + layer.thickness
+            layer_bottom_depth = current_depth + asphalt_layer.thickness
 
             # Inside edge (at insertion point)
             inside_top_y = insertion.y - layer_top_depth
@@ -261,7 +265,7 @@ class Shoulder(RoadComponent):
 
             # For asphalt: 1:1 slump means horizontal extension = thickness
             top_outside_width = current_outside_width
-            bottom_outside_width = current_outside_width + layer.thickness
+            bottom_outside_width = current_outside_width + asphalt_layer.thickness
 
             if direction == "right":
                 outside_top_x = insertion.x + top_outside_width
@@ -291,9 +295,9 @@ class Shoulder(RoadComponent):
         # Process crushed rock base layers extending to foreslope
         # The base creates a 5-vertex irregular polygon filling the space between
         # the inside edge, slumped asphalt edge, paved edge, and foreslope
-        for layer in base_layers:
+        for base_layer in base_layers:
             layer_top_depth = current_depth
-            layer_bottom_depth = current_depth + layer.thickness
+            layer_bottom_depth = current_depth + base_layer.thickness
 
             # Inside edge (at insertion point)
             inside_top_y = insertion.y - layer_top_depth

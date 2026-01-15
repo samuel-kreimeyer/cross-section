@@ -51,6 +51,7 @@ dev = [
     "mypy>=1.7.0",
     "ruff>=0.1.6",
     "black>=23.11.0",
+    "types-shapely>=2.0",  # Type stubs for shapely
 ]
 
 # All optional dependencies
@@ -84,6 +85,14 @@ disallow_untyped_defs = true
 disallow_incomplete_defs = true
 check_untyped_defs = true
 no_implicit_optional = true
+
+[[tool.mypy.overrides]]
+module = "shapely.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "cross_section.core.geometry.validate"
+disable_error_code = ["attr-defined", "operator", "no-redef"]
 
 [tool.ruff]
 line-length = 100

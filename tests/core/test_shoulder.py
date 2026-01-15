@@ -190,3 +190,241 @@ class TestShoulder:
         assert geometry.metadata['width'] == 2.4
         assert geometry.metadata['foreslope_ratio'] == 6.0
         assert geometry.metadata['paved'] is True
+
+    def test_fully_paved_mode_single_asphalt_layer(self):
+        """Test fully_paved mode with single asphalt layer creates slumped geometry."""
+        shoulder = Shoulder(
+            width=2.4,
+            cross_slope=0.02,
+            foreslope_ratio=6.0,
+            paved=True,
+            pavement_layers=[
+                AsphaltLayer(thickness=0.10, aggregate_size=12.5, binder_type='PG 64-22',
+                            binder_percentage=5.5, density=2400),
+            ],
+            shoulder_type="paved_top_slumped",
+        )
+
+        cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
+        insertion = shoulder.get_insertion_point(cp, 'right')
+        geometry = shoulder.to_geometry(insertion, 'right')
+
+        # Should have 1 polygon for the asphalt layer
+        assert len(geometry.polygons) == 1
+
+        # Asphalt layer with 1:1 slump: bottom width = top width + thickness
+        # Top width: 2.4m, bottom width: 2.4 + 0.10 = 2.5m
+        poly = geometry.polygons[0]
+        assert len(poly.exterior) == 4  # Trapezoid
+
+        x_coords = [p.x for p in poly.exterior]
+        width = max(x_coords) - min(x_coords)
+        assert width == pytest.approx(2.5, abs=0.01)
+
+    def test_fully_paved_mode_multiple_asphalt_layers(self):
+        """Test fully_paved mode with multiple asphalt layers creates stacked slumped geometry."""
+        shoulder = Shoulder(
+            width=2.4,
+            cross_slope=0.02,
+            foreslope_ratio=6.0,
+            paved=True,
+            pavement_layers=[
+                AsphaltLayer(thickness=0.05, aggregate_size=9.5, binder_type='PG 64-22',
+                            binder_percentage=5.5, density=2400),
+                AsphaltLayer(thickness=0.08, aggregate_size=19.0, binder_type='PG 64-22',
+                            binder_percentage=5.0, density=2400),
+            ],
+            shoulder_type="paved_top_slumped",
+        )
+
+        cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
+        insertion = shoulder.get_insertion_point(cp, 'right')
+        geometry = shoulder.to_geometry(insertion, 'right')
+
+        # Should have 2 polygons (one per asphalt layer)
+        assert len(geometry.polygons) == 2
+
+        # First layer (top): width 2.4 at top, 2.4 + 0.05 = 2.45 at bottom
+        poly0 = geometry.polygons[0]
+        x_coords0 = [p.x for p in poly0.exterior]
+        width0 = max(x_coords0) - min(x_coords0)
+        assert width0 == pytest.approx(2.45, abs=0.01)
+
+        # Second layer: width 2.45 at top, 2.45 + 0.08 = 2.53 at bottom
+        poly1 = geometry.polygons[1]
+        x_coords1 = [p.x for p in poly1.exterior]
+        width1 = max(x_coords1) - min(x_coords1)
+        assert width1 == pytest.approx(2.53, abs=0.01)
+
+    def test_fully_paved_mode_with_base_layer(self):
+        """Test fully_paved mode with asphalt and base creates 5-vertex base polygon."""
+        shoulder = Shoulder(
+            width=2.4,
+            cross_slope=0.02,
+            foreslope_ratio=6.0,
+            paved=True,
+            pavement_layers=[
+                AsphaltLayer(thickness=0.10, aggregate_size=12.5, binder_type='PG 64-22',
+                            binder_percentage=5.5, density=2400),
+                CrushedRockLayer(thickness=0.20, aggregate_size=37.5, density=2200),
+            ],
+            shoulder_type="paved_top_slumped",
+        )
+
+        cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
+        insertion = shoulder.get_insertion_point(cp, 'right')
+        geometry = shoulder.to_geometry(insertion, 'right')
+
+        # Should have 2 polygons: asphalt + base
+        assert len(geometry.polygons) == 2
+
+        # Asphalt layer: 4 vertices (trapezoid)
+        asphalt_poly = geometry.polygons[0]
+        assert len(asphalt_poly.exterior) == 4
+
+        # Base layer: 5 vertices (irregular polygon extending to foreslope)
+        base_poly = geometry.polygons[1]
+        assert len(base_poly.exterior) == 5
+
+    def test_fully_paved_mode_left_direction(self):
+        """Test fully_paved mode creates correct geometry for left side."""
+        shoulder = Shoulder(
+            width=2.4,
+            cross_slope=0.02,
+            foreslope_ratio=6.0,
+            paved=True,
+            pavement_layers=[
+                AsphaltLayer(thickness=0.10, aggregate_size=12.5, binder_type='PG 64-22',
+                            binder_percentage=5.5, density=2400),
+            ],
+            shoulder_type="paved_top_slumped",
+        )
+
+        cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
+        insertion = shoulder.get_insertion_point(cp, 'left')
+        geometry = shoulder.to_geometry(insertion, 'left')
+
+        # Should have 1 polygon
+        assert len(geometry.polygons) == 1
+
+        poly = geometry.polygons[0]
+        x_coords = [p.x for p in poly.exterior]
+
+        # All X coordinates should be negative or zero (left side)
+        assert all(x <= 0 for x in x_coords)
+
+        # Width should still be 2.4 + 0.10 = 2.5m
+        width = max(x_coords) - min(x_coords)
+        assert width == pytest.approx(2.5, abs=0.01)
+
+    def test_fully_paved_mode_attachment_point_right(self):
+        """Test fully_paved mode attachment point extends to foreslope intercept."""
+        shoulder = Shoulder(
+            width=2.4,
+            cross_slope=0.02,
+            foreslope_ratio=6.0,
+            paved=True,
+            pavement_layers=[
+                AsphaltLayer(thickness=0.10, aggregate_size=12.5, binder_type='PG 64-22',
+                            binder_percentage=5.5, density=2400),
+                CrushedRockLayer(thickness=0.20, aggregate_size=37.5, density=2200),
+            ],
+            shoulder_type="paved_top_slumped",
+        )
+
+        cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
+        insertion = shoulder.get_insertion_point(cp, 'right')
+        attachment = shoulder.get_attachment_point(insertion, 'right')
+
+        # Total depth = 0.10 + 0.20 = 0.30m
+        # Extension from paved edge = 0.30 * 6.0 = 1.8m
+        # Attachment X = 0 + 2.4 (width) + 1.8 (extension) = 4.2m
+        expected_x = 2.4 + 1.8
+        assert attachment.x == pytest.approx(expected_x, abs=0.01)
+
+        # Attachment Y = surface - cross_slope_drop - total_depth
+        # = 100.0 - (2.4 * 0.02) - 0.30 = 100.0 - 0.048 - 0.30 = 99.652
+        expected_y = 100.0 - (2.4 * 0.02) - 0.30
+        assert attachment.y == pytest.approx(expected_y, abs=0.01)
+
+    def test_fully_paved_mode_attachment_point_left(self):
+        """Test fully_paved mode attachment point for left side."""
+        shoulder = Shoulder(
+            width=2.4,
+            cross_slope=0.02,
+            foreslope_ratio=6.0,
+            paved=True,
+            pavement_layers=[
+                AsphaltLayer(thickness=0.10, aggregate_size=12.5, binder_type='PG 64-22',
+                            binder_percentage=5.5, density=2400),
+            ],
+            shoulder_type="paved_top_slumped",
+        )
+
+        cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
+        insertion = shoulder.get_insertion_point(cp, 'left')
+        attachment = shoulder.get_attachment_point(insertion, 'left')
+
+        # Extension = 0.10 * 6.0 = 0.6m
+        # Attachment X = 0 - 2.4 - 0.6 = -3.0m
+        expected_x = -(2.4 + 0.6)
+        assert attachment.x == pytest.approx(expected_x, abs=0.01)
+
+    def test_fully_paved_mode_only_base_layers(self):
+        """Test fully_paved mode with only crushed rock base (no asphalt)."""
+        shoulder = Shoulder(
+            width=2.4,
+            cross_slope=0.02,
+            foreslope_ratio=6.0,
+            paved=True,
+            pavement_layers=[
+                CrushedRockLayer(thickness=0.20, aggregate_size=37.5, density=2200),
+            ],
+            shoulder_type="paved_top_slumped",
+        )
+
+        cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
+        insertion = shoulder.get_insertion_point(cp, 'right')
+        geometry = shoulder.to_geometry(insertion, 'right')
+
+        # Should have 1 polygon for the base layer
+        assert len(geometry.polygons) == 1
+
+        # Base layer should be 5-vertex polygon
+        poly = geometry.polygons[0]
+        assert len(poly.exterior) == 5
+
+    def test_fully_paved_mode_asphalt_slump_accumulation(self):
+        """Test that asphalt slump accumulates correctly across layers."""
+        shoulder = Shoulder(
+            width=2.4,
+            cross_slope=0.02,
+            foreslope_ratio=6.0,
+            paved=True,
+            pavement_layers=[
+                AsphaltLayer(thickness=0.05, aggregate_size=9.5, binder_type='PG 64-22',
+                            binder_percentage=5.5, density=2400),
+                AsphaltLayer(thickness=0.05, aggregate_size=12.5, binder_type='PG 64-22',
+                            binder_percentage=5.5, density=2400),
+                AsphaltLayer(thickness=0.05, aggregate_size=19.0, binder_type='PG 64-22',
+                            binder_percentage=5.0, density=2400),
+            ],
+            shoulder_type="paved_top_slumped",
+        )
+
+        cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
+        insertion = shoulder.get_insertion_point(cp, 'right')
+        geometry = shoulder.to_geometry(insertion, 'right')
+
+        # Should have 3 asphalt polygons
+        assert len(geometry.polygons) == 3
+
+        # Each layer adds 0.05m to the width due to 1:1 slump
+        # Layer 0: 2.4 -> 2.45
+        # Layer 1: 2.45 -> 2.50
+        # Layer 2: 2.50 -> 2.55
+        poly2 = geometry.polygons[2]
+        x_coords = [p.x for p in poly2.exterior]
+        final_width = max(x_coords) - min(x_coords)
+        expected_width = 2.4 + (3 * 0.05)  # 2.55m
+        assert final_width == pytest.approx(expected_width, abs=0.01)

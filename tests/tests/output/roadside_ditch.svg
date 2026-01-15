@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1664.0" height="118.7" viewBox="0 0 1664.0 118.7">
+  <title>Rural Road with Roadside Ditches</title>
+  <rect width="1664.0" height="118.7" fill="white"/>
+  <g transform="scale(1,-1)">
+    <g transform="translate(0,-118.7)">
+      <polygon points="832.00,79.20 832.00,76.70 652.00,73.10 652.00,75.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="832.00,76.70 832.00,72.95 652.00,69.35 652.00,73.10" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="832.00,72.95 832.00,62.95 652.00,59.35 652.00,69.35" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="652.00,75.60 652.00,73.60 520.00,71.20 532.00,73.20" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="652.00,73.60 652.00,66.10 475.00,63.70 520.00,71.20" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="475.00,63.70 475.00,56.20 355.00,26.20 295.00,25.00 205.00,56.20 205.00,63.70 295.00,32.50 355.00,33.70" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polyline points="475.00,63.70 205.00,63.70 295.00,32.50 355.00,33.70" fill="none" stroke="black" stroke-width="1.5"/>
+      <polygon points="205.00,63.70 205.00,63.20 25.00,93.20 25.00,93.70" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="832.00,79.20 1012.00,75.60 1012.00,73.10 832.00,76.70" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="832.00,76.70 1012.00,73.10 1012.00,69.35 832.00,72.95" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="832.00,72.95 1012.00,69.35 1012.00,59.35 832.00,62.95" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="1012.00,75.60 1132.00,73.20 1144.00,71.20 1012.00,73.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="1012.00,73.60 1144.00,71.20 1189.00,63.70 1012.00,66.10" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="1189.00,63.70 1309.00,33.70 1369.00,32.50 1459.00,63.70 1459.00,56.20 1369.00,25.00 1309.00,26.20 1189.00,56.20" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polyline points="1189.00,63.70 1309.00,33.70 1369.00,32.50 1459.00,63.70" fill="none" stroke="black" stroke-width="1.5"/>
+      <polygon points="1459.00,63.70 1639.00,93.70 1639.00,93.20 1459.00,63.20" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">Rural Road with Roadside Ditches</text>
+  <rect x="10" y="40" width="15" height="15" fill="#2C3E50"/>
+  <text x="30" y="52" font-family="Arial" font-size="12">AsphaltLayer</text>
+  <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
+  <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
+  <!-- Scale -->
+  <line x1="10" y1="88.69999999999976" x2="771.9999756160007" y2="88.69999999999976" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="83.69999999999976" x2="10" y2="93.69999999999976" stroke="black" stroke-width="2"/>
+  <line x1="771.9999756160007" y1="83.69999999999976" x2="771.9999756160007" y2="93.69999999999976" stroke="black" stroke-width="2"/>
+  <text x="390.99998780800036" y="108.69999999999976" font-family="Arial" font-size="12" text-anchor="middle">50ft</text>
+</svg>

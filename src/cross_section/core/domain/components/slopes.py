@@ -20,6 +20,10 @@ class Slope(RoadComponent):
         slope_ratio: Alternative to horizontal_run - H:V ratio (e.g., 4.0 for 4:1)
         surface_type: Type of surface ('grass', 'crushed_rock', 'bare_earth', etc.)
         thickness: Thickness of slope material if applicable (0 for just surface)
+        is_surface_slope: If True, indicates this is a roadway surface/aggregate
+            slope (e.g., 4% cross slope) rather than a fill/cut slope. Surface
+            slopes bypass the typical 1:1 to 20:1 slope ratio validation since
+            cross slopes of 2-6% (50:1 to 17:1) are normal for road surfaces.
     """
 
     horizontal_run: float | None = None
@@ -27,6 +31,7 @@ class Slope(RoadComponent):
     slope_ratio: float | None = None  # H:V ratio (horizontal : vertical)
     surface_type: str = "grass"
     thickness: float = 0.0  # Thickness of material (0 for surface only)
+    is_surface_slope: bool = False  # True for roadway surfaces, False for fill/cut slopes
 
     def __post_init__(self) -> None:
         """Calculate missing parameters if ratio is provided."""
@@ -73,6 +78,10 @@ class Slope(RoadComponent):
         Returns:
             The attachment point at the end of the slope
         """
+        # These are guaranteed non-None after __post_init__
+        assert self.vertical_drop is not None  # nosec B101 # Type guard for mypy
+        assert self.horizontal_run is not None  # nosec B101 # Type guard for mypy
+
         attachment_y = insertion.y - self.vertical_drop
 
         if direction == "right":
@@ -102,6 +111,10 @@ class Slope(RoadComponent):
         Returns:
             ComponentGeometry with slope polygon
         """
+        # These are guaranteed non-None after __post_init__
+        assert self.horizontal_run is not None
+        assert self.vertical_drop is not None
+
         attachment = self.get_attachment_point(insertion, direction)
 
         if self.thickness == 0:
@@ -161,6 +174,10 @@ class Slope(RoadComponent):
         Returns:
             List of error messages (empty if valid)
         """
+        # These are guaranteed non-None after __post_init__
+        assert self.horizontal_run is not None
+        assert self.vertical_drop is not None
+
         errors = []
 
         if self.horizontal_run <= 0:
@@ -168,14 +185,21 @@ class Slope(RoadComponent):
 
         if abs(self.vertical_drop) <= 0:
             errors.append("Vertical drop must be non-zero")
+        else:
+            # Calculate actual slope ratio (only if vertical_drop is non-zero)
+            actual_ratio = self.horizontal_run / abs(self.vertical_drop)
 
-        # Calculate actual slope ratio
-        actual_ratio = self.horizontal_run / abs(self.vertical_drop)
-
-        if actual_ratio < 1.0:
-            errors.append(f"Slope ratio {actual_ratio:.1f}:1 is steeper than 1:1 - may be unsafe")
-        elif actual_ratio > 20.0:
-            errors.append(f"Slope ratio {actual_ratio:.1f}:1 is very flat - verify design")
+            # Only validate slope ratio for fill/cut slopes, not surface slopes
+            # Surface slopes (cross slopes) are typically 2-6% (50:1 to 17:1)
+            if not self.is_surface_slope:
+                if actual_ratio < 1.0:
+                    errors.append(
+                        f"Slope ratio {actual_ratio:.1f}:1 is steeper than 1:1 - may be unsafe"
+                    )
+                elif actual_ratio > 20.0:
+                    errors.append(
+                        f"Slope ratio {actual_ratio:.1f}:1 is very flat - verify design"
+                    )
 
         if self.thickness < 0:
             errors.append("Thickness must be non-negative")
