@@ -15,17 +15,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README sections: Purpose, Status, Quick Start, Project Structure, License
 - Changelog file
 - Type guard assertions with proper documentation
+- Stable public API module (`cross_section.api`) with package re-exports
+- Core components: `SurfaceProfile`, `Buffer`, `Gutter`, `Sidewalk`, `TurnLane`, `TraveledWay`
+- Geometry invariants reference documentation
+- Migration notes for the stable API surface
+- Tests for new components and traveled way helpers
 
 ### Changed
 - Updated development dependencies to include types-shapely
 - Configured mypy to handle optional shapely dependency
 - Improved type safety across component modules
+- Scenario builders for crowned road and three-lane urban now use the domain API
+- Scenario validation enforces shapely checks in tests
 
 ### Fixed
 - Type errors in slopes, shoulders, curbs, barriers, and section modules
 - Added proper type guards for union types
 - Resolved variable naming conflicts in shoulder layer processing
 - Suppressed false-positive security warnings for type guard assertions
+- Test imports for annotated export scenario generation
 
 ## [0.1.0] - Initial Development
 

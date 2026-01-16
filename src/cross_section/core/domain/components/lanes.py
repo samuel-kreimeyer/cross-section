@@ -8,6 +8,9 @@ from ..base import Direction, RoadComponent
 from ..pavement import AsphaltLayer, PavementLayer
 
 
+TrafficDirection = Literal["inbound", "outbound", "center"]
+
+
 @dataclass
 class TravelLane(RoadComponent):
     """A travel lane for vehicular traffic.
@@ -24,7 +27,7 @@ class TravelLane(RoadComponent):
 
     width: float
     cross_slope: float = 0.02  # 2% default cross slope
-    traffic_direction: Literal["inbound", "outbound"] = "outbound"
+    traffic_direction: TrafficDirection = "outbound"
     pavement_layers: list[PavementLayer] = field(
         default_factory=lambda: [
             AsphaltLayer(
@@ -156,6 +159,7 @@ class TravelLane(RoadComponent):
             polygons=polygons,
             metadata={
                 "component_type": "TravelLane",
+                "lane_type": "travel",
                 "width": self.width,
                 "cross_slope": self.cross_slope,
                 "assembly_direction": direction,
@@ -214,3 +218,37 @@ class TravelLane(RoadComponent):
                 )
 
         return errors
+
+
+@dataclass
+class TurnLane(TravelLane):
+    """Center turn lane with turn-specific metadata."""
+
+    traffic_direction: TrafficDirection = "center"
+    segment: Literal["left", "right"] | None = None
+
+    def to_geometry(self, insertion: ConnectionPoint, direction: Direction) -> ComponentGeometry:
+        geometry = super().to_geometry(insertion, direction)
+        geometry.metadata["component_type"] = "TurnLane"
+        geometry.metadata["lane_type"] = "turn"
+        geometry.metadata["segment"] = self.segment
+        return geometry
+
+    def split(self) -> tuple["TurnLane", "TurnLane"]:
+        """Split a centered turn lane into left and right halves."""
+        half_width = self.width / 2.0
+        left = TurnLane(
+            width=half_width,
+            cross_slope=self.cross_slope,
+            traffic_direction=self.traffic_direction,
+            pavement_layers=self.pavement_layers,
+            segment="left",
+        )
+        right = TurnLane(
+            width=half_width,
+            cross_slope=self.cross_slope,
+            traffic_direction=self.traffic_direction,
+            pavement_layers=self.pavement_layers,
+            segment="right",
+        )
+        return left, right

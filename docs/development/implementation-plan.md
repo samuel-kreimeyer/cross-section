@@ -3,11 +3,38 @@
 ## Goal
 Deliver a core library with a simple, domain-aligned API for roadway cross sections. Tests must enforce geometry soundness during development, while shapely remains optional at runtime.
 
-## Plan
+## Recent Changes Incorporated
+- Shapely-backed validation now exists, including clipping and gap checks, with dedicated tests.
+- Rehabilitation components exist (`ExistingPavement`, `MillAndOverlay`, `NotchAndWidening`) and are used in the ARDOT notch/widen scenario.
+- Barrier and retaining wall components are implemented.
+- Annotations and annotated SVG export infrastructure landed with test coverage.
+- Scenario and generator structure has been formalized under `tests/scenarios` and `tests/generators`.
+
+## Status by Component
+| Component | Spec Status | Implementation Status | Notes / Next Step |
+| --- | --- | --- | --- |
+| RoadSection / ControlPoint | Core | Implemented | Central assembly API is present. |
+| TravelLane | Core | Implemented | Uses layered pavement and validation. |
+| Shoulder | Core | Implemented | Supports fully paved + slumped; partial paving still needed for spec parity. |
+| Slope | Core | Implemented | Surface-only representation still uses thin polygons. |
+| Ditch | Core | Implemented | Void line + optional lining in place. |
+| Curb | Core | Implemented | Gutter integrated; standalone Gutter not yet present. |
+| Barrier (concrete/guardrail/cable) | Extended | Implemented | Spec alignment needed in documentation. |
+| RetainingWall / MSEWall | Extended | Implemented | Spec alignment needed in documentation. |
+| Shoring | Extended | Implemented | Spec alignment needed in documentation. |
+| Rehabilitation (ExistingPavement / MillAndOverlay / NotchAndWidening) | Extended | Implemented | ARDOT notch/widen uses these. |
+| TraveledWay / LaneGroup | Core | Missing | Needed for multi-lane grouping and shared pavement structure. |
+| TurnLane | Core | Missing | Needed for urban scenario. |
+| Buffer | Core | Missing | Needed for urban scenario. |
+| Sidewalk / PedestrianFacility | Core | Missing | Needed for urban scenario. |
+| Gutter (standalone) | Core | Missing | Currently folded into Curb. |
+| SurfaceProfile / PolylineComponent | Core | Missing | Needed to avoid thin polygons for surface-only elements. |
+
+## Plan (Revised)
 
 ### 1) Spec alignment and refinement (docs first)
 - Update `docs/reference/component_spec.md` to explicitly define:
-  - Core vs extended components
+  - Core vs extended components (including barriers, retaining walls, shoring, rehab)
   - Required behaviors and validation rules
   - Component metadata contracts
 - Add a concise geometry invariant document (new file or section):
@@ -28,8 +55,8 @@ Deliverables:
 Deliverables:
 - Single stable API module exporting domain objects.
 
-### 3) Domain model expansion (close spec gaps)
-Prioritize components that eliminate manual geometry in scenarios.
+### 3) Domain gaps still blocking spec alignment
+Prioritize components that eliminate remaining manual geometry in scenarios.
 
 3.1 TraveledWay / LaneGroup
 - Represent ordered lanes with shared pavement structure and crown logic.
@@ -39,7 +66,7 @@ Prioritize components that eliminate manual geometry in scenarios.
 3.2 TurnLane
 - Add lane subtype with validation rules and metadata.
 
-3.3 Shoulder enhancements
+3.3 Shoulder enhancements (if still needed beyond current slumped support)
 - Support partial paving and aggregate flats/slumps:
   - `paved_width`, `aggregate_flat_width`, `slumped_width`
   - `surface_slope` vs `fill_slope`
@@ -49,12 +76,8 @@ Prioritize components that eliminate manual geometry in scenarios.
 - Implement components aligned to the spec.
 - Compose curb+gutter as a convenience component.
 
-3.5 Rehab components (overlay / notch / widening)
-- Add `ExistingPavement`, `PavementOverlay`, `PavementWidening`, `NotchCut`.
-- Ensure clean integration with `RoadSection` or a `RehabSection`.
-
 Deliverables:
-- Components sufficient to re-implement current scenarios via API.
+- Components sufficient to re-implement the remaining manual scenarios via API.
 
 ### 4) Geometry representation updates
 - Add a `SurfaceProfile`/`PolylineComponent` for surface-only elements.
@@ -64,7 +87,7 @@ Deliverables:
 - Surface-only elements no longer require thin polygons.
 
 ### 5) Validation + test enforcement
-- Keep shapely optional at runtime, but enforce in tests:
+- Shapely validation exists; now enforce it in tests:
   - Add a test fixture that fails if shapely is missing for geometry tests.
   - Ensure CI installs `cross-section[validation]` (or equivalent).
 - Expand unit tests for new components and invariants:
@@ -76,16 +99,13 @@ Deliverables:
 - Tests fail without shapely in dev/CI.
 - Geometry soundness is enforced by the test suite.
 
-### 6) Scenario refactors to API usage
-Replace manual geometry with domain API usage.
-
-- `tests/scenarios/crowned_road.py`: use `RoadSection`, `TravelLane`, `Shoulder`, `Ditch`
-- `tests/scenarios/three_lane_urban.py`: use `TraveledWay`, `TurnLane`, `Curb+Gutter`, `Buffer`, `Sidewalk`, `Slope`
-- `tests/scenarios/ardot_undivided_notch_and_widen.py`: use rehab components and enhanced shoulders
-- Preserve annotations, but drive dimensions from API outputs
+### 6) Scenario refactors to API usage (remaining work)
+- `tests/scenarios/crowned_road.py`: migrate to `RoadSection`, `TravelLane`, `Shoulder`, `Ditch`.
+- `tests/scenarios/three_lane_urban.py`: migrate to `TraveledWay`, `TurnLane`, `Curb+Gutter`, `Buffer`, `Sidewalk`, `Slope`.
+- Preserve annotations, but drive dimensions from API outputs.
 
 Deliverables:
-- Scenario tests fully exercise the domain API.
+- All scenarios use the domain API (no manual `ComponentGeometry` construction).
 
 ### 7) Deprecation and migration (after API stabilizes)
 - Add deprecation notices for old names/parameters.

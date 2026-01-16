@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 
 from ..geometry.primitives import ComponentGeometry, ConnectionPoint
 from .base import Direction, RoadComponent
+from .components.traveled_way import TraveledWay
 
 
 @dataclass
@@ -85,37 +86,55 @@ class RoadSection:
     left_components: list[RoadComponent] = field(default_factory=list)
     right_components: list[RoadComponent] = field(default_factory=list)
 
-    def add_component_left(self, component: RoadComponent) -> None:
+    def add_component_left(self, component: RoadComponent | TraveledWay) -> None:
         """Add a component to the left side of the control point.
 
         Left components extend in the negative X direction from the control point.
 
         Args:
-            component: The component to add
+            component: The component or traveled way to add
         """
+        if isinstance(component, TraveledWay):
+            for lane in component.build_components():
+                self.left_components.append(lane)
+            return
         self.left_components.append(component)
 
-    def add_component_right(self, component: RoadComponent) -> None:
+    def add_component_right(self, component: RoadComponent | TraveledWay) -> None:
         """Add a component to the right side of the control point.
 
         Right components extend in the positive X direction from the control point.
 
         Args:
-            component: The component to add
+            component: The component or traveled way to add
         """
+        if isinstance(component, TraveledWay):
+            for lane in component.build_components():
+                self.right_components.append(lane)
+            return
         self.right_components.append(component)
 
-    def add_component(self, component: RoadComponent, direction: Direction) -> None:
+    def add_component(self, component: RoadComponent | TraveledWay, direction: Direction) -> None:
         """Add a component to the specified side of the control point.
 
         Args:
-            component: The component to add
+            component: The component or traveled way to add
             direction: Which side to add the component ('left' or 'right')
         """
         if direction == "left":
             self.add_component_left(component)
         else:
             self.add_component_right(component)
+
+    def add_traveled_way_left(self, traveled_way: TraveledWay) -> None:
+        """Add a traveled way to the left side of the control point."""
+        for lane in traveled_way.build_components():
+            self.left_components.append(lane)
+
+    def add_traveled_way_right(self, traveled_way: TraveledWay) -> None:
+        """Add a traveled way to the right side of the control point."""
+        for lane in traveled_way.build_components():
+            self.right_components.append(lane)
 
     def validate(self, include_geometry: bool = False) -> list[str]:
         """Validate the complete section.

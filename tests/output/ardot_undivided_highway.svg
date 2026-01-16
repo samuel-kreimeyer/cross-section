@@ -23,7 +23,7 @@
       <polygon points="952.93,80.96 1064.41,76.50 1064.41,76.20 952.93,80.66" fill="#BDC3C7" stroke="black" stroke-width="1"/>
       <polygon points="1064.41,76.50 1308.25,15.54 1308.25,15.24 1064.41,76.20" fill="#BDC3C7" stroke="black" stroke-width="1"/>
       <!-- Annotations -->
-      <g id="dimension-d10990d7">
+      <g id="dimension-5648cccc">
         <line x1="650.99" y1="99.13" x2="650.99" y2="114.37" stroke="black" stroke-width="0.5"/>
         <line x1="753.19" y1="99.13" x2="753.19" y2="114.37" stroke="black" stroke-width="0.5"/>
         <line x1="650.99" y1="114.37" x2="753.19" y2="114.37" stroke="black" stroke-width="1"/>
@@ -31,7 +31,7 @@
         <polygon points="753.19,114.37 748.19,111.87 748.19,116.87" fill="black" transform="rotate(0.0,753.19,114.37)"/>
         <text x="702.09" y="116.20" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,232.40) scale(1,-1)" fill="black">11'-0"</text>
       </g>
-      <g id="dimension-e8802f89">
+      <g id="dimension-274915d2">
         <line x1="753.19" y1="99.13" x2="753.19" y2="114.37" stroke="black" stroke-width="0.5"/>
         <line x1="855.38" y1="99.13" x2="855.38" y2="114.37" stroke="black" stroke-width="0.5"/>
         <line x1="753.19" y1="114.37" x2="855.38" y2="114.37" stroke="black" stroke-width="1"/>
@@ -39,7 +39,7 @@
         <polygon points="855.38,114.37 850.38,111.87 850.38,116.87" fill="black" transform="rotate(0.0,855.38,114.37)"/>
         <text x="804.28" y="116.20" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,232.40) scale(1,-1)" fill="black">11'-0"</text>
       </g>
-      <g id="dimension-cac8a3c2">
+      <g id="dimension-078877c8">
         <line x1="613.83" y1="94.56" x2="613.83" y2="109.80" stroke="black" stroke-width="0.5"/>
         <line x1="650.99" y1="94.56" x2="650.99" y2="109.80" stroke="black" stroke-width="0.5"/>
         <line x1="613.83" y1="109.80" x2="650.99" y2="109.80" stroke="black" stroke-width="1"/>
@@ -47,7 +47,7 @@
         <polygon points="650.99,109.80 645.99,107.30 645.99,112.30" fill="black" transform="rotate(0.0,650.99,109.80)"/>
         <text x="632.41" y="111.63" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,223.26) scale(1,-1)" fill="black">4'-0"</text>
       </g>
-      <g id="dimension-bdfbc461">
+      <g id="dimension-6c19dea5">
         <line x1="855.38" y1="94.56" x2="855.38" y2="109.80" stroke="black" stroke-width="0.5"/>
         <line x1="892.54" y1="94.56" x2="892.54" y2="109.80" stroke="black" stroke-width="0.5"/>
         <line x1="855.38" y1="109.80" x2="892.54" y2="109.80" stroke="black" stroke-width="1"/>
@@ -55,7 +55,7 @@
         <polygon points="892.54,109.80 887.54,107.30 887.54,112.30" fill="black" transform="rotate(0.0,892.54,109.80)"/>
         <text x="873.96" y="111.63" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,223.26) scale(1,-1)" fill="black">4'-0"</text>
       </g>
-      <g id="dimension-727f76f0">
+      <g id="dimension-be33ad34">
         <line x1="613.83" y1="99.13" x2="613.83" y2="135.71" stroke="black" stroke-width="0.5"/>
         <line x1="892.54" y1="99.13" x2="892.54" y2="135.71" stroke="black" stroke-width="0.5"/>
         <line x1="613.83" y1="135.71" x2="892.54" y2="135.71" stroke="black" stroke-width="1"/>
@@ -63,17 +63,17 @@
         <polygon points="892.54,135.71 887.54,133.21 887.54,138.21" fill="black" transform="rotate(0.0,892.54,135.71)"/>
         <text x="753.19" y="137.54" font-family="Arial" font-size="3.7" text-anchor="middle" transform="translate(0,275.07) scale(1,-1)" fill="black">30'-0"</text>
       </g>
-      <g id="leader-10ab1044">
+      <g id="leader-d392e4eb">
         <polyline points="753.19,97.58 783.67,106.73 829.39,106.73" fill="none" stroke="black" stroke-width="1"/>
         <polygon points="753.19,97.58 748.19,95.08 748.19,100.08" fill="black" transform="rotate(-163.30075576600652,753.19,97.58)"/>
         <text x="834.39" y="106.73" font-family="Arial" font-size="4.6" text-anchor="start" transform="translate(0,213.45) scale(1,-1)" fill="black">Surface Course (2x2")</text>
       </g>
-      <g id="leader-baa12246">
+      <g id="leader-130ad6d1">
         <polyline points="753.19,81.16 783.67,75.06 829.39,75.06" fill="none" stroke="black" stroke-width="1"/>
         <polygon points="753.19,81.16 748.19,78.66 748.19,83.66" fill="black" transform="rotate(168.69006752597966,753.19,81.16)"/>
         <text x="834.39" y="75.06" font-family="Arial" font-size="4.6" text-anchor="start" transform="translate(0,150.12) scale(1,-1)" fill="black">Binder Course (3")</text>
       </g>
-      <g id="leader-e70dd067">
+      <g id="leader-ed606fd0">
         <polyline points="753.19,77.67 783.67,68.53 829.39,68.53" fill="none" stroke="black" stroke-width="1"/>
         <polygon points="753.19,77.67 748.19,75.17 748.19,80.17" fill="black" transform="rotate(163.30075576600652,753.19,77.67)"/>
         <text x="834.39" y="68.53" font-family="Arial" font-size="4.6" text-anchor="start" transform="translate(0,137.06) scale(1,-1)" fill="black">Aggregate Base (6")</text>

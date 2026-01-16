@@ -5,13 +5,13 @@ validate geometry, and export to SVG. Each scenario should pass validation
 checks, but human evaluation is needed to judge quality of output.
 """
 
-import os
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pytest
 
 from cross_section.export import AnnotatedSVGExporter
+from cross_section.core.geometry.validate import validate_section_geometry
 
 # Import scenario builders
 import sys
@@ -21,14 +21,6 @@ from crowned_road import build_scenario as build_crowned_road
 from three_lane_urban import build_scenario as build_three_lane_urban
 from ardot_undivided_highway import build_scenario as build_ardot_undivided_highway
 from ardot_undivided_notch_and_widen import build_scenario as build_ardot_undivided_notch_and_widen
-
-
-# Optional: Import shapely for validation if available
-try:
-    from cross_section.core.geometry.validate import validate_section_geometry
-    HAS_SHAPELY = True
-except ImportError:
-    HAS_SHAPELY = False
 
 
 # Test output directory
@@ -50,9 +42,8 @@ class TestScenarioValidation:
 
     def _validate_section_geometry(self, section):
         """Validate section geometry using shapely if available."""
-        if HAS_SHAPELY:
-            # Run shapely validation (expects list of components)
-            validate_section_geometry(section.components)
+        # Run shapely validation (expects list of components)
+        validate_section_geometry(section.components)
 
         # Basic validation (no shapely required)
         assert len(section.components) > 0, "Section must have at least one component"
@@ -200,7 +191,6 @@ class TestScenarioValidation:
         assert "Widening" in svg_content, "Should have widening annotation"
         assert "Notch" in svg_content, "Should have notch annotation"
 
-    @pytest.mark.skipif(not HAS_SHAPELY, reason="Shapely not available")
     def test_all_scenarios_pass_shapely_validation(self, exporter):
         """Test that all scenarios pass shapely geometric validation."""
         scenarios = [

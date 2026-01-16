@@ -101,7 +101,7 @@ def test_example_script_generates_valid_svg():
     """Test that the example script generates a valid SVG file."""
     # Import and run the example
     import sys
-    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "examples"))
+    sys.path.insert(0, str(Path(__file__).parent.parent / "generators"))
 
     try:
         from annotated_crowned_road import create_crowned_road_section, create_manual_annotations

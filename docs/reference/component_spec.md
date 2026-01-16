@@ -4,6 +4,27 @@
 
 This document defines the detailed requirements for all road cross-section components based on civil engineering practice. It serves as the specification for implementing the component library in the core domain model.
 
+## Scope and Status
+
+The table below captures the intended scope (core vs extended) and current implementation status. This is meant to keep the spec aligned with the codebase and highlight remaining gaps.
+
+| Component | Scope | Implementation Status | Notes |
+| --- | --- | --- | --- |
+| RoadSection / ControlPoint | Core | Implemented | Primary assembly API. |
+| TravelLane | Core | Implemented | Layered pavement support. |
+| Shoulder | Core | Implemented | Slumped/fully paved support; partial paving still needed. |
+| Slope | Core | Implemented | Surface-only representation needs a true polyline option. |
+| Ditch | Core | Implemented | Void polyline + optional lining. |
+| Curb (curb+gutter) | Core | Implemented | Standalone Gutter component not yet present. |
+| TraveledWay / LaneGroup | Core | Missing | Needed for lane grouping and turn lanes. |
+| TurnLane | Core | Missing | Needed for urban scenario. |
+| Buffer | Core | Missing | Needed for urban scenario. |
+| Sidewalk / PedestrianFacility | Core | Missing | Needed for urban scenario. |
+| Barrier (concrete/guardrail/cable) | Extended | Implemented | Align docs with code. |
+| RetainingWall / MSEWall | Extended | Implemented | Align docs with code. |
+| Shoring | Extended | Implemented | Align docs with code. |
+| Rehabilitation (ExistingPavement / Overlay / Notch/Widening) | Extended | Implemented | Used in ARDOT rehab scenario. |
+
 ## Component Hierarchy
 
 ```

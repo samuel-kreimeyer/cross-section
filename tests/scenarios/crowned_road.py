@@ -14,8 +14,11 @@ from cross_section.core.domain.annotations import (
     DimensionAnnotation,
     LeaderAnnotation,
 )
+from cross_section.core.domain import ControlPoint, RoadSection, SurfaceProfile, TravelLane
+from cross_section.core.domain.components import Ditch
+from cross_section.core.domain.pavement import AsphaltLayer
 from cross_section.core.domain.section import SectionGeometry
-from cross_section.core.geometry.primitives import ComponentGeometry, Point2D, Polygon
+from cross_section.core.geometry.primitives import Point2D
 
 
 def build_scenario() -> tuple[SectionGeometry, AnnotationCollection]:
@@ -65,129 +68,57 @@ def build_scenario() -> tuple[SectionGeometry, AnnotationCollection]:
     right_shoulder_right = right_shoulder_left + shoulder_width_ft * ft_to_m
     right_shoulder_right_elev = right_lane_right_elev - (shoulder_width_ft * ft_to_m * shoulder_slope)
 
-    # Left ditch
-    left_ditch_top = left_shoulder_left
-    left_ditch_top_elev = left_shoulder_left_elev
-    left_ditch_bottom_elev = left_ditch_top_elev - ditch_depth_ft * ft_to_m
-    left_ditch_bottom = left_ditch_top - (ditch_depth_ft * ft_to_m * ditch_slope)
-    left_ditch_far = left_ditch_bottom - (ditch_depth_ft * ft_to_m * ditch_slope)
-
-    # Right ditch
-    right_ditch_top = right_shoulder_right
-    right_ditch_top_elev = right_shoulder_right_elev
-    right_ditch_bottom_elev = right_ditch_top_elev - ditch_depth_ft * ft_to_m
-    right_ditch_bottom = right_ditch_top + (ditch_depth_ft * ft_to_m * ditch_slope)
-    right_ditch_far = right_ditch_bottom + (ditch_depth_ft * ft_to_m * ditch_slope)
-
-    # Create component geometries
-    components = []
-
-    # Left lane
-    left_lane_poly = Polygon(exterior=[
-        Point2D(left_lane_left, left_lane_left_elev),
-        Point2D(left_lane_right, crown_elevation),
-        Point2D(left_lane_right, crown_elevation - 0.15),  # Pavement thickness
-        Point2D(left_lane_left, left_lane_left_elev - 0.15),
-    ])
-    components.append(ComponentGeometry(
-        polygons=[left_lane_poly],
-        metadata={
-            "component_type": "TravelLane",
-            "width": lane_width_ft * ft_to_m,
-            "assembly_direction": "left",
-        }
-    ))
-
-    # Right lane
-    right_lane_poly = Polygon(exterior=[
-        Point2D(right_lane_left, crown_elevation),
-        Point2D(right_lane_right, right_lane_right_elev),
-        Point2D(right_lane_right, right_lane_right_elev - 0.15),
-        Point2D(right_lane_left, crown_elevation - 0.15),
-    ])
-    components.append(ComponentGeometry(
-        polygons=[right_lane_poly],
-        metadata={
-            "component_type": "TravelLane",
-            "width": lane_width_ft * ft_to_m,
-            "assembly_direction": "right",
-        }
-    ))
-
-    # Left shoulder
-    left_shoulder_poly = Polygon(exterior=[
-        Point2D(left_shoulder_left, left_shoulder_left_elev),
-        Point2D(left_shoulder_right, left_lane_left_elev),
-        Point2D(left_shoulder_right, left_lane_left_elev - 0.15),
-        Point2D(left_shoulder_left, left_shoulder_left_elev - 0.15),
-    ])
-    components.append(ComponentGeometry(
-        polygons=[left_shoulder_poly],
-        metadata={
-            "component_type": "Shoulder",
-            "width": shoulder_width_ft * ft_to_m,
-            "assembly_direction": "left",
-        }
-    ))
-
-    # Right shoulder
-    right_shoulder_poly = Polygon(exterior=[
-        Point2D(right_shoulder_left, right_lane_right_elev),
-        Point2D(right_shoulder_right, right_shoulder_right_elev),
-        Point2D(right_shoulder_right, right_shoulder_right_elev - 0.15),
-        Point2D(right_shoulder_left, right_lane_right_elev - 0.15),
-    ])
-    components.append(ComponentGeometry(
-        polygons=[right_shoulder_poly],
-        metadata={
-            "component_type": "Shoulder",
-            "width": shoulder_width_ft * ft_to_m,
-            "assembly_direction": "right",
-        }
-    ))
-
-    # Left ditch (as polylines - no fill)
-    left_ditch_line = [
-        Point2D(left_ditch_top, left_ditch_top_elev),
-        Point2D(left_ditch_bottom, left_ditch_bottom_elev),
-        Point2D(left_ditch_far, left_ditch_top_elev),
-    ]
-    components.append(ComponentGeometry(
-        polygons=[],
-        polylines=[left_ditch_line],
-        metadata={
-            "component_type": "Ditch",
-            "width": abs(left_ditch_far - left_ditch_top),
-            "assembly_direction": "left",
-            "depth": ditch_depth_ft * ft_to_m,
-        }
-    ))
-
-    # Right ditch
-    right_ditch_line = [
-        Point2D(right_ditch_top, right_ditch_top_elev),
-        Point2D(right_ditch_bottom, right_ditch_bottom_elev),
-        Point2D(right_ditch_far, right_ditch_top_elev),
-    ]
-    components.append(ComponentGeometry(
-        polygons=[],
-        polylines=[right_ditch_line],
-        metadata={
-            "component_type": "Ditch",
-            "width": abs(right_ditch_far - right_ditch_top),
-            "assembly_direction": "right",
-            "depth": ditch_depth_ft * ft_to_m,
-        }
-    ))
-
-    # Create section geometry
-    section = SectionGeometry(
-        components=components,
-        metadata={
-            "name": "Crowned Road with Ditches",
-            "control_point": {"x": 0.0, "elevation": crown_elevation}
-        }
+    pavement_layer = AsphaltLayer(
+        thickness=0.15,
+        aggregate_size=12.5,
+        binder_type="PG 64-22",
+        binder_percentage=5.5,
+        density=2400,
     )
+
+    # Build section using the domain API
+    section = RoadSection(
+        name="Crowned Road with Ditches",
+        control_point=ControlPoint(x=0.0, elevation=crown_elevation),
+        left_components=[
+            TravelLane(
+                width=lane_width_ft * ft_to_m,
+                cross_slope=crown_slope,
+                traffic_direction="inbound",
+                pavement_layers=[pavement_layer],
+            ),
+            SurfaceProfile(
+                segments=[(shoulder_width_ft * ft_to_m, shoulder_width_ft * ft_to_m * shoulder_slope)],
+                surface_type="asphalt",
+            ),
+            Ditch(
+                depth=ditch_depth_ft * ft_to_m,
+                foreslope_ratio=ditch_slope,
+                backslope_ratio=ditch_slope,
+                bottom_width=0.0,
+            ),
+        ],
+        right_components=[
+            TravelLane(
+                width=lane_width_ft * ft_to_m,
+                cross_slope=crown_slope,
+                traffic_direction="outbound",
+                pavement_layers=[pavement_layer],
+            ),
+            SurfaceProfile(
+                segments=[(shoulder_width_ft * ft_to_m, shoulder_width_ft * ft_to_m * shoulder_slope)],
+                surface_type="asphalt",
+            ),
+            Ditch(
+                depth=ditch_depth_ft * ft_to_m,
+                foreslope_ratio=ditch_slope,
+                backslope_ratio=ditch_slope,
+                bottom_width=0.0,
+            ),
+        ],
+    )
+
+    geometry = section.to_geometry()
 
     # Create annotations
     lane_width = lane_width_ft * ft_to_m
@@ -262,6 +193,6 @@ def build_scenario() -> tuple[SectionGeometry, AnnotationCollection]:
     ))
 
     # Resolve annotation collisions with geometry awareness
-    collection.resolve_collisions(geometry=section)
+    collection.resolve_collisions(geometry=geometry)
 
-    return section, collection
+    return geometry, collection
