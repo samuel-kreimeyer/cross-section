@@ -53,6 +53,10 @@ class TestAnnotationGeneratorOptions:
         assert options.add_width_dimensions is True
         assert options.add_material_labels is False
         assert options.use_keyed_notes is False
+        assert options.add_cross_slope_symbols is False
+        assert options.add_cross_slope_text is False
+        assert options.material_label_mode == "note"
+        assert options.traffic_arrow_mode == "assembly"
         assert options.text_size == 0.15
 
     def test_custom_options(self):
@@ -253,6 +257,62 @@ class TestAnnotationGenerator:
         angles = sorted([s.angle for s in symbols])
         assert angles[0] == pytest.approx(0.0)
         assert angles[1] == pytest.approx(180.0)
+
+    def test_generate_cross_slope_symbols(self):
+        """Test generating cross-slope symbols."""
+        lane = _create_mock_component(
+            "TravelLane",
+            width=3.6,
+            min_x=0,
+            max_x=3.6,
+            min_y=99.5,
+            max_y=100.0,
+            direction="right",
+            cross_slope=0.02,
+        )
+
+        section = SectionGeometry(components=[lane], metadata={})
+        options = AnnotationGeneratorOptions(
+            add_component_labels=False,
+            add_width_dimensions=False,
+            add_cross_slope_symbols=True,
+        )
+
+        collection = AnnotationGenerator.generate(section, options)
+
+        symbols = collection.get_by_type(SymbolAnnotation)
+        assert len(symbols) == 1
+        assert symbols[0].symbol_type == "drainage_arrow"
+        assert symbols[0].angle == pytest.approx(0.0)
+
+    def test_crown_dimension_required(self):
+        """Test crown point always receives a dimension."""
+        lane = _create_mock_component(
+            "TravelLane",
+            width=3.6,
+            min_x=0,
+            max_x=3.6,
+            min_y=99.5,
+            max_y=100.0,
+            direction="right",
+        )
+        section = SectionGeometry(
+            components=[lane],
+            metadata={"control_point": {"x": 0.0, "elevation": 100.0}},
+        )
+        options = AnnotationGeneratorOptions(
+            add_component_labels=False,
+            add_width_dimensions=False,
+        )
+
+        collection = AnnotationGenerator.generate(section, options)
+
+        dimensions = collection.get_by_type(DimensionAnnotation)
+        assert len(dimensions) == 1
+        assert (
+            dimensions[0].start.x == pytest.approx(0.0)
+            or dimensions[0].end.x == pytest.approx(0.0)
+        )
 
     def test_generate_all_annotations(self):
         """Test generating all annotation types together."""

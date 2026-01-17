@@ -1,3 +1,20 @@
+## Implementation Progress (2026-01-16)
+
+### Summary
+- Introduced guide-based annotation planning with profiles and a component registry.
+- Anchored leader annotations now keep arrow tips fixed and clamp elbow extensions.
+- Added crown-dimension enforcement and cross-slope warning logic.
+- Expanded annotation tests for crown dimensions and cross-slope symbols.
+
+### Details
+- New modules: `src/cross_section/core/domain/annotations/guides.py`, `src/cross_section/core/domain/annotations/profile.py`, `src/cross_section/core/domain/annotations/planner.py`.
+- `AnnotationGenerator` now delegates to `AnnotationPlanner`, mapping options to an `AnnotationProfile`.
+- `LeaderAnnotation.reposition` preserves anchor points and shortens elbow segments to avoid long underlines.
+- `RoadSection.validate` emits warnings when left/right cross slopes oppose.
+- Tests updated: `tests/core/test_annotation_generation.py`, `tests/core/test_annotations.py`, `tests/core/test_section.py`.
+
+---
+
 ## Implementation Progress (2026-01-14)
 
 ### Summary

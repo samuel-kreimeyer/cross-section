@@ -380,12 +380,27 @@ class TestLeaderAnnotation:
         )
         repositioned = leader.reposition(Point2D(10.0, 10.0))
 
-        assert repositioned.points[0].x == 10.0
-        assert repositioned.points[0].y == 10.0
+        assert repositioned.points[0].x == 0.0
+        assert repositioned.points[0].y == 0.0
         assert repositioned.points[1].x == 15.0
         assert repositioned.points[1].y == 15.0
         # Original unchanged
         assert leader.points[0].x == 0.0
+
+    def test_leader_reposition_clamps_elbow(self):
+        """Test leader elbow is clamped to a short extension."""
+        leader = LeaderAnnotation(
+            points=[Point2D(0, 0), Point2D(2, 0), Point2D(4, 0)],
+            text="Test",
+            text_size=0.10,
+        )
+        repositioned = leader.reposition(Point2D(0.0, 0.0))
+
+        elbow = repositioned.points[1]
+        text_point = repositioned.points[2]
+        segment_length = ((elbow.x - text_point.x) ** 2 + (elbow.y - text_point.y) ** 2) ** 0.5
+        max_length = leader.text_size * len(leader.text) * 0.6 + leader.max_underline_extension
+        assert segment_length <= max_length + 1e-6
 
     def test_leader_to_svg(self):
         """Test SVG generation for leader."""

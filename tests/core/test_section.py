@@ -123,6 +123,26 @@ class TestRoadSection:
         errors = section.validate()
         assert errors == []
 
+    def test_validate_opposing_cross_slopes_warns(self):
+        """Test opposing cross slopes emit a warning."""
+        cp = ControlPoint(x=0.0, elevation=100.0)
+        section = RoadSection(name="Test", control_point=cp)
+
+        from cross_section.core.domain.pavement import AsphaltLayer
+
+        layers = [
+            AsphaltLayer(thickness=0.15, aggregate_size=19.0, binder_type="PG 64-22",
+                         binder_percentage=5.0, density=2400),
+        ]
+
+        section.add_component_left(TravelLane(width=3.6, cross_slope=-0.02, pavement_layers=layers))
+        section.add_component_right(TravelLane(width=3.6, cross_slope=0.02, pavement_layers=layers))
+
+        with pytest.warns(UserWarning):
+            errors = section.validate()
+
+        assert errors == []
+
     def test_validate_invalid_component(self):
         """Test validation catches invalid component."""
         cp = ControlPoint(x=0.0, elevation=100.0)

@@ -1,6 +1,7 @@
 """Road section assembly and coordination."""
 
 from dataclasses import dataclass, field
+import warnings
 
 from ..geometry.primitives import ComponentGeometry, ConnectionPoint
 from .base import Direction, RoadComponent
@@ -200,7 +201,33 @@ class RoadSection:
             except ShapelyNotAvailable as exc:
                 errors.append(str(exc))
 
+        self._warn_opposing_slopes()
+
         return errors
+
+    def _warn_opposing_slopes(self) -> None:
+        left = self._first_cross_slope(self.left_components)
+        right = self._first_cross_slope(self.right_components)
+
+        if left is None or right is None:
+            return
+
+        if abs(left) < 1e-6 or abs(right) < 1e-6:
+            return
+
+        if left * right < 0:
+            warnings.warn(
+                "Opposing cross slopes detected across crown; verify superelevation intent.",
+                UserWarning,
+            )
+
+    @staticmethod
+    def _first_cross_slope(components: list[RoadComponent]) -> float | None:
+        for component in components:
+            cross_slope = getattr(component, "cross_slope", None)
+            if cross_slope is not None:
+                return cross_slope
+        return None
 
     def to_geometry(self) -> SectionGeometry:
         """Generate complete section geometry by coordinating component assembly.

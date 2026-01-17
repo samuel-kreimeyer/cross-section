@@ -22,6 +22,10 @@ class AnnotatedSVGExporter(SimpleSVGExporter):
     and symbols with automatic collision resolution.
     """
 
+    KEYED_NOTES_WIDTH_PX = 250
+    KEYED_NOTES_ROW_HEIGHT_PX = 20
+    KEYED_NOTES_PADDING_PX = 10
+
     def export_with_annotations(
         self,
         geometry: SectionGeometry,
@@ -56,12 +60,22 @@ class AnnotatedSVGExporter(SimpleSVGExporter):
                 max_x = max(max_x, ann_bounds.max_x)
                 max_y = max(max_y, ann_bounds.max_y)
 
-        # Add margins (in meters)
-        margin = 0.5
-        view_min_x = min_x - margin
-        view_max_x = max_x + margin
-        view_min_y = min_y - margin
-        view_max_y = max_y + margin
+        keyed_notes_count = len(annotations.keyed_notes) if include_keyed_notes_table else 0
+        (
+            view_min_x,
+            view_min_y,
+            view_max_x,
+            view_max_y,
+            scale_length_m,
+            scale_label,
+        ) = self._compute_view_bounds(
+            min_x,
+            min_y,
+            max_x,
+            max_y,
+            geometry,
+            keyed_notes_count=keyed_notes_count,
+        )
 
         # Calculate viewport dimensions
         view_width = view_max_x - view_min_x
@@ -106,7 +120,7 @@ class AnnotatedSVGExporter(SimpleSVGExporter):
         self._add_legend(output, geometry, svg_width, svg_height)
 
         # Add scale indicator
-        self._add_scale(output, svg_height, view_width)
+        self._add_scale(output, svg_height, scale_length_m, scale_label)
 
         # Add keyed notes table if requested
         if include_keyed_notes_table and annotations.keyed_notes:
@@ -195,6 +209,15 @@ class AnnotatedSVGExporter(SimpleSVGExporter):
                 self._render_symbol(output, annotation, transform)
             elif isinstance(annotation, TextAnnotation):
                 self._render_text(output, annotation, transform)
+
+    def _keyed_notes_box_px(self, keyed_notes_count: int) -> tuple[float, float]:
+        if keyed_notes_count <= 0:
+            return (0.0, 0.0)
+        table_height = (
+            (keyed_notes_count + 1) * self.KEYED_NOTES_ROW_HEIGHT_PX
+            + self.KEYED_NOTES_PADDING_PX
+        )
+        return (self.KEYED_NOTES_WIDTH_PX, table_height + 20)
 
     def _render_text(
         self,
@@ -409,16 +432,21 @@ class AnnotatedSVGExporter(SimpleSVGExporter):
         output.write("  <!-- Keyed Notes Table -->\n")
 
         # Table parameters
-        table_x = svg_width - 250
-        table_y = svg_height - 20 - (len(keyed_notes) * 20) - 30
-        row_height = 20
+        table_x = svg_width - self.KEYED_NOTES_WIDTH_PX
+        table_y = (
+            svg_height
+            - 20
+            - (len(keyed_notes) * self.KEYED_NOTES_ROW_HEIGHT_PX)
+            - 30
+        )
+        row_height = self.KEYED_NOTES_ROW_HEIGHT_PX
         col1_width = 40
         col2_width = 200
 
         # Table background
-        table_height = (len(keyed_notes) + 1) * row_height + 10
+        table_height = (len(keyed_notes) + 1) * row_height + self.KEYED_NOTES_PADDING_PX
         output.write(f'  <rect x="{table_x}" y="{table_y}" ')
-        output.write(f'width="{col1_width + col2_width}" height="{table_height}" ')
+        output.write(f'width="{self.KEYED_NOTES_WIDTH_PX}" height="{table_height}" ')
         output.write('fill="white" stroke="black" stroke-width="1"/>\n')
 
         # Header

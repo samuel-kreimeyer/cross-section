@@ -30,6 +30,7 @@ class LeaderAnnotation(AnnotationBase):
     arrow_at_start: bool = True
     text_anchor: Literal["start", "middle", "end"] = "start"
     text_size: float = 0.12  # Slightly smaller than regular labels
+    max_underline_extension: float = 0.006  # ~1/4 inch in meters
 
     def __post_init__(self) -> None:
         """Validate leader path."""
@@ -95,12 +96,38 @@ class LeaderAnnotation(AnnotationBase):
         Returns:
             New LeaderAnnotation instance at offset position
         """
-        new_points = [
-            Point2D(p.x + offset.x, p.y + offset.y)
-            for p in self.points
-        ]
+        new_points = [self.points[0]]
+        for p in self.points[1:]:
+            new_points.append(Point2D(p.x + offset.x, p.y + offset.y))
+
+        if len(new_points) == 3:
+            new_points = self._clamp_elbow_extension(new_points)
 
         return replace(self, points=new_points)
+
+    def _clamp_elbow_extension(self, points: list[Point2D]) -> list[Point2D]:
+        """Clamp elbow-to-text segment length to avoid excessive overhang."""
+        text_width = self.text_size * len(self.text) * 0.6
+        if self.text_anchor == "middle":
+            max_length = text_width / 2 + self.max_underline_extension
+        else:
+            max_length = text_width + self.max_underline_extension
+
+        elbow = points[1]
+        text_point = points[2]
+        dx = elbow.x - text_point.x
+        dy = elbow.y - text_point.y
+        length = (dx * dx + dy * dy) ** 0.5
+
+        if length > max_length and length > 0:
+            scale = max_length / length
+            elbow = Point2D(
+                text_point.x + dx * scale,
+                text_point.y + dy * scale,
+            )
+            return [points[0], elbow, text_point]
+
+        return points
 
     def to_svg_elements(self, transform: Callable[[Point2D], Point2D]) -> list[str]:
         """Convert this leader to SVG elements.

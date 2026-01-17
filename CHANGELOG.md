@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Geometry invariants reference documentation
 - Migration notes for the stable API surface
 - Tests for new components and traveled way helpers
+- Guide-based annotation planner with component registry and profiles
+- Cross-slope annotation options and crown-dimension enforcement
+- Cross-slope warning for opposing left/right pavement slopes
+- SVG margin system to reserve space for legend, scale, and keyed notes
 
 ### Changed
 - Updated development dependencies to include types-shapely
@@ -27,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved type safety across component modules
 - Scenario builders for crowned road and three-lane urban now use the domain API
 - Scenario validation enforces shapely checks in tests
+- Leader annotations keep anchor points fixed during repositioning
 
 ### Fixed
 - Type errors in slopes, shoulders, curbs, barriers, and section modules
