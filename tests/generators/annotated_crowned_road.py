@@ -1,23 +1,23 @@
-"""Example: Generate annotated crowned road cross-section.
-
-Creates a simple crowned road with:
-- Two 12-ft travel lanes (24 ft total)
-- 8-ft paved shoulders on each side
-- 1-ft deep ditches with 4:1 side slopes
-- Width dimensions above each component
-- Overall width dimension above all components
-- Leader pointing to crown with "Crown" text
-"""
+"""Example: Generate annotated crowned road cross-section."""
 
 from cross_section.core.domain.annotations import (
-    AnnotationCollection,
-    DimensionAnnotation,
-    LeaderAnnotation,
-    TextAnnotation,
+    AnnotationGenerator,
+    AnnotationGeneratorOptions,
 )
 from cross_section.core.domain.section import SectionGeometry
 from cross_section.core.geometry.primitives import ComponentGeometry, Point2D, Polygon
 from cross_section.export import AnnotatedSVGExporter
+
+
+def _annotation_options() -> AnnotationGeneratorOptions:
+    return AnnotationGeneratorOptions(
+        add_component_labels=True,
+        add_width_dimensions=True,
+        add_material_labels=True,
+        add_traffic_symbols=True,
+        add_cross_slope_symbols=True,
+        add_cross_slope_text=True,
+    )
 
 
 def create_crowned_road_section() -> SectionGeometry:
@@ -193,101 +193,6 @@ def create_crowned_road_section() -> SectionGeometry:
     )
 
 
-def create_manual_annotations(section: SectionGeometry) -> AnnotationCollection:
-    """Create manual annotations for the crowned road.
-
-    Args:
-        section: The section geometry to annotate
-
-    Returns:
-        AnnotationCollection with all annotations
-    """
-    ft_to_m = 0.3048
-    collection = AnnotationCollection()
-
-    # Text size: 10pt at 100% zoom with scale=100 px/m
-    # 10pt = ~13.3 pixels at 96 DPI
-    # 13.3 pixels / 100 px/m = 0.133 meters
-    text_size = 0.13
-
-    # Get component bounds for positioning
-    lane_width = 12.0 * ft_to_m
-    shoulder_width = 8.0 * ft_to_m
-
-    # Dimension offset (vertical spacing)
-    dim_offset_lower = 0.5  # For component dimensions
-    dim_offset_upper = 1.2  # For overall dimension
-
-    # Crown elevation
-    crown_elev = 100.0
-
-    # Component dimensions (lower level)
-    # Left shoulder
-    left_shoulder_right = -lane_width
-    left_shoulder_left = left_shoulder_right - shoulder_width
-    collection.add(DimensionAnnotation(
-        start=Point2D(left_shoulder_left, crown_elev),
-        end=Point2D(left_shoulder_right, crown_elev),
-        offset=dim_offset_lower,
-        dimension_text="8'-0\"",
-        layer="dimensions"
-    ))
-
-    # Left lane
-    collection.add(DimensionAnnotation(
-        start=Point2D(-lane_width, crown_elev),
-        end=Point2D(0.0, crown_elev),
-        offset=dim_offset_lower,
-        dimension_text="12'-0\"",
-        layer="dimensions"
-    ))
-
-    # Right lane
-    collection.add(DimensionAnnotation(
-        start=Point2D(0.0, crown_elev),
-        end=Point2D(lane_width, crown_elev),
-        offset=dim_offset_lower,
-        dimension_text="12'-0\"",
-        layer="dimensions"
-    ))
-
-    # Right shoulder
-    right_shoulder_left = lane_width
-    right_shoulder_right = right_shoulder_left + shoulder_width
-    collection.add(DimensionAnnotation(
-        start=Point2D(right_shoulder_left, crown_elev),
-        end=Point2D(right_shoulder_right, crown_elev),
-        offset=dim_offset_lower,
-        dimension_text="8'-0\"",
-        layer="dimensions"
-    ))
-
-    # Overall width dimension (upper level)
-    total_paved_width = (2 * lane_width) + (2 * shoulder_width)
-    collection.add(DimensionAnnotation(
-        start=Point2D(-lane_width - shoulder_width, crown_elev),
-        end=Point2D(lane_width + shoulder_width, crown_elev),
-        offset=dim_offset_upper,
-        dimension_text="40'-0\"",
-        layer="dimensions"
-    ))
-
-    # Leader pointing to crown
-    # Start from crown point, go up and to the right
-    collection.add(LeaderAnnotation(
-        points=[
-            Point2D(0.0, crown_elev),  # At crown
-            Point2D(1.0, crown_elev + 0.3),  # Up and right
-            Point2D(2.5, crown_elev + 0.3),  # Extend to the right
-        ],
-        text="Crown",
-        arrow_at_start=True,
-        layer="leaders"
-    ))
-
-    return collection
-
-
 def main():
     """Generate and export annotated crowned road section."""
     print("Generating crowned road cross-section...")
@@ -296,8 +201,8 @@ def main():
     section = create_crowned_road_section()
     print(f"  Created section with {len(section.components)} components")
 
-    # Create manual annotations
-    annotations = create_manual_annotations(section)
+    annotations = AnnotationGenerator.generate(section, _annotation_options())
+    annotations.resolve_collisions(geometry=section)
     print(f"  Created {annotations.count()} annotations")
 
     # Export to SVG
@@ -319,9 +224,7 @@ def main():
     print(f"  - Total paved width: 40 ft")
     print(f"  - Crown at centerline, 2% cross slope")
     print("\nAnnotations:")
-    print(f"  - {len(annotations.get_by_type(DimensionAnnotation))} dimension lines (arrows point outward)")
-    print(f"  - {len(annotations.get_by_type(LeaderAnnotation))} leader callout")
-    print(f"  - Text size: 10pt (0.13m at scale=100)")
+    print(f"  - Automated annotation set (generator defaults with slope/traffic symbols)")
     print(f"  - No vertical exaggeration (1:1 scale)")
 
 

@@ -16,15 +16,23 @@ snap together via insertion/attachment points.
 
 from cross_section.core.domain.annotations import (
     AnnotationCollection,
-    DimensionAnnotation,
-    LeaderAnnotation,
+    AnnotationGenerator,
+    AnnotationGeneratorOptions,
 )
 from cross_section.core.domain.components.lanes import TravelLane
 from cross_section.core.domain.components.shoulders import Shoulder
 from cross_section.core.domain.components.slopes import Slope
 from cross_section.core.domain.pavement import AsphaltLayer, CrushedRockLayer
 from cross_section.core.domain.section import ControlPoint, RoadSection, SectionGeometry
-from cross_section.core.geometry.primitives import Point2D
+def _annotation_options() -> AnnotationGeneratorOptions:
+    return AnnotationGeneratorOptions(
+        add_component_labels=True,
+        add_width_dimensions=True,
+        add_material_labels=True,
+        add_traffic_symbols=True,
+        add_cross_slope_symbols=True,
+        add_cross_slope_text=True,
+    )
 
 
 def build_scenario() -> tuple[SectionGeometry, AnnotationCollection]:
@@ -238,105 +246,7 @@ def build_scenario() -> tuple[SectionGeometry, AnnotationCollection]:
     # Add ARDOT-specific metadata
     geometry.metadata["standard"] = "ARDOT"
 
-    # Create annotations
-    collection = AnnotationCollection()
+    annotations = AnnotationGenerator.generate(geometry, _annotation_options())
+    annotations.resolve_collisions(geometry=geometry)
 
-    # Calculate key positions for annotations
-    # These are derived from the component widths for accurate placement
-    left_lane_edge = -lane_width
-    right_lane_edge = lane_width
-    left_shoulder_edge = left_lane_edge - shoulder_paved_width - shoulder_aggregate_flat_width
-    right_shoulder_edge = right_lane_edge + shoulder_paved_width + shoulder_aggregate_flat_width
-
-    # Dimension offsets (in world units)
-    dim_offset_lower = 0.5
-    dim_offset_upper = 1.2
-
-    # Lane dimensions
-    collection.add(DimensionAnnotation(
-        start=Point2D(left_lane_edge, centerline_elev),
-        end=Point2D(0.0, centerline_elev),
-        offset=dim_offset_lower,
-        dimension_text="11'-0\"",
-        layer="dimensions"
-    ))
-
-    collection.add(DimensionAnnotation(
-        start=Point2D(0.0, centerline_elev),
-        end=Point2D(right_lane_edge, centerline_elev),
-        offset=dim_offset_lower,
-        dimension_text="11'-0\"",
-        layer="dimensions"
-    ))
-
-    # Shoulder dimensions (paved + flat aggregate = 4 ft each side)
-    collection.add(DimensionAnnotation(
-        start=Point2D(left_shoulder_edge, centerline_elev),
-        end=Point2D(left_lane_edge, centerline_elev),
-        offset=dim_offset_lower,
-        dimension_text="4'-0\"",
-        layer="dimensions"
-    ))
-
-    collection.add(DimensionAnnotation(
-        start=Point2D(right_lane_edge, centerline_elev),
-        end=Point2D(right_shoulder_edge, centerline_elev),
-        offset=dim_offset_lower,
-        dimension_text="4'-0\"",
-        layer="dimensions"
-    ))
-
-    # Overall dimension (lanes + shoulders = 30 ft)
-    collection.add(DimensionAnnotation(
-        start=Point2D(left_shoulder_edge, centerline_elev),
-        end=Point2D(right_shoulder_edge, centerline_elev),
-        offset=dim_offset_upper,
-        dimension_text="30'-0\"",
-        layer="dimensions"
-    ))
-
-    # Leader notes for pavement layers
-    # Position leaders on right side to avoid geometry overlap
-    total_surface = 2 * surface_course_thickness
-    surface_mid_elev = centerline_elev - surface_course_thickness
-
-    collection.add(LeaderAnnotation(
-        points=[
-            Point2D(0.0, surface_mid_elev),
-            Point2D(1.0, surface_mid_elev + 0.3),
-            Point2D(2.5, surface_mid_elev + 0.3),
-        ],
-        text="Surface Course (2x2\")",
-        arrow_at_start=True,
-        layer="leaders"
-    ))
-
-    binder_mid_elev = centerline_elev - total_surface - binder_thickness / 2
-    collection.add(LeaderAnnotation(
-        points=[
-            Point2D(0.0, binder_mid_elev),
-            Point2D(1.0, binder_mid_elev - 0.2),
-            Point2D(2.5, binder_mid_elev - 0.2),
-        ],
-        text="Binder Course (3\")",
-        arrow_at_start=True,
-        layer="leaders"
-    ))
-
-    total_pavement = total_surface + binder_thickness
-    base_mid_elev = centerline_elev - total_pavement - lane_aggregate_base / 2
-    collection.add(LeaderAnnotation(
-        points=[
-            Point2D(0.0, base_mid_elev),
-            Point2D(1.0, base_mid_elev - 0.3),
-            Point2D(2.5, base_mid_elev - 0.3),
-        ],
-        text="Aggregate Base (6\")",
-        arrow_at_start=True,
-        layer="leaders"
-    ))
-
-    # Resolve annotation collisions with geometry awareness
-    collection.resolve_collisions(geometry=geometry)
-
-    return geometry, collection
+    return geometry, annotations

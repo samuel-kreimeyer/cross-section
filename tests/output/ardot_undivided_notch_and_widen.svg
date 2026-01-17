@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="5362.0" height="667.9" viewBox="0 0 5362.0 667.9">
+<svg xmlns="http://www.w3.org/2000/svg" width="5362.0" height="619.5" viewBox="0 0 5362.0 619.5">
   <title>ARDOT Undivided Notch and Widen</title>
-  <rect width="5362.0" height="667.9" fill="white"/>
+  <rect width="5362.0" height="619.5" fill="white"/>
   <g transform="scale(1,-1)">
-    <g transform="translate(0,-667.9)">
+    <g transform="translate(0,-619.5)">
       <polygon points="3453.02,376.88 3453.02,346.88 3148.22,340.78 3148.22,370.78" fill="#BDC3C7" stroke="black" stroke-width="1"/>
       <polygon points="3453.02,375.86 3453.02,370.78 3148.22,376.88 3148.22,381.96" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="3148.22,375.86 3148.22,370.78 3120.28,369.67 3089.80,368.45 3089.80,373.53 3120.28,374.75" fill="#2C3E50" stroke="black" stroke-width="1"/>
@@ -26,61 +26,76 @@
       <polygon points="4136.28,335.63 4502.04,321.00 4502.04,320.00 4136.28,334.63" fill="#BDC3C7" stroke="black" stroke-width="1"/>
       <polygon points="4502.04,321.00 5302.04,121.00 5302.04,120.00 4502.04,320.00" fill="#BDC3C7" stroke="black" stroke-width="1"/>
       <!-- Annotations -->
-      <g id="dimension-2a5eba09">
-        <line x1="3089.80" y1="391.88" x2="3089.80" y2="441.88" stroke="black" stroke-width="0.5"/>
-        <line x1="3453.02" y1="391.88" x2="3453.02" y2="441.88" stroke="black" stroke-width="0.5"/>
-        <line x1="3089.80" y1="441.88" x2="3453.02" y2="441.88" stroke="black" stroke-width="1"/>
-        <polygon points="3089.80,441.88 3084.80,439.38 3084.80,444.38" fill="black" transform="rotate(180.0,3089.80,441.88)"/>
-        <polygon points="3453.02,441.88 3448.02,439.38 3448.02,444.38" fill="black" transform="rotate(0.0,3453.02,441.88)"/>
-        <text x="3271.41" y="447.88" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,895.76) scale(1,-1)" fill="black">11'-0"</text>
+      <text x="3300.62" y="396.88" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,793.76) scale(1,-1)" fill="black">ExistingPavement</text>
+      <text x="3240.62" y="461.96" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,923.92) scale(1,-1)" fill="black">MillAndOverlay</text>
+      <text x="3119.01" y="395.86" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,791.73) scale(1,-1)" fill="black">NotchAndWidening</text>
+      <text x="2960.26" y="393.53" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,787.05) scale(1,-1)" fill="black">Shoulder</text>
+      <text x="2740.24" y="418.07" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,836.14) scale(1,-1)" fill="black">Slope 25.0:1</text>
+      <text x="2586.88" y="355.63" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,711.26) scale(1,-1)" fill="black">Slope 25.0:1</text>
+      <text x="2004.00" y="341.00" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,682.00) scale(1,-1)" fill="black">Slope 4.0:1</text>
+      <text x="3605.42" y="396.88" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,793.76) scale(1,-1)" fill="black">ExistingPavement</text>
+      <text x="3630.42" y="426.96" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,853.92) scale(1,-1)" fill="black">MillAndOverlay</text>
+      <text x="3847.03" y="455.86" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,911.73) scale(1,-1)" fill="black">NotchAndWidening</text>
+      <text x="3945.78" y="393.53" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,787.05) scale(1,-1)" fill="black">Shoulder</text>
+      <text x="4105.80" y="358.07" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,716.14) scale(1,-1)" fill="black">Slope 25.0:1</text>
+      <text x="4319.16" y="355.63" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,711.26) scale(1,-1)" fill="black">Slope 25.0:1</text>
+      <text x="4902.04" y="341.00" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,682.00) scale(1,-1)" fill="black">Slope 4.0:1</text>
+      <g id="dimension-76393802">
+        <line x1="3453.02" y1="381.96" x2="3453.02" y2="331.96" stroke="black" stroke-width="0.5"/>
+        <line x1="3148.22" y1="381.96" x2="3148.22" y2="331.96" stroke="black" stroke-width="0.5"/>
+        <line x1="3453.02" y1="331.96" x2="3148.22" y2="331.96" stroke="black" stroke-width="1"/>
+        <polygon points="3453.02,331.96 3448.02,329.46 3448.02,334.46" fill="black" transform="rotate(360.0,3453.02,331.96)"/>
+        <polygon points="3148.22,331.96 3143.22,329.46 3143.22,334.46" fill="black" transform="rotate(180.0,3148.22,331.96)"/>
+        <text x="3300.62" y="325.96" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,651.92) scale(1,-1)" fill="black">3.05m</text>
       </g>
-      <g id="dimension-702ad050">
-        <line x1="3453.02" y1="391.88" x2="3453.02" y2="441.88" stroke="black" stroke-width="0.5"/>
-        <line x1="3816.24" y1="391.88" x2="3816.24" y2="441.88" stroke="black" stroke-width="0.5"/>
-        <line x1="3453.02" y1="441.88" x2="3816.24" y2="441.88" stroke="black" stroke-width="1"/>
-        <polygon points="3453.02,441.88 3448.02,439.38 3448.02,444.38" fill="black" transform="rotate(180.0,3453.02,441.88)"/>
-        <polygon points="3816.24,441.88 3811.24,439.38 3811.24,444.38" fill="black" transform="rotate(0.0,3816.24,441.88)"/>
-        <text x="3634.63" y="447.88" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,895.76) scale(1,-1)" fill="black">11'-0"</text>
+      <text x="3360.62" y="436.37" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,872.74) scale(1,-1)" fill="black">Asphalt</text>
+      <text x="3179.01" y="298.19" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,596.37) scale(1,-1)" fill="black">Asphalt</text>
+      <g id="dimension-bc9331fc">
+        <line x1="3089.80" y1="373.53" x2="3089.80" y2="323.53" stroke="black" stroke-width="0.5"/>
+        <line x1="2830.72" y1="373.53" x2="2830.72" y2="323.53" stroke="black" stroke-width="0.5"/>
+        <line x1="3089.80" y1="323.53" x2="2830.72" y2="323.53" stroke="black" stroke-width="1"/>
+        <polygon points="3089.80,323.53 3084.80,321.03 3084.80,326.03" fill="black" transform="rotate(360.0,3089.80,323.53)"/>
+        <polygon points="2830.72,323.53 2825.72,321.03 2825.72,326.03" fill="black" transform="rotate(180.0,2830.72,323.53)"/>
+        <text x="2960.26" y="317.53" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,635.05) scale(1,-1)" fill="black">0.61m</text>
       </g>
-      <g id="dimension-7bd5eadb">
-        <line x1="2967.88" y1="376.88" x2="2967.88" y2="426.88" stroke="black" stroke-width="0.5"/>
-        <line x1="3089.80" y1="376.88" x2="3089.80" y2="426.88" stroke="black" stroke-width="0.5"/>
-        <line x1="2967.88" y1="426.88" x2="3089.80" y2="426.88" stroke="black" stroke-width="1"/>
-        <polygon points="2967.88,426.88 2962.88,424.38 2962.88,429.38" fill="black" transform="rotate(180.0,2967.88,426.88)"/>
-        <polygon points="3089.80,426.88 3084.80,424.38 3084.80,429.38" fill="black" transform="rotate(0.0,3089.80,426.88)"/>
-        <text x="3028.84" y="432.88" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,865.76) scale(1,-1)" fill="black">4'-0"</text>
+      <g id="symbol-cc4817a2" transform="translate(2960.26,438.53) scale(0.8) rotate(-180.0)">
+
+        <g>
+            <path d="M -10,0 L 8,0 L 8,-5 L 15,0 L 8,5 L 8,0 Z"
+                  fill="black" stroke="black" stroke-width="0.75"/>
+        </g>
+    
       </g>
-      <g id="dimension-640fa34e">
-        <line x1="3816.24" y1="376.88" x2="3816.24" y2="426.88" stroke="black" stroke-width="0.5"/>
-        <line x1="3938.16" y1="376.88" x2="3938.16" y2="426.88" stroke="black" stroke-width="0.5"/>
-        <line x1="3816.24" y1="426.88" x2="3938.16" y2="426.88" stroke="black" stroke-width="1"/>
-        <polygon points="3816.24,426.88 3811.24,424.38 3811.24,429.38" fill="black" transform="rotate(180.0,3816.24,426.88)"/>
-        <polygon points="3938.16,426.88 3933.16,424.38 3933.16,429.38" fill="black" transform="rotate(0.0,3938.16,426.88)"/>
-        <text x="3877.20" y="432.88" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,865.76) scale(1,-1)" fill="black">4'-0"</text>
+      <text x="2960.26" y="453.53" font-family="Arial" font-size="10.0" text-anchor="middle" transform="translate(0,907.05) scale(1,-1)" fill="black">4%</text>
+      <text x="2968.26" y="347.80" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,695.60) scale(1,-1)" fill="black">Asphalt</text>
+      <g id="dimension-d8e6d0ea">
+        <line x1="3453.02" y1="396.96" x2="3453.02" y2="446.96" stroke="black" stroke-width="0.5"/>
+        <line x1="3757.82" y1="396.96" x2="3757.82" y2="446.96" stroke="black" stroke-width="0.5"/>
+        <line x1="3453.02" y1="446.96" x2="3757.82" y2="446.96" stroke="black" stroke-width="1"/>
+        <polygon points="3453.02,446.96 3448.02,444.46 3448.02,449.46" fill="black" transform="rotate(180.0,3453.02,446.96)"/>
+        <polygon points="3757.82,446.96 3752.82,444.46 3752.82,449.46" fill="black" transform="rotate(0.0,3757.82,446.96)"/>
+        <text x="3605.42" y="452.96" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,905.92) scale(1,-1)" fill="black">3.05m</text>
       </g>
-      <g id="dimension-382b0a1b">
-        <line x1="2967.88" y1="391.88" x2="2967.88" y2="511.88" stroke="black" stroke-width="0.5"/>
-        <line x1="3938.16" y1="391.88" x2="3938.16" y2="511.88" stroke="black" stroke-width="0.5"/>
-        <line x1="2967.88" y1="511.88" x2="3938.16" y2="511.88" stroke="black" stroke-width="1"/>
-        <polygon points="2967.88,511.88 2962.88,509.38 2962.88,514.38" fill="black" transform="rotate(180.0,2967.88,511.88)"/>
-        <polygon points="3938.16,511.88 3933.16,509.38 3933.16,514.38" fill="black" transform="rotate(0.0,3938.16,511.88)"/>
-        <text x="3453.02" y="517.88" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,1035.76) scale(1,-1)" fill="black">30'-0"</text>
+      <text x="3665.42" y="316.37" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,632.74) scale(1,-1)" fill="black">Asphalt</text>
+      <text x="3787.03" y="298.19" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,596.37) scale(1,-1)" fill="black">Asphalt</text>
+      <g id="dimension-fcfcf774">
+        <line x1="3816.24" y1="388.53" x2="3816.24" y2="438.53" stroke="black" stroke-width="0.5"/>
+        <line x1="4075.32" y1="388.53" x2="4075.32" y2="438.53" stroke="black" stroke-width="0.5"/>
+        <line x1="3816.24" y1="438.53" x2="4075.32" y2="438.53" stroke="black" stroke-width="1"/>
+        <polygon points="3816.24,438.53 3811.24,436.03 3811.24,441.03" fill="black" transform="rotate(180.0,3816.24,438.53)"/>
+        <polygon points="4075.32,438.53 4070.32,436.03 4070.32,441.03" fill="black" transform="rotate(0.0,4075.32,438.53)"/>
+        <text x="3945.78" y="444.53" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,889.05) scale(1,-1)" fill="black">0.61m</text>
       </g>
-      <g id="leader-bebb6737">
-        <polyline points="3453.02,374.34 3553.02,394.34 3703.02,394.34" fill="none" stroke="black" stroke-width="1"/>
-        <polygon points="3453.02,374.34 3448.02,371.84 3448.02,376.84" fill="black" transform="rotate(-168.69006752597963,3453.02,374.34)"/>
-        <text x="3708.02" y="394.34" font-family="Arial" font-size="15.0" text-anchor="start" transform="translate(0,788.68) scale(1,-1)" fill="black">Overlay (2")</text>
+      <g id="symbol-0711bbdb" transform="translate(3945.78,408.53) scale(0.8) rotate(-0.0)">
+
+        <g>
+            <path d="M -10,0 L 8,0 L 8,-5 L 15,0 L 8,5 L 8,0 Z"
+                  fill="black" stroke="black" stroke-width="0.75"/>
+        </g>
+    
       </g>
-      <g id="leader-39fe2ba9">
-        <polyline points="3119.01,371.80 3069.01,351.80 2969.01,351.80" fill="none" stroke="black" stroke-width="1"/>
-        <polygon points="3119.01,371.80 3114.01,369.30 3114.01,374.30" fill="black" transform="rotate(21.801409486352092,3119.01,371.80)"/>
-        <text x="2974.01" y="351.80" font-family="Arial" font-size="15.0" text-anchor="start" transform="translate(0,703.60) scale(1,-1)" fill="black">1' Widening (Full Depth)</text>
-      </g>
-      <g id="leader-161ed738">
-        <polyline points="3148.22,376.88 3178.22,391.88 3248.22,391.88" fill="none" stroke="black" stroke-width="1"/>
-        <polygon points="3148.22,376.88 3143.22,374.38 3143.22,379.38" fill="black" transform="rotate(-153.43494882292114,3148.22,376.88)"/>
-        <text x="3253.22" y="391.88" font-family="Arial" font-size="15.0" text-anchor="start" transform="translate(0,783.76) scale(1,-1)" fill="black">11" Notch</text>
-      </g>
+      <text x="3945.78" y="453.53" font-family="Arial" font-size="10.0" text-anchor="middle" transform="translate(0,907.05) scale(1,-1)" fill="black">4%</text>
+      <text x="3945.78" y="295.80" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,591.60) scale(1,-1)" fill="black">Asphalt</text>
     </g>
   </g>
   <!-- Legend -->
@@ -90,8 +105,8 @@
   <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
   <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
   <!-- Scale -->
-  <line x1="10" y1="637.8800000000024" x2="1533.9999512320014" y2="637.8800000000024" stroke="black" stroke-width="2"/>
-  <line x1="10" y1="632.8800000000024" x2="10" y2="642.8800000000024" stroke="black" stroke-width="2"/>
-  <line x1="1533.9999512320014" y1="632.8800000000024" x2="1533.9999512320014" y2="642.8800000000024" stroke="black" stroke-width="2"/>
-  <text x="771.9999756160007" y="657.8800000000024" font-family="Arial" font-size="12" text-anchor="middle">50ft</text>
+  <line x1="10" y1="589.4600000000008" x2="1533.9999512320014" y2="589.4600000000008" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="584.4600000000008" x2="10" y2="594.4600000000008" stroke="black" stroke-width="2"/>
+  <line x1="1533.9999512320014" y1="584.4600000000008" x2="1533.9999512320014" y2="594.4600000000008" stroke="black" stroke-width="2"/>
+  <text x="771.9999756160007" y="609.4600000000008" font-family="Arial" font-size="12" text-anchor="middle">50ft</text>
 </svg>

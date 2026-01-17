@@ -21,8 +21,8 @@ snap together via insertion/attachment points. The key components are:
 
 from cross_section.core.domain.annotations import (
     AnnotationCollection,
-    DimensionAnnotation,
-    LeaderAnnotation,
+    AnnotationGenerator,
+    AnnotationGeneratorOptions,
 )
 from cross_section.core.domain.components.rehabilitation import (
     ExistingPavement,
@@ -33,7 +33,15 @@ from cross_section.core.domain.components.shoulders import Shoulder
 from cross_section.core.domain.components.slopes import Slope
 from cross_section.core.domain.pavement import AsphaltLayer, CrushedRockLayer
 from cross_section.core.domain.section import ControlPoint, RoadSection, SectionGeometry
-from cross_section.core.geometry.primitives import Point2D
+def _annotation_options() -> AnnotationGeneratorOptions:
+    return AnnotationGeneratorOptions(
+        add_component_labels=True,
+        add_width_dimensions=True,
+        add_material_labels=True,
+        add_traffic_symbols=True,
+        add_cross_slope_symbols=True,
+        add_cross_slope_text=True,
+    )
 
 
 def build_scenario() -> tuple[SectionGeometry, AnnotationCollection]:
@@ -281,106 +289,7 @@ def build_scenario() -> tuple[SectionGeometry, AnnotationCollection]:
     # Add ARDOT-specific metadata
     geometry.metadata["standard"] = "ARDOT"
 
-    # Create annotations
-    collection = AnnotationCollection()
+    annotations = AnnotationGenerator.generate(geometry, _annotation_options())
+    annotations.resolve_collisions(geometry=geometry)
 
-    # Calculate key positions for annotations
-    # Lane edges after widening (existing 10' + notch 11" + widen 1')
-    total_half_width = existing_pavement_half_width + notch_horizontal + widen_width
-    left_lane_edge = -total_half_width
-    right_lane_edge = total_half_width
-
-    # Shoulder edges
-    left_shoulder_edge = left_lane_edge - shoulder_paved_width - shoulder_aggregate_flat_width
-    right_shoulder_edge = right_lane_edge + shoulder_paved_width + shoulder_aggregate_flat_width
-
-    # Dimension offsets (in world units)
-    dim_offset_lower = 0.5
-    dim_offset_upper = 1.2
-
-    # Lane dimensions (11' each)
-    collection.add(DimensionAnnotation(
-        start=Point2D(left_lane_edge, centerline_elev),
-        end=Point2D(0.0, centerline_elev),
-        offset=dim_offset_lower,
-        dimension_text="11'-0\"",
-        layer="dimensions"
-    ))
-
-    collection.add(DimensionAnnotation(
-        start=Point2D(0.0, centerline_elev),
-        end=Point2D(right_lane_edge, centerline_elev),
-        offset=dim_offset_lower,
-        dimension_text="11'-0\"",
-        layer="dimensions"
-    ))
-
-    # Shoulder dimensions (paved + flat aggregate = 4 ft each side)
-    collection.add(DimensionAnnotation(
-        start=Point2D(left_shoulder_edge, centerline_elev),
-        end=Point2D(left_lane_edge, centerline_elev),
-        offset=dim_offset_lower,
-        dimension_text="4'-0\"",
-        layer="dimensions"
-    ))
-
-    collection.add(DimensionAnnotation(
-        start=Point2D(right_lane_edge, centerline_elev),
-        end=Point2D(right_shoulder_edge, centerline_elev),
-        offset=dim_offset_lower,
-        dimension_text="4'-0\"",
-        layer="dimensions"
-    ))
-
-    # Overall dimension (lanes + shoulders = 30 ft)
-    collection.add(DimensionAnnotation(
-        start=Point2D(left_shoulder_edge, centerline_elev),
-        end=Point2D(right_shoulder_edge, centerline_elev),
-        offset=dim_offset_upper,
-        dimension_text="30'-0\"",
-        layer="dimensions"
-    ))
-
-    # Leader notes
-    # Overlay
-    collection.add(LeaderAnnotation(
-        points=[
-            Point2D(0.0, centerline_elev - overlay_thickness / 2),
-            Point2D(1.0, centerline_elev - overlay_thickness / 2 + 0.2),
-            Point2D(2.5, centerline_elev - overlay_thickness / 2 + 0.2),
-        ],
-        text="Overlay (2\")",
-        arrow_at_start=True,
-        layer="leaders"
-    ))
-
-    # Widening section
-    widen_center_x = -existing_pavement_half_width - (notch_horizontal + widen_width) / 2
-    collection.add(LeaderAnnotation(
-        points=[
-            Point2D(widen_center_x, centerline_elev - surface_course_thickness),
-            Point2D(widen_center_x - 0.5, centerline_elev - surface_course_thickness - 0.2),
-            Point2D(widen_center_x - 1.5, centerline_elev - surface_course_thickness - 0.2),
-        ],
-        text="1' Widening (Full Depth)",
-        arrow_at_start=True,
-        layer="leaders"
-    ))
-
-    # Notch indicator
-    notch_edge_x = -existing_pavement_half_width
-    collection.add(LeaderAnnotation(
-        points=[
-            Point2D(notch_edge_x, centerline_elev),
-            Point2D(notch_edge_x + 0.3, centerline_elev + 0.15),
-            Point2D(notch_edge_x + 1.0, centerline_elev + 0.15),
-        ],
-        text="11\" Notch",
-        arrow_at_start=True,
-        layer="leaders"
-    ))
-
-    # Resolve annotation collisions with geometry awareness
-    collection.resolve_collisions(geometry=geometry)
-
-    return geometry, collection
+    return geometry, annotations
