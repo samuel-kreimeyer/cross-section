@@ -1,16 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1180.0" height="441.6" viewBox="0 0 1180.0 441.6">
+<svg xmlns="http://www.w3.org/2000/svg" width="1524.8" height="631.6" viewBox="0 0 1524.8 631.6">
   <title>Flexible Pavement Section</title>
-  <rect width="1180.0" height="441.6" fill="white"/>
+  <rect width="1524.8" height="631.6" fill="white"/>
   <g transform="scale(1,-1)">
-    <g transform="translate(0,-441.6)">
-      <polygon points="410.00,291.60 410.00,216.60 50.00,195.00 50.00,270.00" fill="#95A5A6" stroke="black" stroke-width="1"/>
-      <polygon points="410.00,216.60 410.00,171.60 50.00,150.00 50.00,195.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="410.00,291.60 770.00,270.00 770.00,255.00 410.00,276.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="410.00,276.60 770.00,255.00 770.00,232.50 410.00,254.10" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="410.00,254.10 770.00,232.50 770.00,172.50 410.00,194.10" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="770.00,270.00 1130.00,248.40 1130.00,233.40 770.00,255.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="770.00,255.00 1130.00,233.40 1130.00,210.90 770.00,232.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="770.00,232.50 1130.00,210.90 1130.00,150.90 770.00,172.50" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+    <g transform="translate(0,-631.6)">
+      <polygon points="744.80,361.60 744.80,286.60 384.80,265.00 384.80,340.00" fill="#95A5A6" stroke="black" stroke-width="1"/>
+      <polygon points="744.80,286.60 744.80,241.60 384.80,220.00 384.80,265.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="744.80,361.60 1104.80,340.00 1104.80,325.00 744.80,346.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="744.80,346.60 1104.80,325.00 1104.80,302.50 744.80,324.10" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="744.80,324.10 1104.80,302.50 1104.80,242.50 744.80,264.10" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="1104.80,340.00 1464.80,318.40 1464.80,303.40 1104.80,325.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="1104.80,325.00 1464.80,303.40 1464.80,280.90 1104.80,302.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="1104.80,302.50 1464.80,280.90 1464.80,220.90 1104.80,242.50" fill="#7F8C8D" stroke="black" stroke-width="1"/>
     </g>
   </g>
   <!-- Legend -->
@@ -22,8 +22,8 @@
   <rect x="10" y="80" width="15" height="15" fill="#7F8C8D"/>
   <text x="30" y="92" font-family="Arial" font-size="12">CrushedRockLayer</text>
   <!-- Scale -->
-  <line x1="10" y1="411.6000000000025" x2="314.7999902464003" y2="411.6000000000025" stroke="black" stroke-width="2"/>
-  <line x1="10" y1="406.6000000000025" x2="10" y2="416.6000000000025" stroke="black" stroke-width="2"/>
-  <line x1="314.7999902464003" y1="406.6000000000025" x2="314.7999902464003" y2="416.6000000000025" stroke="black" stroke-width="2"/>
-  <text x="162.39999512320014" y="431.6000000000025" font-family="Arial" font-size="12" text-anchor="middle">10ft</text>
+  <line x1="10" y1="601.6000000000045" x2="314.7999902464003" y2="601.6000000000045" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="596.6000000000045" x2="10" y2="606.6000000000045" stroke="black" stroke-width="2"/>
+  <line x1="314.7999902464003" y1="596.6000000000045" x2="314.7999902464003" y2="606.6000000000045" stroke="black" stroke-width="2"/>
+  <text x="162.39999512320014" y="621.6000000000045" font-family="Arial" font-size="12" text-anchor="middle">10ft</text>
 </svg>

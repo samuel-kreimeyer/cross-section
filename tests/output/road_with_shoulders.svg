@@ -1,18 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="764.0" height="69.9" viewBox="0 0 764.0 69.9">
+<svg xmlns="http://www.w3.org/2000/svg" width="1039.2" height="239.9" viewBox="0 0 1039.2 239.9">
   <title>Two-Lane Road with Shoulders</title>
-  <rect width="764.0" height="69.9" fill="white"/>
+  <rect width="1039.2" height="239.9" fill="white"/>
   <g transform="scale(1,-1)">
-    <g transform="translate(0,-69.9)">
-      <polygon points="382.00,44.85 382.00,42.35 202.00,38.75 202.00,41.25" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="382.00,42.35 382.00,38.60 202.00,35.00 202.00,38.75" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="382.00,38.60 382.00,28.60 202.00,25.00 202.00,35.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="202.00,41.25 202.00,39.25 70.00,36.85 82.00,38.85" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="202.00,39.25 202.00,31.75 25.00,29.35 70.00,36.85" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="382.00,44.85 562.00,41.25 562.00,38.75 382.00,42.35" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="382.00,42.35 562.00,38.75 562.00,35.00 382.00,38.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="382.00,38.60 562.00,35.00 562.00,25.00 382.00,28.60" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="562.00,41.25 682.00,38.85 694.00,36.85 562.00,39.25" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="562.00,39.25 694.00,36.85 739.00,29.35 562.00,31.75" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+    <g transform="translate(0,-239.9)">
+      <polygon points="647.20,114.85 647.20,112.35 467.20,108.75 467.20,111.25" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="647.20,112.35 647.20,108.60 467.20,105.00 467.20,108.75" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="647.20,108.60 647.20,98.60 467.20,95.00 467.20,105.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="467.20,111.25 467.20,109.25 335.20,106.85 347.20,108.85" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="467.20,109.25 467.20,101.75 290.20,99.35 335.20,106.85" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="647.20,114.85 827.20,111.25 827.20,108.75 647.20,112.35" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="647.20,112.35 827.20,108.75 827.20,105.00 647.20,108.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="647.20,108.60 827.20,105.00 827.20,95.00 647.20,98.60" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="827.20,111.25 947.20,108.85 959.20,106.85 827.20,109.25" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="827.20,109.25 959.20,106.85 1004.20,99.35 827.20,101.75" fill="#7F8C8D" stroke="black" stroke-width="1"/>
     </g>
   </g>
   <!-- Legend -->
@@ -22,8 +22,8 @@
   <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
   <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
   <!-- Scale -->
-  <line x1="10" y1="39.85000000000028" x2="314.7999902464003" y2="39.85000000000028" stroke="black" stroke-width="2"/>
-  <line x1="10" y1="34.85000000000028" x2="10" y2="44.85000000000028" stroke="black" stroke-width="2"/>
-  <line x1="314.7999902464003" y1="34.85000000000028" x2="314.7999902464003" y2="44.85000000000028" stroke="black" stroke-width="2"/>
-  <text x="162.39999512320014" y="59.85000000000028" font-family="Arial" font-size="12" text-anchor="middle">20ft</text>
+  <line x1="10" y1="209.85000000000056" x2="162.39999512320014" y2="209.85000000000056" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="204.85000000000056" x2="10" y2="214.85000000000056" stroke="black" stroke-width="2"/>
+  <line x1="162.39999512320014" y1="204.85000000000056" x2="162.39999512320014" y2="214.85000000000056" stroke="black" stroke-width="2"/>
+  <text x="86.19999756160007" y="229.85000000000056" font-family="Arial" font-size="12" text-anchor="middle">10ft</text>
 </svg>

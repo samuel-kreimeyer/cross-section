@@ -218,9 +218,9 @@ class AnnotationPlanner:
         if profile.traffic_arrow_mode == "traffic_direction":
             traffic = component.metadata.get("traffic_direction")
             if traffic == "inbound":
-                angle = 270.0
+                angle = 180.0
             elif traffic == "outbound":
-                angle = 90.0
+                angle = 0.0
             else:
                 angle = 0.0
         else:

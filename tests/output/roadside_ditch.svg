@@ -1,24 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1664.0" height="118.7" viewBox="0 0 1664.0 118.7">
+<svg xmlns="http://www.w3.org/2000/svg" width="2466.0" height="288.7" viewBox="0 0 2466.0 288.7">
   <title>Rural Road with Roadside Ditches</title>
-  <rect width="1664.0" height="118.7" fill="white"/>
+  <rect width="2466.0" height="288.7" fill="white"/>
   <g transform="scale(1,-1)">
-    <g transform="translate(0,-118.7)">
-      <polygon points="832.00,79.20 832.00,76.70 652.00,73.10 652.00,75.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="832.00,76.70 832.00,72.95 652.00,69.35 652.00,73.10" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="832.00,72.95 832.00,62.95 652.00,59.35 652.00,69.35" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="652.00,75.60 652.00,73.60 520.00,71.20 532.00,73.20" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="652.00,73.60 652.00,66.10 475.00,63.70 520.00,71.20" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="475.00,63.70 475.00,56.20 355.00,26.20 295.00,25.00 205.00,56.20 205.00,63.70 295.00,32.50 355.00,33.70" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polyline points="475.00,63.70 205.00,63.70 295.00,32.50 355.00,33.70" fill="none" stroke="black" stroke-width="1.5"/>
-      <polygon points="205.00,63.70 205.00,63.20 25.00,93.20 25.00,93.70" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polygon points="832.00,79.20 1012.00,75.60 1012.00,73.10 832.00,76.70" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="832.00,76.70 1012.00,73.10 1012.00,69.35 832.00,72.95" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="832.00,72.95 1012.00,69.35 1012.00,59.35 832.00,62.95" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="1012.00,75.60 1132.00,73.20 1144.00,71.20 1012.00,73.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="1012.00,73.60 1144.00,71.20 1189.00,63.70 1012.00,66.10" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="1189.00,63.70 1309.00,33.70 1369.00,32.50 1459.00,63.70 1459.00,56.20 1369.00,25.00 1309.00,26.20 1189.00,56.20" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polyline points="1189.00,63.70 1309.00,33.70 1369.00,32.50 1459.00,63.70" fill="none" stroke="black" stroke-width="1.5"/>
-      <polygon points="1459.00,63.70 1639.00,93.70 1639.00,93.20 1459.00,63.20" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+    <g transform="translate(0,-288.7)">
+      <polygon points="1624.00,149.20 1624.00,146.70 1444.00,143.10 1444.00,145.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="1624.00,146.70 1624.00,142.95 1444.00,139.35 1444.00,143.10" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="1624.00,142.95 1624.00,132.95 1444.00,129.35 1444.00,139.35" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="1444.00,145.60 1444.00,143.60 1312.00,141.20 1324.00,143.20" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="1444.00,143.60 1444.00,136.10 1267.00,133.70 1312.00,141.20" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="1267.00,133.70 1267.00,126.20 1147.00,96.20 1087.00,95.00 997.00,126.20 997.00,133.70 1087.00,102.50 1147.00,103.70" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polyline points="1267.00,133.70 997.00,133.70 1087.00,102.50 1147.00,103.70" fill="none" stroke="black" stroke-width="1.5"/>
+      <polygon points="997.00,133.70 997.00,133.20 817.00,163.20 817.00,163.70" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="1624.00,149.20 1804.00,145.60 1804.00,143.10 1624.00,146.70" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="1624.00,146.70 1804.00,143.10 1804.00,139.35 1624.00,142.95" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="1624.00,142.95 1804.00,139.35 1804.00,129.35 1624.00,132.95" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="1804.00,145.60 1924.00,143.20 1936.00,141.20 1804.00,143.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="1804.00,143.60 1936.00,141.20 1981.00,133.70 1804.00,136.10" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="1981.00,133.70 2101.00,103.70 2161.00,102.50 2251.00,133.70 2251.00,126.20 2161.00,95.00 2101.00,96.20 1981.00,126.20" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polyline points="1981.00,133.70 2101.00,103.70 2161.00,102.50 2251.00,133.70" fill="none" stroke="black" stroke-width="1.5"/>
+      <polygon points="2251.00,133.70 2431.00,163.70 2431.00,163.20 2251.00,133.20" fill="#BDC3C7" stroke="black" stroke-width="1"/>
     </g>
   </g>
   <!-- Legend -->
@@ -28,8 +28,8 @@
   <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
   <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
   <!-- Scale -->
-  <line x1="10" y1="88.69999999999976" x2="771.9999756160007" y2="88.69999999999976" stroke="black" stroke-width="2"/>
-  <line x1="10" y1="83.69999999999976" x2="10" y2="93.69999999999976" stroke="black" stroke-width="2"/>
-  <line x1="771.9999756160007" y1="83.69999999999976" x2="771.9999756160007" y2="93.69999999999976" stroke="black" stroke-width="2"/>
-  <text x="390.99998780800036" y="108.69999999999976" font-family="Arial" font-size="12" text-anchor="middle">50ft</text>
+  <line x1="10" y1="258.70000000000005" x2="771.9999756160007" y2="258.70000000000005" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="253.70000000000005" x2="10" y2="263.70000000000005" stroke="black" stroke-width="2"/>
+  <line x1="771.9999756160007" y1="253.70000000000005" x2="771.9999756160007" y2="263.70000000000005" stroke="black" stroke-width="2"/>
+  <text x="390.99998780800036" y="278.70000000000005" font-family="Arial" font-size="12" text-anchor="middle">50ft</text>
 </svg>

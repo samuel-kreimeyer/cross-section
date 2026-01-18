@@ -2,17 +2,17 @@
 
 from .library import SymbolLibrary
 
-# Traffic arrow (default pointing right, rotate 180 for left)
+# Traffic arrow (default pointing up, rotate 180 for down)
 SymbolLibrary.register(
     symbol_type="traffic_arrow",
     svg_path='''
         <g>
-            <path d="M -15,0 L 10,0 L 10,-8 L 20,0 L 10,8 L 10,0 Z"
+            <path d="M -5,-15 L 5,-15 L 5,0 L 9,0 L 0,15 L -9,0 L -5,0 Z"
                   fill="black" stroke="black" stroke-width="1"/>
         </g>
     ''',
-    width=0.7,  # 700mm
-    height=0.4,  # 400mm
+    width=0.4,  # 400mm
+    height=0.7,  # 700mm
     library="aashto"
 )
 
