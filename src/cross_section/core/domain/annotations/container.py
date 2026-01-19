@@ -132,7 +132,10 @@ class AnnotationCollection:
         self,
         max_iterations: int = 10,
         text_buffer: float = 0.05,
-        geometry: "Any | None" = None
+        geometry: "Any | None" = None,
+        overflow_band_offset: float = 0.5,
+        overflow_band_padding: float = 0.5,
+        overflow_band_gap: float = 0.1,
     ) -> None:
         """Resolve collisions between annotations.
 
@@ -154,7 +157,10 @@ class AnnotationCollection:
         resolver = CollisionResolver(
             max_iterations=max_iterations,
             text_buffer=text_buffer,
-            geometry=geometry
+            geometry=geometry,
+            overflow_band_offset=overflow_band_offset,
+            overflow_band_padding=overflow_band_padding,
+            overflow_band_gap=overflow_band_gap,
         )
 
         self.annotations = resolver.resolve_all(self.annotations)

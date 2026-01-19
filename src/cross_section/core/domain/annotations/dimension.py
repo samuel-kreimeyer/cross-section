@@ -107,6 +107,36 @@ class DimensionAnnotation(AnnotationBase):
 
         return (dim_start, dim_end)
 
+    def get_extension_line_endpoints(self) -> tuple[Point2D, Point2D]:
+        """Get the extension line endpoints (including extension beyond).
+
+        Returns:
+            Tuple of (extension_start, extension_end) points.
+        """
+        # Direction vector
+        dx = self.end.x - self.start.x
+        dy = self.end.y - self.start.y
+        length = math.sqrt(dx * dx + dy * dy)
+
+        if length == 0:
+            return (self.start, self.end)
+
+        # Perpendicular direction
+        perp_x = -dy / length
+        perp_y = dx / length
+
+        extension = self.offset + self.extension_beyond
+        ext_start = Point2D(
+            self.start.x + perp_x * extension,
+            self.start.y + perp_y * extension
+        )
+        ext_end = Point2D(
+            self.end.x + perp_x * extension,
+            self.end.y + perp_y * extension
+        )
+
+        return (ext_start, ext_end)
+
     def bounds(self) -> BoundingBox:
         """Calculate bounding box including extension lines and text.
 
@@ -114,6 +144,7 @@ class DimensionAnnotation(AnnotationBase):
             Bounding box containing entire dimension annotation
         """
         dim_start, dim_end = self.get_dimension_line_endpoints()
+        ext_start, ext_end = self.get_extension_line_endpoints()
 
         # Points to include in bounds
         points = [
@@ -121,6 +152,8 @@ class DimensionAnnotation(AnnotationBase):
             self.end,
             dim_start,
             dim_end,
+            ext_start,
+            ext_end,
         ]
 
         # Add text bounds (approximate)
@@ -174,22 +207,25 @@ class DimensionAnnotation(AnnotationBase):
         elements = []
 
         dim_start, dim_end = self.get_dimension_line_endpoints()
+        ext_start, ext_end = self.get_extension_line_endpoints()
 
         # Transform points
         t_start = transform(self.start)
         t_end = transform(self.end)
         t_dim_start = transform(dim_start)
         t_dim_end = transform(dim_end)
+        t_ext_start = transform(ext_start)
+        t_ext_end = transform(ext_end)
 
         # Extension lines
         elements.append(
             f'<line x1="{t_start.x:.2f}" y1="{t_start.y:.2f}" '
-            f'x2="{t_dim_start.x:.2f}" y2="{t_dim_start.y:.2f}" '
+            f'x2="{t_ext_start.x:.2f}" y2="{t_ext_start.y:.2f}" '
             f'stroke="black" stroke-width="0.5" class="dimension-extension"/>'
         )
         elements.append(
             f'<line x1="{t_end.x:.2f}" y1="{t_end.y:.2f}" '
-            f'x2="{t_dim_end.x:.2f}" y2="{t_dim_end.y:.2f}" '
+            f'x2="{t_ext_end.x:.2f}" y2="{t_ext_end.y:.2f}" '
             f'stroke="black" stroke-width="0.5" class="dimension-extension"/>'
         )
 

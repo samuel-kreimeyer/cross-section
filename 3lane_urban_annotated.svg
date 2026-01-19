@@ -1,50 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="5562.4" height="558.1" viewBox="0 0 5562.4 558.1">
+<svg xmlns="http://www.w3.org/2000/svg" width="5612.4" height="696.3" viewBox="0 0 5612.4 696.3">
   <title>3-Lane Urban Section with Turn Lane</title>
-  <rect width="5562.4" height="558.1" fill="white"/>
+  <rect width="5612.4" height="696.3" fill="white"/>
   <g transform="scale(1,-1)">
-    <g transform="translate(0,-558.1)">
-      <polygon points="3065.52,313.29 3370.32,316.34 3370.32,311.26 3065.52,308.21" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polygon points="3370.32,316.34 3736.08,316.34 3736.08,311.26 3370.32,311.26" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polygon points="3736.08,316.34 4040.88,313.29 4040.88,308.21 3736.08,311.26" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polygon points="3065.52,308.21 4040.88,308.21 4040.88,300.59 3065.52,300.59" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polygon points="3065.52,300.59 4040.88,300.59 4040.88,290.43 3065.52,290.43" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polygon points="3065.52,290.43 4040.88,290.43 4040.88,275.19 3065.52,275.19" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polygon points="3019.80,313.29 3065.52,313.29 3065.52,298.05 3019.80,298.05" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polygon points="2989.32,313.29 3019.80,313.29 3019.80,298.05 2989.32,298.05" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polyline points="2989.32,313.29 2897.88,313.29" fill="none" stroke="black" stroke-width="1.5"/>
-      <polygon points="2745.48,310.25 2897.88,313.29 2897.88,303.13 2745.48,300.09" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polyline points="2745.48,310.25 1604.00,120.00" fill="none" stroke="black" stroke-width="1.5"/>
-      <polygon points="4040.88,313.29 4086.60,313.29 4086.60,298.05 4040.88,298.05" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polygon points="4086.60,313.29 4117.08,313.29 4117.08,298.05 4086.60,298.05" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polyline points="4117.08,313.29 4208.52,313.29" fill="none" stroke="black" stroke-width="1.5"/>
-      <polygon points="4208.52,313.29 4360.92,310.25 4360.92,300.09 4208.52,303.13" fill="#BDC3C7" stroke="black" stroke-width="1"/>
-      <polyline points="4360.92,310.25 5502.40,120.00" fill="none" stroke="black" stroke-width="1.5"/>
+    <g transform="translate(0,-696.3)">
+      <polygon points="3115.52,313.29 3420.32,316.34 3420.32,311.26 3115.52,308.21" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="3420.32,316.34 3786.08,316.34 3786.08,311.26 3420.32,311.26" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="3786.08,316.34 4090.88,313.29 4090.88,308.21 3786.08,311.26" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="3115.52,308.21 4090.88,308.21 4090.88,300.59 3115.52,300.59" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="3115.52,300.59 4090.88,300.59 4090.88,290.43 3115.52,290.43" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="3115.52,290.43 4090.88,290.43 4090.88,275.19 3115.52,275.19" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="3069.80,313.29 3115.52,313.29 3115.52,298.05 3069.80,298.05" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="3039.32,313.29 3069.80,313.29 3069.80,298.05 3039.32,298.05" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polyline points="3039.32,313.29 2947.88,313.29" fill="none" stroke="black" stroke-width="1.5"/>
+      <polygon points="2795.48,310.25 2947.88,313.29 2947.88,303.13 2795.48,300.09" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polyline points="2795.48,310.25 1654.00,120.00" fill="none" stroke="black" stroke-width="1.5"/>
+      <polygon points="4090.88,313.29 4136.60,313.29 4136.60,298.05 4090.88,298.05" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polygon points="4136.60,313.29 4167.08,313.29 4167.08,298.05 4136.60,298.05" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polyline points="4167.08,313.29 4258.52,313.29" fill="none" stroke="black" stroke-width="1.5"/>
+      <polygon points="4258.52,313.29 4410.92,310.25 4410.92,300.09 4258.52,303.13" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <polyline points="4410.92,310.25 5552.40,120.00" fill="none" stroke="black" stroke-width="1.5"/>
       <!-- Annotations -->
-      <text x="3217.92" y="336.34" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,672.68) scale(1,-1)" fill="black">Lane</text>
-      <text x="3553.20" y="336.34" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,672.68) scale(1,-1)" fill="black">Turn Lane</text>
-      <text x="3888.48" y="336.34" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,672.68) scale(1,-1)" fill="black">Lane</text>
-      <text x="3513.20" y="368.21" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,736.43) scale(1,-1)" fill="black">Pavement</text>
-      <text x="3673.20" y="440.59" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,881.19) scale(1,-1)" fill="black">Pavement</text>
-      <text x="3613.20" y="250.43" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,500.87) scale(1,-1)" fill="black">Pavement</text>
-      <text x="3017.66" y="358.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,716.59) scale(1,-1)" fill="black">Gutter</text>
-      <text x="3004.56" y="393.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,786.59) scale(1,-1)" fill="black">Curb</text>
-      <text x="2943.60" y="333.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,666.59) scale(1,-1)" fill="black">Buffer</text>
-      <text x="2821.68" y="333.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,666.59) scale(1,-1)" fill="black">Sidewalk</text>
-      <text x="2174.74" y="330.25" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,660.49) scale(1,-1)" fill="black">Slope</text>
-      <text x="4088.74" y="358.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,716.59) scale(1,-1)" fill="black">Gutter</text>
-      <text x="4101.84" y="393.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,786.59) scale(1,-1)" fill="black">Curb</text>
-      <text x="4162.80" y="333.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,666.59) scale(1,-1)" fill="black">Buffer</text>
-      <text x="4284.72" y="333.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,666.59) scale(1,-1)" fill="black">Sidewalk</text>
-      <text x="4931.66" y="330.25" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,660.49) scale(1,-1)" fill="black">Slope</text>
-      <g id="dimension-0e14c893">
-        <line x1="3065.52" y1="331.34" x2="3065.52" y2="381.34" stroke="black" stroke-width="0.5"/>
-        <line x1="3370.32" y1="331.34" x2="3370.32" y2="381.34" stroke="black" stroke-width="0.5"/>
-        <line x1="3065.52" y1="381.34" x2="3370.32" y2="381.34" stroke="black" stroke-width="1"/>
-        <polygon points="3065.52,381.34 3060.52,378.84 3060.52,383.84" fill="black" transform="rotate(180.0,3065.52,381.34)"/>
-        <polygon points="3370.32,381.34 3365.32,378.84 3365.32,383.84" fill="black" transform="rotate(0.0,3370.32,381.34)"/>
-        <text x="3217.92" y="387.34" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,774.68) scale(1,-1)" fill="black">3.05m</text>
+      <text x="1622.00" y="523.84" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,1047.68) scale(1,-1)" fill="black">Lane</text>
+      <text x="1690.50" y="523.84" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,1047.68) scale(1,-1)" fill="black">Turn Lane</text>
+      <text x="1759.00" y="523.84" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,1047.68) scale(1,-1)" fill="black">Lane</text>
+      <text x="1823.00" y="523.84" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,1047.68) scale(1,-1)" fill="black">Pavement</text>
+      <text x="3663.20" y="260.59" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,521.19) scale(1,-1)" fill="black">Pavement</text>
+      <text x="3543.20" y="250.43" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,500.87) scale(1,-1)" fill="black">Pavement</text>
+      <text x="3067.66" y="358.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,716.59) scale(1,-1)" fill="black">Gutter</text>
+      <text x="3054.56" y="393.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,786.59) scale(1,-1)" fill="black">Curb</text>
+      <text x="2993.60" y="333.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,666.59) scale(1,-1)" fill="black">Buffer</text>
+      <text x="1905.00" y="523.84" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,1047.68) scale(1,-1)" fill="black">Sidewalk</text>
+      <text x="2224.74" y="330.25" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,660.49) scale(1,-1)" fill="black">Slope</text>
+      <text x="4138.74" y="358.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,716.59) scale(1,-1)" fill="black">Gutter</text>
+      <text x="4151.84" y="393.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,786.59) scale(1,-1)" fill="black">Curb</text>
+      <text x="4212.80" y="333.29" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,666.59) scale(1,-1)" fill="black">Buffer</text>
+      <text x="1987.00" y="523.84" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,1047.68) scale(1,-1)" fill="black">Sidewalk</text>
+      <text x="4981.66" y="330.25" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,660.49) scale(1,-1)" fill="black">Slope</text>
+      <g id="dimension-20cf98c0">
+        <line x1="3115.52" y1="331.34" x2="3115.52" y2="381.34" stroke="black" stroke-width="0.5"/>
+        <line x1="3420.32" y1="331.34" x2="3420.32" y2="381.34" stroke="black" stroke-width="0.5"/>
+        <line x1="3115.52" y1="381.34" x2="3420.32" y2="381.34" stroke="black" stroke-width="1"/>
+        <polygon points="3115.52,381.34 3110.52,378.84 3110.52,383.84" fill="black" transform="rotate(180.0,3115.52,381.34)"/>
+        <polygon points="3420.32,381.34 3415.32,378.84 3415.32,383.84" fill="black" transform="rotate(0.0,3420.32,381.34)"/>
+        <text x="3267.92" y="387.34" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,774.68) scale(1,-1)" fill="black">3.05m</text>
       </g>
-      <g id="symbol-bff8bc47" transform="translate(3217.92,312.28) scale(1.0) rotate(-0.0)">
+      <g id="symbol-705695a9" transform="translate(2053.00,551.34) scale(1.0) rotate(-0.0)">
 
         <g>
             <path d="M -5,-15 L 5,-15 L 5,0 L 9,0 L 0,15 L -9,0 L -5,0 Z"
@@ -52,15 +52,15 @@
         </g>
     
       </g>
-      <g id="dimension-c97bc837">
-        <line x1="3370.32" y1="331.34" x2="3370.32" y2="381.34" stroke="black" stroke-width="0.5"/>
-        <line x1="3736.08" y1="331.34" x2="3736.08" y2="381.34" stroke="black" stroke-width="0.5"/>
-        <line x1="3370.32" y1="381.34" x2="3736.08" y2="381.34" stroke="black" stroke-width="1"/>
-        <polygon points="3370.32,381.34 3365.32,378.84 3365.32,383.84" fill="black" transform="rotate(180.0,3370.32,381.34)"/>
-        <polygon points="3736.08,381.34 3731.08,378.84 3731.08,383.84" fill="black" transform="rotate(0.0,3736.08,381.34)"/>
-        <text x="3553.20" y="387.34" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,774.68) scale(1,-1)" fill="black">3.66m</text>
+      <g id="dimension-593fea03">
+        <line x1="3420.32" y1="331.34" x2="3420.32" y2="381.34" stroke="black" stroke-width="0.5"/>
+        <line x1="3786.08" y1="331.34" x2="3786.08" y2="381.34" stroke="black" stroke-width="0.5"/>
+        <line x1="3420.32" y1="381.34" x2="3786.08" y2="381.34" stroke="black" stroke-width="1"/>
+        <polygon points="3420.32,381.34 3415.32,378.84 3415.32,383.84" fill="black" transform="rotate(180.0,3420.32,381.34)"/>
+        <polygon points="3786.08,381.34 3781.08,378.84 3781.08,383.84" fill="black" transform="rotate(0.0,3786.08,381.34)"/>
+        <text x="3603.20" y="387.34" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,774.68) scale(1,-1)" fill="black">3.66m</text>
       </g>
-      <g id="symbol-b326db9d" transform="translate(3553.20,313.80) scale(1.0) rotate(-0.0)">
+      <g id="symbol-f53998ac" transform="translate(2103.00,551.34) scale(1.0) rotate(-0.0)">
 
         <g>
             <path d="M -5,-15 L 5,-15 L 5,0 L 9,0 L 0,15 L -9,0 L -5,0 Z"
@@ -68,15 +68,15 @@
         </g>
     
       </g>
-      <g id="dimension-2e87f411">
-        <line x1="3736.08" y1="331.34" x2="3736.08" y2="381.34" stroke="black" stroke-width="0.5"/>
-        <line x1="4040.88" y1="331.34" x2="4040.88" y2="381.34" stroke="black" stroke-width="0.5"/>
-        <line x1="3736.08" y1="381.34" x2="4040.88" y2="381.34" stroke="black" stroke-width="1"/>
-        <polygon points="3736.08,381.34 3731.08,378.84 3731.08,383.84" fill="black" transform="rotate(180.0,3736.08,381.34)"/>
-        <polygon points="4040.88,381.34 4035.88,378.84 4035.88,383.84" fill="black" transform="rotate(0.0,4040.88,381.34)"/>
-        <text x="3888.48" y="387.34" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,774.68) scale(1,-1)" fill="black">3.05m</text>
+      <g id="dimension-4e65b80d">
+        <line x1="3786.08" y1="331.34" x2="3786.08" y2="381.34" stroke="black" stroke-width="0.5"/>
+        <line x1="4090.88" y1="331.34" x2="4090.88" y2="381.34" stroke="black" stroke-width="0.5"/>
+        <line x1="3786.08" y1="381.34" x2="4090.88" y2="381.34" stroke="black" stroke-width="1"/>
+        <polygon points="3786.08,381.34 3781.08,378.84 3781.08,383.84" fill="black" transform="rotate(180.0,3786.08,381.34)"/>
+        <polygon points="4090.88,381.34 4085.88,378.84 4085.88,383.84" fill="black" transform="rotate(0.0,4090.88,381.34)"/>
+        <text x="3938.48" y="387.34" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,774.68) scale(1,-1)" fill="black">3.05m</text>
       </g>
-      <g id="symbol-9d21bf33" transform="translate(3888.48,312.28) scale(1.0) rotate(-0.0)">
+      <g id="symbol-31a254a5" transform="translate(2153.00,551.34) scale(1.0) rotate(-0.0)">
 
         <g>
             <path d="M -5,-15 L 5,-15 L 5,0 L 9,0 L 0,15 L -9,0 L -5,0 Z"
@@ -84,29 +84,29 @@
         </g>
     
       </g>
-      <g id="dimension-2c1fe862">
-        <line x1="2745.48" y1="328.29" x2="2745.48" y2="378.29" stroke="black" stroke-width="0.5"/>
-        <line x1="2897.88" y1="328.29" x2="2897.88" y2="378.29" stroke="black" stroke-width="0.5"/>
-        <line x1="2745.48" y1="378.29" x2="2897.88" y2="378.29" stroke="black" stroke-width="1"/>
-        <polygon points="2745.48,378.29 2740.48,375.79 2740.48,380.79" fill="black" transform="rotate(180.0,2745.48,378.29)"/>
-        <polygon points="2897.88,378.29 2892.88,375.79 2892.88,380.79" fill="black" transform="rotate(0.0,2897.88,378.29)"/>
-        <text x="2821.68" y="384.29" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,768.59) scale(1,-1)" fill="black">1.52m</text>
+      <g id="dimension-91ce753a">
+        <line x1="2795.48" y1="328.29" x2="2795.48" y2="378.29" stroke="black" stroke-width="0.5"/>
+        <line x1="2947.88" y1="328.29" x2="2947.88" y2="378.29" stroke="black" stroke-width="0.5"/>
+        <line x1="2795.48" y1="378.29" x2="2947.88" y2="378.29" stroke="black" stroke-width="1"/>
+        <polygon points="2795.48,378.29 2790.48,375.79 2790.48,380.79" fill="black" transform="rotate(180.0,2795.48,378.29)"/>
+        <polygon points="2947.88,378.29 2942.88,375.79 2942.88,380.79" fill="black" transform="rotate(0.0,2947.88,378.29)"/>
+        <text x="2871.68" y="384.29" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,768.59) scale(1,-1)" fill="black">1.52m</text>
       </g>
-      <g id="dimension-bc7e4693">
-        <line x1="4208.52" y1="328.29" x2="4208.52" y2="378.29" stroke="black" stroke-width="0.5"/>
-        <line x1="4360.92" y1="328.29" x2="4360.92" y2="378.29" stroke="black" stroke-width="0.5"/>
-        <line x1="4208.52" y1="378.29" x2="4360.92" y2="378.29" stroke="black" stroke-width="1"/>
-        <polygon points="4208.52,378.29 4203.52,375.79 4203.52,380.79" fill="black" transform="rotate(180.0,4208.52,378.29)"/>
-        <polygon points="4360.92,378.29 4355.92,375.79 4355.92,380.79" fill="black" transform="rotate(0.0,4360.92,378.29)"/>
-        <text x="4284.72" y="384.29" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,768.59) scale(1,-1)" fill="black">1.52m</text>
+      <g id="dimension-f2b0efb4">
+        <line x1="4258.52" y1="328.29" x2="4258.52" y2="378.29" stroke="black" stroke-width="0.5"/>
+        <line x1="4410.92" y1="328.29" x2="4410.92" y2="378.29" stroke="black" stroke-width="0.5"/>
+        <line x1="4258.52" y1="378.29" x2="4410.92" y2="378.29" stroke="black" stroke-width="1"/>
+        <polygon points="4258.52,378.29 4253.52,375.79 4253.52,380.79" fill="black" transform="rotate(180.0,4258.52,378.29)"/>
+        <polygon points="4410.92,378.29 4405.92,375.79 4405.92,380.79" fill="black" transform="rotate(0.0,4410.92,378.29)"/>
+        <text x="4334.72" y="384.29" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,768.59) scale(1,-1)" fill="black">1.52m</text>
       </g>
     </g>
   </g>
   <!-- Legend -->
   <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">3-Lane Urban Section with Turn Lane</text>
   <!-- Scale -->
-  <line x1="10" y1="528.0944000000002" x2="1533.9999512320014" y2="528.0944000000002" stroke="black" stroke-width="2"/>
-  <line x1="10" y1="523.0944000000002" x2="10" y2="533.0944000000002" stroke="black" stroke-width="2"/>
-  <line x1="1533.9999512320014" y1="523.0944000000002" x2="1533.9999512320014" y2="533.0944000000002" stroke="black" stroke-width="2"/>
-  <text x="771.9999756160007" y="548.0944000000002" font-family="Arial" font-size="12" text-anchor="middle">50ft</text>
+  <line x1="10" y1="666.3423999999975" x2="1533.9999512320014" y2="666.3423999999975" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="661.3423999999975" x2="10" y2="671.3423999999975" stroke="black" stroke-width="2"/>
+  <line x1="1533.9999512320014" y1="661.3423999999975" x2="1533.9999512320014" y2="671.3423999999975" stroke="black" stroke-width="2"/>
+  <text x="771.9999756160007" y="686.3423999999975" font-family="Arial" font-size="12" text-anchor="middle">50ft</text>
 </svg>

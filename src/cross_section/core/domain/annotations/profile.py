@@ -42,6 +42,7 @@ class AnnotationProfile:
     slope_symbol_offset: float = 0.65
     slope_text_offset: float = 0.80
     slope_text_size: float = 0.10
+    traffic_symbol_offset: float = 0.35
     guide_overrides: dict[str, AnnotationGuideOverride] = field(default_factory=dict)
 
     def apply_override(self, guide: AnnotationGuide) -> AnnotationGuide | None:

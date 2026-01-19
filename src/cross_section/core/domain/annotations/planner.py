@@ -227,8 +227,13 @@ class AnnotationPlanner:
             direction = component.metadata.get("assembly_direction", "right")
             angle = 0.0 if direction == "right" else 180.0
 
+        position = Point2D(
+            anchors.top_center.x,
+            anchors.top_center.y + profile.traffic_symbol_offset,
+        )
+
         collection.add(SymbolAnnotation(
-            position=anchors.center,
+            position=position,
             symbol_type="traffic_arrow",
             angle=angle,
             layer="symbols",

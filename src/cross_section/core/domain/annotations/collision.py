@@ -1,8 +1,10 @@
 """Collision detection and resolution for annotations."""
 
-from typing import TYPE_CHECKING, cast
+from dataclasses import replace
+from typing import TYPE_CHECKING
 
-from ...geometry.primitives import Point2D
+from ...geometry.bounds import BoundingBox
+from ...geometry.primitives import Point2D, Polygon
 from .base import AnnotationBase
 from .dimension import DimensionAnnotation
 from .leader import LeaderAnnotation
@@ -60,6 +62,40 @@ class CollisionDetector:
     """Detects collisions between annotations."""
 
     @staticmethod
+    def _point_in_polygon(point: Point2D, polygon: Polygon) -> bool:
+        """Check if a point is inside a polygon using ray casting."""
+        x = point.x
+        y = point.y
+        inside = False
+        vertices = polygon.exterior
+        if len(vertices) < 3:
+            return False
+
+        j = len(vertices) - 1
+        for i in range(len(vertices)):
+            xi = vertices[i].x
+            yi = vertices[i].y
+            xj = vertices[j].x
+            yj = vertices[j].y
+
+            intersects = ((yi > y) != (yj > y)) and (
+                x < (xj - xi) * (y - yi) / (yj - yi + 1e-12) + xi
+            )
+            if intersects:
+                inside = not inside
+            j = i
+
+        return inside
+
+    @staticmethod
+    def _annotation_allows_geometry_overlap(annotation: AnnotationBase) -> bool:
+        if annotation.metadata.get("allow_geometry_overlap"):
+            return True
+        if isinstance(annotation, SymbolAnnotation) and annotation.symbol_type == "grade_point":
+            return True
+        return False
+
+    @staticmethod
     def detect_text_text(
         text1: TextAnnotation,
         text2: TextAnnotation,
@@ -103,9 +139,10 @@ class CollisionDetector:
         if isinstance(line, DimensionAnnotation):
             # Dimension has extension lines and dimension line
             dim_start, dim_end = line.get_dimension_line_endpoints()
+            ext_start, ext_end = line.get_extension_line_endpoints()
             segments = [
-                (line.start, dim_start),  # Extension 1
-                (line.end, dim_end),      # Extension 2
+                (line.start, ext_start),  # Extension 1
+                (line.end, ext_end),      # Extension 2
                 (dim_start, dim_end),     # Dimension line
             ]
         else:  # LeaderAnnotation
@@ -175,7 +212,12 @@ class CollisionDetector:
         # Get segments for line1
         if isinstance(line1, DimensionAnnotation):
             dim_start1, dim_end1 = line1.get_dimension_line_endpoints()
-            segments1 = [(dim_start1, dim_end1)]  # Just dimension line for simplicity
+            ext_start1, ext_end1 = line1.get_extension_line_endpoints()
+            segments1 = [
+                (dim_start1, dim_end1),
+                (line1.start, ext_start1),
+                (line1.end, ext_end1),
+            ]
         else:
             segments1 = [
                 (line1.points[i], line1.points[i + 1])
@@ -185,7 +227,12 @@ class CollisionDetector:
         # Get segments for line2
         if isinstance(line2, DimensionAnnotation):
             dim_start2, dim_end2 = line2.get_dimension_line_endpoints()
-            segments2 = [(dim_start2, dim_end2)]
+            ext_start2, ext_end2 = line2.get_extension_line_endpoints()
+            segments2 = [
+                (dim_start2, dim_end2),
+                (line2.start, ext_start2),
+                (line2.end, ext_end2),
+            ]
         else:
             segments2 = [
                 (line2.points[i], line2.points[i + 1])
@@ -221,9 +268,16 @@ class CollisionDetector:
         """
         symbol_bounds = symbol.bounds().expand(buffer)
         dim_start, dim_end = dimension.get_dimension_line_endpoints()
+        ext_start, ext_end = dimension.get_extension_line_endpoints()
 
         # Check if dimension line intersects symbol box
         if CollisionDetector._segment_intersects_box(dim_start, dim_end, symbol_bounds):
+            return True
+
+        # Check if extension lines intersect symbol box
+        if CollisionDetector._segment_intersects_box(dimension.start, ext_start, symbol_bounds):
+            return True
+        if CollisionDetector._segment_intersects_box(dimension.end, ext_end, symbol_bounds):
             return True
 
         # Check if symbol overlaps text
@@ -242,6 +296,35 @@ class CollisionDetector:
                     symbol_bounds.max_y < text_bounds_min_y or
                     symbol_bounds.min_y > text_bounds_max_y):
                 return True
+
+        return False
+
+    @staticmethod
+    def detect_symbol_leader(
+        symbol: SymbolAnnotation,
+        leader: LeaderAnnotation,
+        buffer: float = 0.05
+    ) -> bool:
+        """Check if a symbol overlaps a leader line or leader text."""
+        symbol_bounds = symbol.bounds().expand(buffer)
+
+        # Check if any leader point is inside the symbol bounds
+        for point in leader.points:
+            if symbol_bounds.contains_point(point):
+                return True
+
+        # Check if any leader segment intersects symbol bounds
+        for i in range(len(leader.points) - 1):
+            if CollisionDetector._segment_intersects_box(
+                leader.points[i],
+                leader.points[i + 1],
+                symbol_bounds
+            ):
+                return True
+
+        # Check leader text bounds against symbol bounds
+        if symbol_bounds.intersects(leader.bounds(), buffer=0.0):
+            return True
 
         return False
 
@@ -292,7 +375,17 @@ class CollisionDetector:
         Returns:
             True if annotation overlaps geometry
         """
+        if CollisionDetector._annotation_allows_geometry_overlap(annotation):
+            return False
+
         ann_bounds = annotation.bounds().expand(buffer)
+        ann_center = ann_bounds.center()
+        ann_corners = [
+            Point2D(ann_bounds.min_x, ann_bounds.min_y),
+            Point2D(ann_bounds.max_x, ann_bounds.min_y),
+            Point2D(ann_bounds.max_x, ann_bounds.max_y),
+            Point2D(ann_bounds.min_x, ann_bounds.max_y),
+        ]
 
         # Check against all geometry components
         for component in geometry.components:
@@ -306,9 +399,15 @@ class CollisionDetector:
                     if CollisionDetector._segment_intersects_box(p1, p2, ann_bounds):
                         return True
 
-                    # Also check if annotation center is inside polygon
-                    # (simplified point-in-polygon test)
+                    # Also check if polygon vertices fall inside the annotation bounds
                     if ann_bounds.contains_point(p1):
+                        return True
+
+                # Check if annotation bounds are inside polygon
+                if CollisionDetector._point_in_polygon(ann_center, polygon):
+                    return True
+                for corner in ann_corners:
+                    if CollisionDetector._point_in_polygon(corner, polygon):
                         return True
 
             # Check polylines (surface slopes, etc.)
@@ -339,7 +438,10 @@ class CollisionResolver:
         self,
         max_iterations: int = 10,
         text_buffer: float = 0.05,
-        geometry: "SectionGeometry | None" = None
+        geometry: "SectionGeometry | None" = None,
+        overflow_band_offset: float = 0.5,
+        overflow_band_padding: float = 0.5,
+        overflow_band_gap: float = 0.1,
     ):
         """Initialize collision resolver.
 
@@ -351,6 +453,9 @@ class CollisionResolver:
         self.max_iterations = max_iterations
         self.text_buffer = text_buffer
         self.geometry = geometry
+        self.overflow_band_offset = overflow_band_offset
+        self.overflow_band_padding = overflow_band_padding
+        self.overflow_band_gap = overflow_band_gap
 
     def resolve_all(self, annotations: list[AnnotationBase]) -> list[AnnotationBase]:
         """Resolve all collisions in annotation list.
@@ -374,6 +479,9 @@ class CollisionResolver:
             # Rule 1: Symbol-dimension collisions (reposition symbol vertically)
             changed |= self._resolve_symbol_dimension_collisions(resolved)
 
+            # Rule 1b: Leader-leader collisions (reposition leader text)
+            changed |= self._resolve_leader_leader_collisions(resolved)
+
             # Rule 2: Text-text collisions (reposition lower priority)
             changed |= self._resolve_text_text_collisions(resolved)
 
@@ -388,7 +496,13 @@ class CollisionResolver:
                 # No changes in this iteration, we're done
                 break
 
+        # Final pass: move any remaining collisions into overflow band
+        self._force_overflow_band(resolved)
+
         return resolved
+
+    def _is_fixed(self, annotation: AnnotationBase) -> bool:
+        return bool(annotation.metadata.get("fixed"))
 
     def _resolve_geometry_collisions(
         self,
@@ -408,6 +522,8 @@ class CollisionResolver:
         changed = False
 
         for idx, annotation in enumerate(annotations):
+            if self._is_fixed(annotation):
+                continue
             # Check if annotation overlaps geometry
             if CollisionDetector.detect_annotation_geometry(
                 annotation, self.geometry, buffer=0.02
@@ -416,6 +532,17 @@ class CollisionResolver:
                 # For text annotations, use the existing positioning logic
                 if isinstance(annotation, TextAnnotation):
                     new_pos = self._find_valid_text_position(
+                        annotation, annotations, idx
+                    )
+                    if new_pos:
+                        offset = Point2D(
+                            new_pos.x - annotation.position.x,
+                            new_pos.y - annotation.position.y
+                        )
+                        annotations[idx] = annotation.reposition(offset)
+                        changed = True
+                elif isinstance(annotation, SymbolAnnotation):
+                    new_pos = self._find_valid_symbol_position(
                         annotation, annotations, idx
                     )
                     if new_pos:
@@ -469,14 +596,33 @@ class CollisionResolver:
             (i, ann) for i, ann in enumerate(annotations)
             if isinstance(ann, SymbolAnnotation)
         ]
-        dimensions = [
-            ann for ann in annotations
+        dimension_indices = [
+            (i, ann) for i, ann in enumerate(annotations)
             if isinstance(ann, DimensionAnnotation)
         ]
 
         for idx, symbol in symbol_indices:
-            for dimension in dimensions:
+            if self._is_fixed(symbol):
+                continue
+            for dim_idx, dimension in dimension_indices:
                 if CollisionDetector.detect_symbol_dimension(symbol, dimension, buffer=0.05):
+                    if not self._is_fixed(dimension):
+                        candidate_dimension = self._find_valid_dimension_offset(
+                            dimension, annotations, dim_idx
+                        )
+                        if candidate_dimension:
+                            annotations[dim_idx] = candidate_dimension
+                            dimension = candidate_dimension
+                            for di, (stored_idx, _stored_dim) in enumerate(dimension_indices):
+                                if stored_idx == dim_idx:
+                                    dimension_indices[di] = (dim_idx, candidate_dimension)
+                                    break
+                            changed = True
+                            if not CollisionDetector.detect_symbol_dimension(
+                                symbol, dimension, buffer=0.05
+                            ):
+                                continue
+
                     # Collision detected - move symbol down by small amount
                     # Try moving down first (away from dimension text which is usually above)
                     offset_options = [
@@ -490,7 +636,7 @@ class CollisionResolver:
 
                         # Check if new position still collides
                         still_collides = False
-                        for dim in dimensions:
+                        for _, dim in dimension_indices:
                             if CollisionDetector.detect_symbol_dimension(new_symbol, dim, buffer=0.05):
                                 still_collides = True
                                 break
@@ -528,29 +674,28 @@ class CollisionResolver:
                     text1, text2, buffer=self.text_buffer
                 ):
                     # Collision detected - reposition lower priority text
-                    if text1.priority >= text2.priority:
+                    if self._is_fixed(text1) and self._is_fixed(text2):
+                        continue
+                    if self._is_fixed(text1):
+                        move_idx, move_text = idx2, text2
+                    elif self._is_fixed(text2):
+                        move_idx, move_text = idx1, text1
+                    elif text1.priority >= text2.priority:
+                        move_idx, move_text = idx2, text2
+                    else:
+                        move_idx, move_text = idx1, text1
+
+                    if move_idx == idx2:
                         # Reposition text2
                         new_pos = self._find_valid_text_position(
-                            text2, annotations, idx2
+                            move_text, annotations, move_idx
                         )
                         if new_pos:
                             offset = Point2D(
-                                new_pos.x - text2.position.x,
-                                new_pos.y - text2.position.y
+                                new_pos.x - move_text.position.x,
+                                new_pos.y - move_text.position.y
                             )
-                            annotations[idx2] = text2.reposition(offset)
-                            changed = True
-                    else:
-                        # Reposition text1
-                        new_pos = self._find_valid_text_position(
-                            text1, annotations, idx1
-                        )
-                        if new_pos:
-                            offset = Point2D(
-                                new_pos.x - text1.position.x,
-                                new_pos.y - text1.position.y
-                            )
-                            annotations[idx1] = text1.reposition(offset)
+                            annotations[move_idx] = move_text.reposition(offset)
                             changed = True
 
         return changed
@@ -581,6 +726,8 @@ class CollisionResolver:
 
         for line in lines:
             for idx, text in text_indices:
+                if self._is_fixed(text):
+                    continue
                 if CollisionDetector.detect_line_text(line, text, buffer=0.02):
                     # Collision detected - reposition text
                     new_pos = self._find_valid_text_position(
@@ -595,6 +742,109 @@ class CollisionResolver:
                         changed = True
 
         return changed
+
+    def _resolve_leader_leader_collisions(
+        self,
+        annotations: list[AnnotationBase]
+    ) -> bool:
+        """Resolve leader-leader collisions by repositioning the lower priority leader."""
+        leaders = [
+            (i, ann) for i, ann in enumerate(annotations)
+            if isinstance(ann, LeaderAnnotation)
+        ]
+        changed = False
+
+        for i, (idx1, leader1) in enumerate(leaders):
+            for idx2, leader2 in leaders[i + 1:]:
+                if not CollisionDetector.detect_line_line(leader1, leader2):
+                    continue
+                if self._is_fixed(leader1) and self._is_fixed(leader2):
+                    continue
+
+                if self._is_fixed(leader1):
+                    move_idx, move_leader = idx2, leader2
+                elif self._is_fixed(leader2):
+                    move_idx, move_leader = idx1, leader1
+                elif leader1.priority >= leader2.priority:
+                    move_idx, move_leader = idx2, leader2
+                else:
+                    move_idx, move_leader = idx1, leader1
+
+                new_pos = self._find_valid_leader_position(
+                    move_leader, annotations, move_idx
+                )
+                if new_pos:
+                    text_pos = move_leader.get_text_position()
+                    offset = Point2D(
+                        new_pos.x - text_pos.x,
+                        new_pos.y - text_pos.y
+                    )
+                    annotations[move_idx] = move_leader.reposition(offset)
+                    changed = True
+
+        return changed
+
+    def _find_valid_leader_position(
+        self,
+        leader: LeaderAnnotation,
+        all_annotations: list[AnnotationBase],
+        leader_index: int
+    ) -> Point2D | None:
+        """Find a valid text position for a leader without overlaps."""
+        text_pos = leader.get_text_position()
+        probe_text = TextAnnotation(
+            position=text_pos,
+            text=leader.text,
+            font_size=leader.text_size,
+            anchor=leader.text_anchor,
+        )
+        candidates = self._generate_text_candidates(probe_text)
+
+        for candidate_pos in candidates:
+            offset = Point2D(
+                candidate_pos.x - text_pos.x,
+                candidate_pos.y - text_pos.y
+            )
+            candidate = leader.reposition(offset)
+            if self._has_leader_collision(candidate, all_annotations, leader_index):
+                continue
+            return candidate_pos
+
+        return None
+
+    def _has_leader_collision(
+        self,
+        candidate: LeaderAnnotation,
+        all_annotations: list[AnnotationBase],
+        leader_index: int
+    ) -> bool:
+        if self.geometry:
+            if CollisionDetector.detect_annotation_geometry(candidate, self.geometry, buffer=0.02):
+                return True
+
+        for i, other in enumerate(all_annotations):
+            if i == leader_index:
+                continue
+
+            if isinstance(other, LeaderAnnotation):
+                if CollisionDetector.detect_line_line(candidate, other):
+                    return True
+
+            if isinstance(other, DimensionAnnotation):
+                if CollisionDetector.detect_line_line(candidate, other):
+                    return True
+
+            if isinstance(other, TextAnnotation):
+                if CollisionDetector.detect_line_text(candidate, other, buffer=0.02):
+                    return True
+                if candidate.bounds().intersects(other.bounds(), buffer=self.text_buffer):
+                    return True
+
+            if isinstance(other, SymbolAnnotation):
+                if candidate.bounds().intersects(other.bounds(), buffer=self.text_buffer):
+                    return True
+
+        return False
 
     def _find_valid_text_position(
         self,
@@ -649,6 +899,138 @@ class CollisionResolver:
         # Return best candidate (highest score)
         scored_candidates.sort(key=lambda x: x[0], reverse=True)
         return scored_candidates[0][1]
+
+    def _find_valid_symbol_position(
+        self,
+        symbol: SymbolAnnotation,
+        all_annotations: list[AnnotationBase],
+        symbol_index: int
+    ) -> Point2D | None:
+        """Find a valid position for a symbol using candidate offsets."""
+        candidates = self._generate_symbol_candidates(symbol)
+
+        for candidate_pos in candidates:
+            candidate = symbol.reposition(Point2D(
+                candidate_pos.x - symbol.position.x,
+                candidate_pos.y - symbol.position.y
+            ))
+            if self._has_symbol_collision(candidate, all_annotations, symbol_index):
+                continue
+            return candidate_pos
+
+        return None
+
+    def _find_valid_dimension_offset(
+        self,
+        dimension: DimensionAnnotation,
+        all_annotations: list[AnnotationBase],
+        dimension_index: int
+    ) -> DimensionAnnotation | None:
+        """Increase dimension offset to create clearance for symbols."""
+        offset_increments = [0.15, 0.30, 0.45, 0.60, 0.80]
+
+        for inc in offset_increments:
+            new_offset = dimension.offset + inc
+            candidate = replace(dimension, offset=new_offset, text_position=None)
+            if not self._has_dimension_collision(candidate, all_annotations, dimension_index):
+                return candidate
+
+        return None
+
+    def _has_dimension_collision(
+        self,
+        candidate: DimensionAnnotation,
+        all_annotations: list[AnnotationBase],
+        dimension_index: int
+    ) -> bool:
+        if self.geometry:
+            if CollisionDetector.detect_annotation_geometry(candidate, self.geometry, buffer=0.02):
+                return True
+
+        candidate_text_bounds = self._dimension_text_bounds(candidate)
+
+        for i, other in enumerate(all_annotations):
+            if i == dimension_index:
+                continue
+
+            if isinstance(other, TextAnnotation):
+                if CollisionDetector.detect_line_text(candidate, other, buffer=0.02):
+                    return True
+                if candidate_text_bounds and candidate_text_bounds.intersects(
+                    other.bounds(), buffer=self.text_buffer
+                ):
+                    return True
+
+            if isinstance(other, SymbolAnnotation):
+                if CollisionDetector.detect_symbol_dimension(other, candidate, buffer=0.02):
+                    return True
+
+            if isinstance(other, LeaderAnnotation):
+                if CollisionDetector.detect_line_line(candidate, other):
+                    return True
+                if candidate_text_bounds and candidate_text_bounds.intersects(
+                    other.bounds(), buffer=self.text_buffer
+                ):
+                    return True
+
+            if isinstance(other, DimensionAnnotation):
+                if CollisionDetector.detect_line_line(candidate, other):
+                    return True
+
+        return False
+
+    def _generate_symbol_candidates(self, symbol: SymbolAnnotation) -> list[Point2D]:
+        """Generate candidate positions for symbol placement."""
+        candidates = [symbol.position]
+        offset_increments = [0.10, 0.20, 0.30, 0.45, 0.60, 0.80]
+
+        for inc in offset_increments:
+            candidates.extend([
+                Point2D(symbol.position.x, symbol.position.y + inc),
+                Point2D(symbol.position.x, symbol.position.y - inc),
+                Point2D(symbol.position.x + inc, symbol.position.y),
+                Point2D(symbol.position.x - inc, symbol.position.y),
+                Point2D(symbol.position.x + inc, symbol.position.y + inc),
+                Point2D(symbol.position.x + inc, symbol.position.y - inc),
+                Point2D(symbol.position.x - inc, symbol.position.y + inc),
+                Point2D(symbol.position.x - inc, symbol.position.y - inc),
+            ])
+
+        return candidates
+
+    def _has_symbol_collision(
+        self,
+        candidate: SymbolAnnotation,
+        all_annotations: list[AnnotationBase],
+        symbol_index: int
+    ) -> bool:
+        if self.geometry:
+            if CollisionDetector.detect_annotation_geometry(candidate, self.geometry, buffer=0.02):
+                return True
+
+        candidate_bounds = candidate.bounds()
+
+        for i, other in enumerate(all_annotations):
+            if i == symbol_index:
+                continue
+
+            if isinstance(other, SymbolAnnotation):
+                if candidate_bounds.intersects(other.bounds(), buffer=self.text_buffer):
+                    return True
+
+            if isinstance(other, TextAnnotation):
+                if candidate_bounds.intersects(other.bounds(), buffer=self.text_buffer):
+                    return True
+
+            if isinstance(other, DimensionAnnotation):
+                if CollisionDetector.detect_symbol_dimension(candidate, other, buffer=0.02):
+                    return True
+
+            if isinstance(other, LeaderAnnotation):
+                if CollisionDetector.detect_symbol_leader(candidate, other, buffer=0.02):
+                    return True
+
+        return False
 
     def _generate_text_candidates(self, text: TextAnnotation) -> list[Point2D]:
         """Generate candidate positions for text placement.
@@ -732,6 +1114,9 @@ class CollisionResolver:
                     buffer=0.02
                 ):
                     return True
+                if isinstance(other, LeaderAnnotation):
+                    if other.bounds().intersects(candidate.bounds(), buffer=self.text_buffer):
+                        return True
 
             # Symbol-text collision (symbols are fixed)
             if isinstance(other, SymbolAnnotation):
@@ -807,3 +1192,142 @@ class CollisionResolver:
         score += min(min_clearance * 20.0, 30.0)
 
         return score
+
+    def _dimension_text_bounds(self, dimension: DimensionAnnotation):
+        if not dimension.text_position or not dimension.dimension_text:
+            return None
+        text_width = len(dimension.dimension_text) * dimension.text_size * 0.6
+        text_height = dimension.text_size
+        return BoundingBox(
+            min_x=dimension.text_position.x - text_width / 2,
+            min_y=dimension.text_position.y - text_height / 2,
+            max_x=dimension.text_position.x + text_width / 2,
+            max_y=dimension.text_position.y + text_height / 2,
+        )
+
+    def _force_overflow_band(self, annotations: list[AnnotationBase]) -> None:
+        colliding_indices = self._collect_colliding_indices(annotations)
+        if not colliding_indices:
+            return
+
+        band_min_x, band_max_x, band_base_y = self._overflow_band_bounds(annotations)
+        self._pack_in_band(annotations, colliding_indices, band_min_x, band_max_x, band_base_y)
+
+    def _collect_colliding_indices(
+        self, annotations: list[AnnotationBase]
+    ) -> list[int]:
+        colliding: list[int] = []
+        for idx, annotation in enumerate(annotations):
+            if self._is_fixed(annotation):
+                continue
+            if not isinstance(annotation, (TextAnnotation, SymbolAnnotation)):
+                continue
+            if self._annotation_has_collision(annotation, annotations, idx):
+                colliding.append(idx)
+        return colliding
+
+    def _annotation_has_collision(
+        self,
+        annotation: AnnotationBase,
+        annotations: list[AnnotationBase],
+        annotation_index: int
+    ) -> bool:
+        if self.geometry:
+            if CollisionDetector.detect_annotation_geometry(
+                annotation, self.geometry, buffer=0.02
+            ):
+                return True
+
+        for i, other in enumerate(annotations):
+            if i == annotation_index:
+                continue
+
+            if isinstance(annotation, TextAnnotation):
+                if isinstance(other, TextAnnotation):
+                    if CollisionDetector.detect_text_text(annotation, other, buffer=self.text_buffer):
+                        return True
+                if isinstance(other, (DimensionAnnotation, LeaderAnnotation)):
+                    if CollisionDetector.detect_line_text(other, annotation, buffer=0.02):
+                        return True
+                    if other.bounds().intersects(annotation.bounds(), buffer=self.text_buffer):
+                        return True
+                if isinstance(other, SymbolAnnotation):
+                    if annotation.bounds().intersects(other.bounds(), buffer=self.text_buffer):
+                        return True
+            elif isinstance(annotation, SymbolAnnotation):
+                if isinstance(other, DimensionAnnotation):
+                    if CollisionDetector.detect_symbol_dimension(annotation, other, buffer=0.02):
+                        return True
+                if isinstance(other, LeaderAnnotation):
+                    if CollisionDetector.detect_symbol_leader(annotation, other, buffer=0.02):
+                        return True
+                if isinstance(other, (TextAnnotation, SymbolAnnotation)):
+                    if annotation.bounds().intersects(other.bounds(), buffer=self.text_buffer):
+                        return True
+                else:
+                    if annotation.bounds().intersects(other.bounds(), buffer=self.text_buffer):
+                        return True
+
+        return False
+
+    def _overflow_band_bounds(
+        self, annotations: list[AnnotationBase]
+    ) -> tuple[float, float, float]:
+        bounds = [ann.bounds() for ann in annotations]
+        min_x = min(b.min_x for b in bounds)
+        max_x = max(b.max_x for b in bounds)
+        max_y = max(b.max_y for b in bounds)
+
+        if self.geometry:
+            geom_min_x, _geom_min_y, geom_max_x, geom_max_y = self.geometry.bounds()
+            min_x = min(min_x, geom_min_x)
+            max_x = max(max_x, geom_max_x)
+            max_y = max(max_y, geom_max_y)
+
+        band_min_x = min_x - self.overflow_band_padding
+        band_max_x = max_x + self.overflow_band_padding
+        band_base_y = max_y + self.overflow_band_offset
+
+        return band_min_x, band_max_x, band_base_y
+
+    def _pack_in_band(
+        self,
+        annotations: list[AnnotationBase],
+        indices: list[int],
+        band_min_x: float,
+        band_max_x: float,
+        band_base_y: float
+    ) -> None:
+        indices_sorted = sorted(indices, key=lambda i: annotations[i].priority)
+        cursor_x = band_min_x
+        row_y = band_base_y
+        row_height = 0.0
+        band_width = max(band_max_x - band_min_x, 0.01)
+
+        for idx in indices_sorted:
+            annotation = annotations[idx]
+            bounds = annotation.bounds()
+            width = bounds.width()
+            height = bounds.height()
+
+            if cursor_x > band_min_x and cursor_x + width > band_max_x:
+                row_y += row_height + self.overflow_band_gap
+                cursor_x = band_min_x
+                row_height = 0.0
+
+            if width > band_width:
+                cursor_x = band_min_x
+
+            desired_center = Point2D(
+                cursor_x + width / 2,
+                row_y + height / 2
+            )
+            current_center = bounds.center()
+            offset = Point2D(
+                desired_center.x - current_center.x,
+                desired_center.y - current_center.y
+            )
+            annotations[idx] = annotation.reposition(offset)
+
+            cursor_x += width + self.overflow_band_gap
+            row_height = max(row_height, height)

@@ -42,6 +42,7 @@ class AnnotationGeneratorOptions:
     symbol_library: str = "aashto"
     text_size: float = 0.15
     dimension_offset: float = 0.5
+    traffic_symbol_offset: float = 0.35
 
 
 class AnnotationGenerator:
@@ -78,6 +79,7 @@ class AnnotationGenerator:
             symbol_library=options.symbol_library,
             text_size=options.text_size,
             dimension_offset=options.dimension_offset,
+            traffic_symbol_offset=options.traffic_symbol_offset,
         )
         planner = AnnotationPlanner()
         return planner.plan(section_geometry, profile)
