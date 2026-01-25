@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311176Z
+**Detected:** 2026-01-24T20:23:19.349274Z
 
 ## Summary
 Method '_x_at' has cyclomatic complexity 2 (rank A)
@@ -31,7 +31,7 @@ Refactor '_x_at' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/barriers.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/barriers.py"],
   "lines": [327]
 }
 ```

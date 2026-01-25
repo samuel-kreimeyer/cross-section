@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311157Z
+**Detected:** 2026-01-24T20:23:19.349254Z
 
 ## Summary
 Class 'Barrier' has cyclomatic complexity 4 (rank A)
@@ -31,7 +31,7 @@ Refactor 'Barrier' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/barriers.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/barriers.py"],
   "lines": [196]
 }
 ```

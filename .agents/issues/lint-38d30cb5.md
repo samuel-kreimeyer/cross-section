@@ -3,15 +3,15 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311132Z
+**Detected:** 2026-01-24T20:23:19.349210Z
 
 ## Summary
-Method 'to_geometry' has cyclomatic complexity 2 (rank A)
+Method 'to_geometry' has cyclomatic complexity 3 (rank A)
 
 ## Evidence
 File: /home/sam/Projects/cross-section/src/cross_section/core/domain/components/curbs.py
 Line: 94
-Complexity: 2
+Complexity: 3
 Rank: A
 
 ## Impact
@@ -31,7 +31,7 @@ Refactor 'to_geometry' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/curbs.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/curbs.py"],
   "lines": [94]
 }
 ```

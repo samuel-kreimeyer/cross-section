@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311004Z
+**Detected:** 2026-01-24T20:23:19.348996Z
 
 ## Summary
 Function 'validate_component_geometry' has cyclomatic complexity 4 (rank A)
@@ -31,7 +31,7 @@ Refactor 'validate_component_geometry' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/geometry/validate.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/geometry/validate.py"],
   "lines": [275]
 }
 ```

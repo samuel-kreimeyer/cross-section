@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311011Z
+**Detected:** 2026-01-24T20:23:19.349005Z
 
 ## Summary
 Function '_coords' has cyclomatic complexity 2 (rank A)
@@ -31,7 +31,7 @@ Refactor '_coords' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/geometry/validate.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/geometry/validate.py"],
   "lines": [40]
 }
 ```

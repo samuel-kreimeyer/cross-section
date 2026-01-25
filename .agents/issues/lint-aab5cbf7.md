@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311167Z
+**Detected:** 2026-01-24T20:23:19.349263Z
 
 ## Summary
 Method '_build_layers' has cyclomatic complexity 3 (rank A)
@@ -31,7 +31,7 @@ Refactor '_build_layers' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/barriers.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/barriers.py"],
   "lines": [330]
 }
 ```

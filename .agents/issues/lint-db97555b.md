@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311080Z
+**Detected:** 2026-01-24T20:23:19.349146Z
 
 ## Summary
 Class 'Shoulder' has cyclomatic complexity 7 (rank B)
@@ -31,7 +31,7 @@ Refactor 'Shoulder' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/shoulders.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/shoulders.py"],
   "lines": [14]
 }
 ```

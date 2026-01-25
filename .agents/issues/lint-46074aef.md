@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311250Z
+**Detected:** 2026-01-24T20:23:19.349353Z
 
 ## Summary
 Function 'feet' has cyclomatic complexity 1 (rank A)
@@ -31,7 +31,7 @@ Refactor 'feet' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/retaining_walls.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/retaining_walls.py"],
   "lines": [22]
 }
 ```

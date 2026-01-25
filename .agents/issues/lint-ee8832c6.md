@@ -1,0 +1,37 @@
+# Issue: High Complexity: _generate_symbol_candidates
+
+**Type:** lint
+**Severity:** info
+**Tool:** radon
+**Detected:** 2026-01-24T20:23:19.349597Z
+
+## Summary
+Method '_generate_symbol_candidates' has cyclomatic complexity 2 (rank A)
+
+## Evidence
+File: /home/sam/Projects/cross-section/src/cross_section/core/domain/annotations/collision.py
+Line: 982
+Complexity: 2
+Rank: A
+
+## Impact
+Complex code is harder to test, understand, and maintain. High complexity often indicates a need for refactoring.
+
+## Recommended Action
+Refactor '_generate_symbol_candidates' by:
+- Breaking into smaller functions
+- Reducing branching (if/else, loops)
+- Simplifying logic
+- Target complexity < 10
+
+## Automation
+- Detectable: yes
+- Auto-fixable: no
+
+## Metadata
+```json
+{
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/annotations/collision.py"],
+  "lines": [982]
+}
+```

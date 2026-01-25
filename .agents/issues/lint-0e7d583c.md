@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311192Z
+**Detected:** 2026-01-24T20:23:19.349290Z
 
 ## Summary
 Method 'footprint_width' has cyclomatic complexity 1 (rank A)
@@ -31,7 +31,7 @@ Refactor 'footprint_width' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/barriers.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/barriers.py"],
   "lines": [38]
 }
 ```

@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311019Z
+**Detected:** 2026-01-24T20:23:19.349013Z
 
 ## Summary
 Method 'validate' has cyclomatic complexity 14 (rank C)
@@ -31,7 +31,7 @@ Refactor 'validate' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/pavement.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/pavement.py"],
   "lines": [74]
 }
 ```

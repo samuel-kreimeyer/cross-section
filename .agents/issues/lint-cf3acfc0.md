@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311062Z
+**Detected:** 2026-01-24T20:23:19.349107Z
 
 ## Summary
 Class 'Ditch' has cyclomatic complexity 4 (rank A)
@@ -31,7 +31,7 @@ Refactor 'Ditch' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/ditches.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/ditches.py"],
   "lines": [13]
 }
 ```

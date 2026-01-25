@@ -5,11 +5,11 @@
     "name": "cross-section"
   },
   "last_check": {
-    "timestamp": "2026-01-10T16:23:14.627617",
-    "commit_hash": "a5c58ce59b79338ba5620aa0efb51e000b8a7b2d",
+    "timestamp": "2026-01-24T20:23:25.864345",
+    "commit_hash": "85805293bb7ffc2adb69d7feba44195d4b4fab28",
     "branch": "main",
     "exit_code": 1,
-    "issues_found": 211,
+    "issues_found": 364,
     "checks_run": [
       "schema",
       "types",
@@ -18,9 +18,24 @@
       "docs"
     ]
   },
-  "history": [],
+  "history": [
+    {
+      "timestamp": "2026-01-10T16:23:14.627617",
+      "commit_hash": "a5c58ce59b79338ba5620aa0efb51e000b8a7b2d",
+      "branch": "main",
+      "exit_code": 1,
+      "issues_found": 211,
+      "checks_run": [
+        "schema",
+        "types",
+        "lint",
+        "risk",
+        "docs"
+      ]
+    }
+  ],
   "metadata": {
     "created": "2026-01-10T16:23:14.627612",
-    "last_modified": "2026-01-10T16:23:14.627621"
+    "last_modified": "2026-01-24T20:23:25.864350"
   }
 }

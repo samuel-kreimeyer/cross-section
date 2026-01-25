@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311087Z
+**Detected:** 2026-01-24T20:23:19.349154Z
 
 ## Summary
 Method 'to_geometry' has cyclomatic complexity 2 (rank A)
@@ -31,7 +31,7 @@ Refactor 'to_geometry' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/shoulders.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/shoulders.py"],
   "lines": [134]
 }
 ```

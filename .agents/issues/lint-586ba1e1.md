@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311093Z
+**Detected:** 2026-01-24T20:23:19.349161Z
 
 ## Summary
 Class 'Shoring' has cyclomatic complexity 5 (rank A)
@@ -31,7 +31,7 @@ Refactor 'Shoring' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/shoring.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/shoring.py"],
   "lines": [10]
 }
 ```

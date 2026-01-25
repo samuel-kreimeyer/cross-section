@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311005Z
+**Detected:** 2026-01-24T20:23:19.348998Z
 
 ## Summary
 Function '_to_shapely_polygon' has cyclomatic complexity 3 (rank A)
@@ -31,7 +31,7 @@ Refactor '_to_shapely_polygon' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/geometry/validate.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/geometry/validate.py"],
   "lines": [44]
 }
 ```

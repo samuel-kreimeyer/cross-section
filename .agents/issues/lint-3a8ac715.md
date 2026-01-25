@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311078Z
+**Detected:** 2026-01-24T20:23:19.349145Z
 
 ## Summary
 Method '_create_slumped_geometry' has cyclomatic complexity 9 (rank B)
@@ -31,7 +31,7 @@ Refactor '_create_slumped_geometry' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/shoulders.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/shoulders.py"],
   "lines": [216]
 }
 ```

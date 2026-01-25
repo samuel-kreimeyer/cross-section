@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311235Z
+**Detected:** 2026-01-24T20:23:19.349337Z
 
 ## Summary
 Method '_backfill_polygon' has cyclomatic complexity 2 (rank A)
@@ -31,7 +31,7 @@ Refactor '_backfill_polygon' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/retaining_walls.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/retaining_walls.py"],
   "lines": [200]
 }
 ```

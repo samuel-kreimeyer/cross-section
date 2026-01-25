@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311163Z
+**Detected:** 2026-01-24T20:23:19.349261Z
 
 ## Summary
 Method '__post_init__' has cyclomatic complexity 3 (rank A)
@@ -31,7 +31,7 @@ Refactor '__post_init__' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/barriers.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/barriers.py"],
   "lines": [208]
 }
 ```

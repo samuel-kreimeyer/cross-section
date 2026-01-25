@@ -1,0 +1,36 @@
+# Issue: Type Error: Returning Any from function declared to return "fl...
+
+**Type:** type
+**Severity:** error
+**Tool:** check-types
+**Detected:** 2026-01-24T20:23:19.029512Z
+
+## Summary
+Type error detected by mypy on line 229.
+
+## Evidence
+File: src/cross_section/core/domain/section.py
+Line: 229
+
+mypy output:
+```
+src/cross_section/core/domain/section.py:229: error: Returning Any from function declared to return "float | None"  [no-any-return]
+```
+
+## Impact
+Type errors can lead to runtime failures. Static type checking helps catch these issues early.
+
+## Recommended Action
+Review the type error and fix the type annotation or adjust the code to match the expected type.
+
+## Automation
+- Detectable: yes
+- Auto-fixable: no
+
+## Metadata
+```json
+{
+  "files": ["src/cross_section/core/domain/section.py"],
+  "lines": [229]
+}
+```

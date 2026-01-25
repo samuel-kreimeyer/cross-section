@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311127Z
+**Detected:** 2026-01-24T20:23:19.349208Z
 
 ## Summary
 Class 'Curb' has cyclomatic complexity 4 (rank A)
@@ -31,7 +31,7 @@ Refactor 'Curb' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/curbs.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/curbs.py"],
   "lines": [11]
 }
 ```

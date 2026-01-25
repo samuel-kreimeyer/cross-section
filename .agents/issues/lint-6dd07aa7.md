@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.310962Z
+**Detected:** 2026-01-24T20:23:19.348953Z
 
 ## Summary
 Class 'ComponentGeometry' has cyclomatic complexity 16 (rank C)
@@ -31,7 +31,7 @@ Refactor 'ComponentGeometry' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/geometry/primitives.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/geometry/primitives.py"],
   "lines": [87]
 }
 ```

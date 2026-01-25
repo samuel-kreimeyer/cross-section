@@ -3,7 +3,7 @@
 **Type:** lint
 **Severity:** info
 **Tool:** radon
-**Detected:** 2026-01-10T16:23:09.311134Z
+**Detected:** 2026-01-24T20:23:19.349215Z
 
 ## Summary
 Method 'get_insertion_point' has cyclomatic complexity 1 (rank A)
@@ -31,7 +31,7 @@ Refactor 'get_insertion_point' by:
 ## Metadata
 ```json
 {
-  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/curbs.py"]
+  "files": ["/home/sam/Projects/cross-section/src/cross_section/core/domain/components/curbs.py"],
   "lines": [46]
 }
 ```
