@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1026.0" height="404.5" viewBox="0 0 1026.0 404.5">
+  <title>Four-Lane Divided Highway</title>
+  <rect width="1026.0" height="404.5" fill="white"/>
+  <g transform="scale(1,-1)">
+    <g transform="translate(0,-404.5)">
+      <polygon points="628.00,152.95 628.00,150.45 448.00,146.85 448.00,149.35" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="628.00,150.45 628.00,146.70 448.00,143.10 448.00,146.85" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="628.00,146.70 628.00,139.20 448.00,135.60 448.00,143.10" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="448.00,149.35 448.00,146.85 268.00,143.25 268.00,145.75" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="448.00,146.85 448.00,143.10 268.00,139.50 268.00,143.25" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="448.00,143.10 448.00,135.60 268.00,132.00 268.00,139.50" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="628.00,152.95 808.00,149.35 808.00,146.85 628.00,150.45" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="628.00,150.45 808.00,146.85 808.00,143.10 628.00,146.70" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="628.00,146.70 808.00,143.10 808.00,135.60 628.00,139.20" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="808.00,149.35 988.00,145.75 988.00,143.25 808.00,146.85" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="808.00,146.85 988.00,143.25 988.00,139.50 808.00,143.10" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="808.00,143.10 988.00,139.50 988.00,132.00 808.00,135.60" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <!-- Annotations -->
+      <g id="symbol-a4838602" transform="translate(538.00,195.45) scale(1.0) rotate(-180.0)">
+
+        <g>
+            <path d="M -5,-15 L 5,-15 L 5,0 L 9,0 L 0,15 L -9,0 L -5,0 Z"
+                  fill="black" stroke="black" stroke-width="1"/>
+        </g>
+    
+      </g>
+      <g id="symbol-59545d51" transform="translate(538.00,175.45) scale(0.8) rotate(-180.0)">
+
+        <g>
+            <path d="M -10,0 L 8,0 L 8,-5 L 15,0 L 8,5 L 8,0 Z"
+                  fill="black" stroke="black" stroke-width="0.75"/>
+        </g>
+    
+      </g>
+      <text x="538.00" y="169.45" font-family="Arial" font-size="5.0" text-anchor="middle" transform="translate(0,338.90) scale(1,-1)" fill="black">2%</text>
+      <text x="538.00" y="144.28" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,288.55) scale(1,-1)" fill="black">Asphalt</text>
+      <g id="symbol-82000a92" transform="translate(358.00,191.85) scale(1.0) rotate(-180.0)">
+
+        <g>
+            <path d="M -5,-15 L 5,-15 L 5,0 L 9,0 L 0,15 L -9,0 L -5,0 Z"
+                  fill="black" stroke="black" stroke-width="1"/>
+        </g>
+    
+      </g>
+      <g id="symbol-d8c46063" transform="translate(358.00,171.85) scale(0.8) rotate(-180.0)">
+
+        <g>
+            <path d="M -10,0 L 8,0 L 8,-5 L 15,0 L 8,5 L 8,0 Z"
+                  fill="black" stroke="black" stroke-width="0.75"/>
+        </g>
+    
+      </g>
+      <text x="358.00" y="165.85" font-family="Arial" font-size="5.0" text-anchor="middle" transform="translate(0,331.70) scale(1,-1)" fill="black">2%</text>
+      <text x="358.00" y="140.68" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,281.35) scale(1,-1)" fill="black">Asphalt</text>
+      <g id="symbol-cbe74d25" transform="translate(718.00,195.45) scale(1.0) rotate(-0.0)">
+
+        <g>
+            <path d="M -5,-15 L 5,-15 L 5,0 L 9,0 L 0,15 L -9,0 L -5,0 Z"
+                  fill="black" stroke="black" stroke-width="1"/>
+        </g>
+    
+      </g>
+      <g id="symbol-ad73c105" transform="translate(718.00,175.45) scale(0.8) rotate(-0.0)">
+
+        <g>
+            <path d="M -10,0 L 8,0 L 8,-5 L 15,0 L 8,5 L 8,0 Z"
+                  fill="black" stroke="black" stroke-width="0.75"/>
+        </g>
+    
+      </g>
+      <text x="718.00" y="169.45" font-family="Arial" font-size="5.0" text-anchor="middle" transform="translate(0,338.90) scale(1,-1)" fill="black">2%</text>
+      <text x="718.00" y="144.28" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,288.55) scale(1,-1)" fill="black">Asphalt</text>
+      <g id="symbol-3683f3db" transform="translate(898.00,191.85) scale(1.0) rotate(-0.0)">
+
+        <g>
+            <path d="M -5,-15 L 5,-15 L 5,0 L 9,0 L 0,15 L -9,0 L -5,0 Z"
+                  fill="black" stroke="black" stroke-width="1"/>
+        </g>
+    
+      </g>
+      <g id="symbol-1e90c7b8" transform="translate(898.00,171.85) scale(0.8) rotate(-0.0)">
+
+        <g>
+            <path d="M -10,0 L 8,0 L 8,-5 L 15,0 L 8,5 L 8,0 Z"
+                  fill="black" stroke="black" stroke-width="0.75"/>
+        </g>
+    
+      </g>
+      <text x="898.00" y="165.85" font-family="Arial" font-size="5.0" text-anchor="middle" transform="translate(0,331.70) scale(1,-1)" fill="black">2%</text>
+      <text x="898.00" y="276.45" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,552.90) scale(1,-1)" fill="black">Asphalt</text>
+      <g id="dimension-c6b9a112">
+        <line x1="448.00" y1="160.45" x2="448.00" y2="245.45" stroke="black" stroke-width="0.5"/>
+        <line x1="628.00" y1="160.45" x2="628.00" y2="245.45" stroke="black" stroke-width="0.5"/>
+        <line x1="448.00" y1="245.45" x2="628.00" y2="245.45" stroke="black" stroke-width="1"/>
+        <polygon points="448.00,245.45 443.00,242.95 443.00,247.95" fill="black" transform="rotate(180.0,448.00,245.45)"/>
+        <polygon points="628.00,245.45 623.00,242.95 623.00,247.95" fill="black" transform="rotate(0.0,628.00,245.45)"/>
+        <text x="538.00" y="248.45" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,496.90) scale(1,-1)" fill="black">11'-9.7"</text>
+      </g>
+      <text x="691.40" y="225.45" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,450.90) scale(1,-1)" fill="black">Lane</text>
+      <g id="dimension-a5dcaa57">
+        <line x1="268.00" y1="156.85" x2="268.00" y2="245.45" stroke="black" stroke-width="0.5"/>
+        <line x1="448.00" y1="156.85" x2="448.00" y2="245.45" stroke="black" stroke-width="0.5"/>
+        <line x1="268.00" y1="245.45" x2="448.00" y2="245.45" stroke="black" stroke-width="1"/>
+        <polygon points="268.00,245.45 263.00,242.95 263.00,247.95" fill="black" transform="rotate(180.0,268.00,245.45)"/>
+        <polygon points="448.00,245.45 443.00,242.95 443.00,247.95" fill="black" transform="rotate(0.0,448.00,245.45)"/>
+        <text x="358.00" y="248.45" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,496.90) scale(1,-1)" fill="black">11'-9.7"</text>
+      </g>
+      <text x="511.40" y="225.45" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,450.90) scale(1,-1)" fill="black">Lane</text>
+      <g id="dimension-0125ec72">
+        <line x1="628.00" y1="160.45" x2="628.00" y2="245.45" stroke="black" stroke-width="0.5"/>
+        <line x1="808.00" y1="160.45" x2="808.00" y2="245.45" stroke="black" stroke-width="0.5"/>
+        <line x1="628.00" y1="245.45" x2="808.00" y2="245.45" stroke="black" stroke-width="1"/>
+        <polygon points="628.00,245.45 623.00,242.95 623.00,247.95" fill="black" transform="rotate(180.0,628.00,245.45)"/>
+        <polygon points="808.00,245.45 803.00,242.95 803.00,247.95" fill="black" transform="rotate(0.0,808.00,245.45)"/>
+        <text x="718.00" y="248.45" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,496.90) scale(1,-1)" fill="black">11'-9.7"</text>
+      </g>
+      <text x="871.40" y="225.45" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,450.90) scale(1,-1)" fill="black">Lane</text>
+      <g id="dimension-79f5dabb">
+        <line x1="808.00" y1="156.85" x2="808.00" y2="245.45" stroke="black" stroke-width="0.5"/>
+        <line x1="988.00" y1="156.85" x2="988.00" y2="245.45" stroke="black" stroke-width="0.5"/>
+        <line x1="808.00" y1="245.45" x2="988.00" y2="245.45" stroke="black" stroke-width="1"/>
+        <polygon points="808.00,245.45 803.00,242.95 803.00,247.95" fill="black" transform="rotate(180.0,808.00,245.45)"/>
+        <polygon points="988.00,245.45 983.00,242.95 983.00,247.95" fill="black" transform="rotate(0.0,988.00,245.45)"/>
+        <text x="898.00" y="248.45" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,496.90) scale(1,-1)" fill="black">11'-9.7"</text>
+      </g>
+      <text x="924.60" y="225.45" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,450.90) scale(1,-1)" fill="black">Lane</text>
+      <g id="leader-b94c0ea7">
+        <polyline points="808.00,149.90 825.50,107.00 833.00,107.00" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="808.00,149.90 803.00,147.40 803.00,152.40" fill="black" transform="rotate(112.19179552999384,808.00,149.90)"/>
+        <text x="838.00" y="107.00" font-family="Arial" font-size="7.5" text-anchor="start" transform="translate(0,214.00) scale(1,-1)" fill="black">Asphalt (2")</text>
+      </g>
+      <g id="leader-3d529afd">
+        <polyline points="808.00,141.15 825.50,98.00 833.00,98.00" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="808.00,141.15 803.00,138.65 803.00,143.65" fill="black" transform="rotate(112.07560454333654,808.00,141.15)"/>
+        <text x="838.00" y="98.00" font-family="Arial" font-size="7.5" text-anchor="start" transform="translate(0,196.00) scale(1,-1)" fill="black">Aggregate Base (6")</text>
+      </g>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text x="10" y="20" font-family="Arial" font-size="14" font-weight="bold">Four-Lane Divided Highway</text>
+  <rect x="10" y="40" width="15" height="15" fill="#2C3E50"/>
+  <text x="30" y="52" font-family="Arial" font-size="12">AsphaltLayer</text>
+  <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
+  <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
+  <!-- Scale -->
+  <line x1="10" y1="374.4500000000021" x2="162.39999512320014" y2="374.4500000000021" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="369.4500000000021" x2="10" y2="379.4500000000021" stroke="black" stroke-width="2"/>
+  <line x1="162.39999512320014" y1="369.4500000000021" x2="162.39999512320014" y2="379.4500000000021" stroke="black" stroke-width="2"/>
+  <text x="86.19999756160007" y="394.4500000000021" font-family="Arial" font-size="12" text-anchor="middle">10ft</text>
+</svg>

@@ -6,7 +6,7 @@ from typing import Literal
 from ..section import SectionGeometry
 from .container import AnnotationCollection
 from .planner import AnnotationPlanner
-from .profile import AnnotationProfile
+from .profile import AnnotationProfile, UnitSystem
 
 
 @dataclass
@@ -17,6 +17,7 @@ class AnnotationGeneratorOptions:
         add_component_labels: Add text labels for each component
         add_width_dimensions: Add dimension lines for component widths
         add_material_labels: Add labels for material types/layers
+        add_layer_callouts: Add leader lines with material callouts for pavement layers
         use_keyed_notes: Use keyed notes instead of inline text
         add_traffic_symbols: Add traffic direction arrows on lanes
         add_centerpoint_mark: Add mark at control point
@@ -25,6 +26,7 @@ class AnnotationGeneratorOptions:
         material_label_mode: How to render pavement material labels
         traffic_arrow_mode: How to orient traffic arrows
         symbol_library: Which symbol library to use
+        unit_system: Unit system for dimensions (imperial or metric)
         text_size: Default text size for labels
         dimension_offset: Vertical offset for dimension lines
     """
@@ -32,6 +34,7 @@ class AnnotationGeneratorOptions:
     add_component_labels: bool = True
     add_width_dimensions: bool = True
     add_material_labels: bool = False
+    add_layer_callouts: bool = True
     use_keyed_notes: bool = False
     add_traffic_symbols: bool = False
     add_centerpoint_mark: bool = False
@@ -40,9 +43,23 @@ class AnnotationGeneratorOptions:
     material_label_mode: Literal["note", "dimension_suffix"] = "note"
     traffic_arrow_mode: Literal["assembly", "traffic_direction"] = "assembly"
     symbol_library: str = "aashto"
+    unit_system: UnitSystem = "imperial"
     text_size: float = 0.15
-    dimension_offset: float = 0.5
-    traffic_symbol_offset: float = 0.35
+    dimension_offset: float = 1.70
+    traffic_symbol_offset: float = 0.85
+
+
+def default_annotation_options() -> AnnotationGeneratorOptions:
+    """Return the standard 'everything on' options for end-to-end tests."""
+    return AnnotationGeneratorOptions(
+        add_component_labels=True,
+        add_width_dimensions=True,
+        add_material_labels=True,
+        add_layer_callouts=True,
+        add_traffic_symbols=True,
+        add_cross_slope_symbols=True,
+        add_cross_slope_text=True,
+    )
 
 
 class AnnotationGenerator:
@@ -69,6 +86,7 @@ class AnnotationGenerator:
             include_component_labels=options.add_component_labels,
             include_width_dimensions=options.add_width_dimensions,
             include_material_labels=options.add_material_labels,
+            include_layer_callouts=options.add_layer_callouts,
             include_travel_direction=options.add_traffic_symbols,
             include_cross_slope=options.add_cross_slope_symbols,
             include_cross_slope_text=options.add_cross_slope_text,
@@ -77,6 +95,7 @@ class AnnotationGenerator:
             material_label_mode=material_label_mode,
             traffic_arrow_mode=options.traffic_arrow_mode,
             symbol_library=options.symbol_library,
+            unit_system=options.unit_system,
             text_size=options.text_size,
             dimension_offset=options.dimension_offset,
             traffic_symbol_offset=options.traffic_symbol_offset,

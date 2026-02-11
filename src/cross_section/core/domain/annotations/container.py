@@ -136,7 +136,7 @@ class AnnotationCollection:
         overflow_band_offset: float = 0.5,
         overflow_band_padding: float = 0.5,
         overflow_band_gap: float = 0.1,
-    ) -> None:
+    ):
         """Resolve collisions between annotations.
 
         Applies strict collision rules:
@@ -151,8 +151,11 @@ class AnnotationCollection:
             max_iterations: Maximum iterations for repositioning
             text_buffer: Buffer distance around text
             geometry: Optional section geometry to avoid during placement
+
+        Returns:
+            CollisionResult with resolution outcome details.
         """
-        from .collision import CollisionResolver
+        from .collision import CollisionResolver, CollisionResult
 
         resolver = CollisionResolver(
             max_iterations=max_iterations,
@@ -163,7 +166,8 @@ class AnnotationCollection:
             overflow_band_gap=overflow_band_gap,
         )
 
-        self.annotations = resolver.resolve_all(self.annotations)
+        self.annotations, result = resolver.resolve_all(self.annotations)
+        return result
 
     def validate(self) -> list[str]:
         """Validate all annotations in the collection.

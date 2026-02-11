@@ -11,8 +11,8 @@ SymbolLibrary.register(
                   fill="black" stroke="black" stroke-width="1"/>
         </g>
     ''',
-    width=0.4,  # 400mm
-    height=0.7,  # 700mm
+    width=0.36,  # Path spans -9 to 9 = 18 units; 18/50 = 0.36m
+    height=0.60,  # Path spans -15 to 15 = 30 units; 30/50 = 0.60m
     library="aashto"
 )
 

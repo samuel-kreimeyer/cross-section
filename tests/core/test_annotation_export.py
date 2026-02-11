@@ -304,7 +304,8 @@ class TestAnnotatedSVGExporter:
         # Generate annotations
         options = AnnotationGeneratorOptions(
             add_component_labels=True,
-            add_width_dimensions=True
+            add_width_dimensions=True,
+            unit_system="metric"
         )
         collection = AnnotationGenerator.generate(section, options)
 

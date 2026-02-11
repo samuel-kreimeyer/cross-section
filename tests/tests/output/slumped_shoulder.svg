@@ -1,22 +1,69 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1132.4" height="243.5" viewBox="0 0 1132.4 243.5">
+<svg xmlns="http://www.w3.org/2000/svg" width="1228.2" height="335.8" viewBox="0 0 1228.2 335.8">
   <title>Two-Lane Road with Slumped Shoulders</title>
-  <rect width="1132.4" height="243.5" fill="white"/>
+  <rect width="1228.2" height="335.8" fill="white"/>
   <g transform="scale(1,-1)">
-    <g transform="translate(0,-243.5)">
-      <polygon points="727.40,118.50 727.40,116.00 547.40,112.40 547.40,114.90" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="727.40,116.00 727.40,112.25 547.40,108.65 547.40,112.40" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="727.40,112.25 727.40,102.25 547.40,98.65 547.40,108.65" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="547.40,114.90 547.40,112.90 425.40,110.50 427.40,112.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="547.40,112.90 547.40,110.40 422.90,108.00 425.40,110.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="547.40,110.40 547.40,107.40 419.90,105.00 422.90,108.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="547.40,107.40 547.40,97.40 357.40,95.00 427.40,112.50 419.90,105.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="727.40,118.50 907.40,114.90 907.40,112.40 727.40,116.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="727.40,116.00 907.40,112.40 907.40,108.65 727.40,112.25" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="727.40,112.25 907.40,108.65 907.40,98.65 727.40,102.25" fill="#7F8C8D" stroke="black" stroke-width="1"/>
-      <polygon points="907.40,114.90 1027.40,112.50 1029.40,110.50 907.40,112.90" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="907.40,112.90 1029.40,110.50 1031.90,108.00 907.40,110.40" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="907.40,110.40 1031.90,108.00 1034.90,105.00 907.40,107.40" fill="#2C3E50" stroke="black" stroke-width="1"/>
-      <polygon points="907.40,107.40 1034.90,105.00 1027.40,112.50 1097.40,95.00 907.40,97.40" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+    <g transform="translate(0,-335.8)">
+      <polygon points="729.80,118.50 729.80,116.00 549.80,112.40 549.80,114.90" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="729.80,116.00 729.80,112.25 549.80,108.65 549.80,112.40" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="729.80,112.25 729.80,102.25 549.80,98.65 549.80,108.65" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="549.80,114.90 549.80,112.90 427.80,110.50 429.80,112.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="549.80,112.90 549.80,110.40 425.30,108.00 427.80,110.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="549.80,110.40 549.80,107.40 422.30,105.00 425.30,108.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="549.80,107.40 549.80,97.40 359.80,95.00 429.80,112.50 422.30,105.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="729.80,118.50 909.80,114.90 909.80,112.40 729.80,116.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="729.80,116.00 909.80,112.40 909.80,108.65 729.80,112.25" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="729.80,112.25 909.80,108.65 909.80,98.65 729.80,102.25" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <polygon points="909.80,114.90 1029.80,112.50 1031.80,110.50 909.80,112.90" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="909.80,112.90 1031.80,110.50 1034.30,108.00 909.80,110.40" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="909.80,110.40 1034.30,108.00 1037.30,105.00 909.80,107.40" fill="#2C3E50" stroke="black" stroke-width="1"/>
+      <polygon points="909.80,107.40 1037.30,105.00 1029.80,112.50 1099.80,95.00 909.80,97.40" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <!-- Annotations -->
+      <text x="454.80" y="207.00" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,414.00) scale(1,-1)" fill="black">Shoulder</text>
+      <text x="639.80" y="207.00" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,414.00) scale(1,-1)" fill="black">Lane</text>
+      <text x="819.80" y="207.00" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,414.00) scale(1,-1)" fill="black">Lane</text>
+      <text x="1004.80" y="174.50" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,349.00) scale(1,-1)" fill="black">Shoulder</text>
+      <g id="dimension-7e20c0ca">
+        <line x1="549.80" y1="126.00" x2="549.80" y2="151.00" stroke="black" stroke-width="0.5"/>
+        <line x1="729.80" y1="126.00" x2="729.80" y2="151.00" stroke="black" stroke-width="0.5"/>
+        <line x1="549.80" y1="151.00" x2="729.80" y2="151.00" stroke="black" stroke-width="1"/>
+        <polygon points="549.80,151.00 544.80,148.50 544.80,153.50" fill="black" transform="rotate(180.0,549.80,151.00)"/>
+        <polygon points="729.80,151.00 724.80,148.50 724.80,153.50" fill="black" transform="rotate(0.0,729.80,151.00)"/>
+        <text x="639.80" y="154.00" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,308.00) scale(1,-1)" fill="black">11'-9.7"</text>
+      </g>
+      <g id="dimension-94ee5900">
+        <line x1="359.80" y1="122.40" x2="359.80" y2="151.00" stroke="black" stroke-width="0.5"/>
+        <line x1="549.80" y1="122.40" x2="549.80" y2="151.00" stroke="black" stroke-width="0.5"/>
+        <line x1="359.80" y1="151.00" x2="549.80" y2="151.00" stroke="black" stroke-width="1"/>
+        <polygon points="359.80,151.00 354.80,148.50 354.80,153.50" fill="black" transform="rotate(180.0,359.80,151.00)"/>
+        <polygon points="549.80,151.00 544.80,148.50 544.80,153.50" fill="black" transform="rotate(0.0,549.80,151.00)"/>
+        <text x="454.80" y="154.00" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,308.00) scale(1,-1)" fill="black">7'-10.5"</text>
+      </g>
+      <g id="dimension-b502eca6">
+        <line x1="729.80" y1="126.00" x2="729.80" y2="151.00" stroke="black" stroke-width="0.5"/>
+        <line x1="909.80" y1="126.00" x2="909.80" y2="151.00" stroke="black" stroke-width="0.5"/>
+        <line x1="729.80" y1="151.00" x2="909.80" y2="151.00" stroke="black" stroke-width="1"/>
+        <polygon points="729.80,151.00 724.80,148.50 724.80,153.50" fill="black" transform="rotate(180.0,729.80,151.00)"/>
+        <polygon points="909.80,151.00 904.80,148.50 904.80,153.50" fill="black" transform="rotate(0.0,909.80,151.00)"/>
+        <text x="819.80" y="154.00" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,308.00) scale(1,-1)" fill="black">11'-9.7"</text>
+      </g>
+      <g id="dimension-29de9089">
+        <line x1="909.80" y1="122.40" x2="909.80" y2="151.00" stroke="black" stroke-width="0.5"/>
+        <line x1="1099.80" y1="122.40" x2="1099.80" y2="151.00" stroke="black" stroke-width="0.5"/>
+        <line x1="909.80" y1="151.00" x2="1099.80" y2="151.00" stroke="black" stroke-width="1"/>
+        <polygon points="909.80,151.00 904.80,148.50 904.80,153.50" fill="black" transform="rotate(180.0,909.80,151.00)"/>
+        <polygon points="1099.80,151.00 1094.80,148.50 1094.80,153.50" fill="black" transform="rotate(0.0,1099.80,151.00)"/>
+        <text x="1004.80" y="154.00" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,308.00) scale(1,-1)" fill="black">7'-10.5"</text>
+      </g>
+      <g id="leader-b8703db6">
+        <polyline points="909.80,115.45 1117.30,133.50 1124.80,133.50" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="909.80,115.45 904.80,112.95 904.80,117.95" fill="black" transform="rotate(-175.02847198100994,909.80,115.45)"/>
+        <text x="1129.80" y="133.50" font-family="Arial" font-size="7.5" text-anchor="start" transform="translate(0,267.00) scale(1,-1)" fill="black">Asphalt (2")</text>
+      </g>
+      <g id="leader-427719ec">
+        <polyline points="909.80,105.45 1117.30,124.50 1124.80,124.50" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="909.80,105.45 904.80,102.95 904.80,107.95" fill="black" transform="rotate(-174.7545375205679,909.80,105.45)"/>
+        <text x="1129.80" y="124.50" font-family="Arial" font-size="7.5" text-anchor="start" transform="translate(0,249.00) scale(1,-1)" fill="black">Aggregate Base (8")</text>
+      </g>
     </g>
   </g>
   <!-- Legend -->
@@ -26,8 +73,8 @@
   <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
   <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
   <!-- Scale -->
-  <line x1="10" y1="213.50000000000023" x2="162.39999512320014" y2="213.50000000000023" stroke="black" stroke-width="2"/>
-  <line x1="10" y1="208.50000000000023" x2="10" y2="218.50000000000023" stroke="black" stroke-width="2"/>
-  <line x1="162.39999512320014" y1="208.50000000000023" x2="162.39999512320014" y2="218.50000000000023" stroke="black" stroke-width="2"/>
-  <text x="86.19999756160007" y="233.50000000000023" font-family="Arial" font-size="12" text-anchor="middle">10ft</text>
+  <line x1="10" y1="305.7500000000009" x2="314.7999902464003" y2="305.7500000000009" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="300.7500000000009" x2="10" y2="310.7500000000009" stroke="black" stroke-width="2"/>
+  <line x1="314.7999902464003" y1="300.7500000000009" x2="314.7999902464003" y2="310.7500000000009" stroke="black" stroke-width="2"/>
+  <text x="162.39999512320014" y="325.7500000000009" font-family="Arial" font-size="12" text-anchor="middle">20ft</text>
 </svg>

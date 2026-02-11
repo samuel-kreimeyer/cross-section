@@ -138,7 +138,7 @@ class DimensionAnnotation(AnnotationBase):
         return (ext_start, ext_end)
 
     def bounds(self) -> BoundingBox:
-        """Calculate bounding box including extension lines and text.
+        """Calculate bounding box including extension lines, arrowheads, and text.
 
         Returns:
             Bounding box containing entire dimension annotation
@@ -155,6 +155,31 @@ class DimensionAnnotation(AnnotationBase):
             ext_start,
             ext_end,
         ]
+
+        # Include arrowhead extents
+        if self.show_arrows:
+            arrow_size = self.text_size * 0.5  # Matches to_svg_elements
+            dx = dim_end.x - dim_start.x
+            dy = dim_end.y - dim_start.y
+            length = math.sqrt(dx * dx + dy * dy)
+            if length > 0:
+                dir_x = dx / length
+                dir_y = dy / length
+                perp_x = -dir_y
+                perp_y = dir_x
+
+                # Start arrow points outward (away from end)
+                for sign in (1, -1):
+                    points.append(Point2D(
+                        dim_start.x - dir_x * arrow_size + sign * perp_x * arrow_size / 2,
+                        dim_start.y - dir_y * arrow_size + sign * perp_y * arrow_size / 2,
+                    ))
+                # End arrow points outward (away from start)
+                for sign in (1, -1):
+                    points.append(Point2D(
+                        dim_end.x + dir_x * arrow_size + sign * perp_x * arrow_size / 2,
+                        dim_end.y + dir_y * arrow_size + sign * perp_y * arrow_size / 2,
+                    ))
 
         # Add text bounds (approximate)
         if self.text_position and self.dimension_text:

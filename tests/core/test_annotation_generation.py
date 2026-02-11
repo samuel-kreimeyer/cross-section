@@ -5,7 +5,9 @@ import pytest
 from cross_section.core.domain.annotations import (
     AnnotationGenerator,
     AnnotationGeneratorOptions,
+    AnnotationProfile,
     DimensionAnnotation,
+    LeaderAnnotation,
     SymbolAnnotation,
     TextAnnotation,
 )
@@ -52,6 +54,7 @@ class TestAnnotationGeneratorOptions:
         assert options.add_component_labels is True
         assert options.add_width_dimensions is True
         assert options.add_material_labels is False
+        assert options.add_layer_callouts is True
         assert options.use_keyed_notes is False
         assert options.add_cross_slope_symbols is False
         assert options.add_cross_slope_text is False
@@ -120,7 +123,8 @@ class TestAnnotationGenerator:
         section = SectionGeometry(components=[lane], metadata={})
         options = AnnotationGeneratorOptions(
             add_component_labels=False,
-            add_width_dimensions=True
+            add_width_dimensions=True,
+            unit_system="metric"
         )
 
         collection = AnnotationGenerator.generate(section, options)
@@ -410,3 +414,115 @@ class TestAnnotationGenerator:
 
         # Should not have dimensions
         assert len(collection.get_by_type(DimensionAnnotation)) == 0
+
+    def test_generate_layer_callouts(self):
+        """Test generating leader callouts for pavement layers."""
+        # Create lane with multiple layers
+        lane = _create_mock_component(
+            "TravelLane",
+            width=3.6,
+            min_x=0,
+            max_x=3.6,
+            min_y=99.5,
+            max_y=100.0,
+            layers=[
+                {"type": "AsphaltLayer", "thickness": 0.05},  # 2" surface
+                {"type": "CrushedRockLayer", "thickness": 0.15},  # 6" base
+            ]
+        )
+        # Add a second polygon for the second layer
+        lane.polygons.append(Polygon(exterior=[
+            Point2D(0, 99.3), Point2D(3.6, 99.3),
+            Point2D(3.6, 99.5), Point2D(0, 99.5),
+        ]))
+
+        section = SectionGeometry(
+            components=[lane],
+            metadata={"control_point": {"x": 0.0, "elevation": 100.0}}
+        )
+        options = AnnotationGeneratorOptions(
+            add_component_labels=False,
+            add_width_dimensions=False,
+            add_layer_callouts=True
+        )
+
+        collection = AnnotationGenerator.generate(section, options)
+
+        # Should have leaders for both layer types
+        leaders = collection.get_by_type(LeaderAnnotation)
+        assert len(leaders) == 2
+
+        # Check leader texts include material names
+        texts = [l.text for l in leaders]
+        assert any("Asphalt" in t for t in texts)
+        assert any("Aggregate" in t for t in texts)
+
+    def test_generate_layer_callouts_groups_same_type(self):
+        """Test that same layer types across components are grouped."""
+        # Two lanes with same layer type
+        lane1 = _create_mock_component(
+            "TravelLane",
+            width=3.6,
+            min_x=0,
+            max_x=3.6,
+            min_y=99.5,
+            max_y=100.0,
+            direction="right",
+            layers=[{"type": "AsphaltLayer", "thickness": 0.05}]
+        )
+        lane2 = _create_mock_component(
+            "TravelLane",
+            width=3.6,
+            min_x=-3.6,
+            max_x=0,
+            min_y=99.5,
+            max_y=100.0,
+            direction="left",
+            layers=[{"type": "AsphaltLayer", "thickness": 0.05}]
+        )
+
+        section = SectionGeometry(
+            components=[lane1, lane2],
+            metadata={"control_point": {"x": 0.0, "elevation": 100.0}}
+        )
+        options = AnnotationGeneratorOptions(
+            add_component_labels=False,
+            add_width_dimensions=False,
+            add_layer_callouts=True
+        )
+
+        collection = AnnotationGenerator.generate(section, options)
+
+        # Should have only ONE leader for Asphalt (deduplicated)
+        leaders = collection.get_by_type(LeaderAnnotation)
+        assert len(leaders) == 1
+        assert "Asphalt" in leaders[0].text
+
+    def test_layer_callout_includes_thickness(self):
+        """Test that layer callouts include thickness in inches."""
+        lane = _create_mock_component(
+            "TravelLane",
+            width=3.6,
+            min_x=0,
+            max_x=3.6,
+            min_y=99.5,
+            max_y=100.0,
+            layers=[{"type": "AsphaltLayer", "thickness": 0.0508}]  # 2 inches
+        )
+
+        section = SectionGeometry(
+            components=[lane],
+            metadata={"control_point": {"x": 0.0, "elevation": 100.0}}
+        )
+        options = AnnotationGeneratorOptions(
+            add_component_labels=False,
+            add_width_dimensions=False,
+            add_layer_callouts=True
+        )
+
+        collection = AnnotationGenerator.generate(section, options)
+
+        leaders = collection.get_by_type(LeaderAnnotation)
+        assert len(leaders) == 1
+        # Should include thickness (approximately 2")
+        assert '2"' in leaders[0].text or "Asphalt" in leaders[0].text

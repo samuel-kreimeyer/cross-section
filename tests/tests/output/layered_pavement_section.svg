@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1524.8" height="631.6" viewBox="0 0 1524.8 631.6">
+<svg xmlns="http://www.w3.org/2000/svg" width="1711.6" height="1185.1" viewBox="0 0 1711.6 1185.1">
   <title>Flexible Pavement Section</title>
-  <rect width="1524.8" height="631.6" fill="white"/>
+  <rect width="1711.6" height="1185.1" fill="white"/>
   <g transform="scale(1,-1)">
-    <g transform="translate(0,-631.6)">
+    <g transform="translate(0,-1185.1)">
       <polygon points="744.80,361.60 744.80,286.60 384.80,265.00 384.80,340.00" fill="#95A5A6" stroke="black" stroke-width="1"/>
       <polygon points="744.80,286.60 744.80,241.60 384.80,220.00 384.80,265.00" fill="#7F8C8D" stroke="black" stroke-width="1"/>
       <polygon points="744.80,361.60 1104.80,340.00 1104.80,325.00 744.80,346.60" fill="#2C3E50" stroke="black" stroke-width="1"/>
@@ -11,6 +11,49 @@
       <polygon points="1104.80,340.00 1464.80,318.40 1464.80,303.40 1104.80,325.00" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="1104.80,325.00 1464.80,303.40 1464.80,280.90 1104.80,302.50" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="1104.80,302.50 1464.80,280.90 1464.80,220.90 1104.80,242.50" fill="#7F8C8D" stroke="black" stroke-width="1"/>
+      <!-- Annotations -->
+      <text x="564.80" y="892.60" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,1785.20) scale(1,-1)" fill="black">Lane</text>
+      <text x="924.80" y="892.60" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,1785.20) scale(1,-1)" fill="black">Lane</text>
+      <text x="1284.80" y="697.60" font-family="Arial" font-size="15.0" text-anchor="middle" transform="translate(0,1395.20) scale(1,-1)" fill="black">Lane</text>
+      <g id="dimension-f9c017e0">
+        <line x1="384.80" y1="406.60" x2="384.80" y2="556.60" stroke="black" stroke-width="0.5"/>
+        <line x1="744.80" y1="406.60" x2="744.80" y2="556.60" stroke="black" stroke-width="0.5"/>
+        <line x1="384.80" y1="556.60" x2="744.80" y2="556.60" stroke="black" stroke-width="1"/>
+        <polygon points="384.80,556.60 379.80,554.10 379.80,559.10" fill="black" transform="rotate(180.0,384.80,556.60)"/>
+        <polygon points="744.80,556.60 739.80,554.10 739.80,559.10" fill="black" transform="rotate(0.0,744.80,556.60)"/>
+        <text x="564.80" y="562.60" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,1125.20) scale(1,-1)" fill="black">11'-9.7"</text>
+      </g>
+      <g id="dimension-726eab74">
+        <line x1="744.80" y1="406.60" x2="744.80" y2="556.60" stroke="black" stroke-width="0.5"/>
+        <line x1="1104.80" y1="406.60" x2="1104.80" y2="556.60" stroke="black" stroke-width="0.5"/>
+        <line x1="744.80" y1="556.60" x2="1104.80" y2="556.60" stroke="black" stroke-width="1"/>
+        <polygon points="744.80,556.60 739.80,554.10 739.80,559.10" fill="black" transform="rotate(180.0,744.80,556.60)"/>
+        <polygon points="1104.80,556.60 1099.80,554.10 1099.80,559.10" fill="black" transform="rotate(0.0,1104.80,556.60)"/>
+        <text x="924.80" y="562.60" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,1125.20) scale(1,-1)" fill="black">11'-9.7"</text>
+      </g>
+      <g id="dimension-cbdb6ed0">
+        <line x1="1104.80" y1="385.00" x2="1104.80" y2="556.60" stroke="black" stroke-width="0.5"/>
+        <line x1="1464.80" y1="385.00" x2="1464.80" y2="556.60" stroke="black" stroke-width="0.5"/>
+        <line x1="1104.80" y1="556.60" x2="1464.80" y2="556.60" stroke="black" stroke-width="1"/>
+        <polygon points="1104.80,556.60 1099.80,554.10 1099.80,559.10" fill="black" transform="rotate(180.0,1104.80,556.60)"/>
+        <polygon points="1464.80,556.60 1459.80,554.10 1459.80,559.10" fill="black" transform="rotate(0.0,1464.80,556.60)"/>
+        <text x="1284.80" y="562.60" font-family="Arial" font-size="12.0" text-anchor="middle" transform="translate(0,1125.20) scale(1,-1)" fill="black">11'-9.7"</text>
+      </g>
+      <g id="leader-670d15f5">
+        <polyline points="744.80,313.30 1499.80,451.60 1514.80,451.60" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="744.80,313.30 739.80,310.80 739.80,315.80" fill="black" transform="rotate(-169.61970816739728,744.80,313.30)"/>
+        <text x="1519.80" y="451.60" font-family="Arial" font-size="15.0" text-anchor="start" transform="translate(0,903.20) scale(1,-1)" fill="black">Concrete (10")</text>
+      </g>
+      <g id="leader-12fd5259">
+        <polyline points="1104.80,283.30 1499.80,397.60 1514.80,397.60" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="1104.80,283.30 1099.80,280.80 1099.80,285.80" fill="black" transform="rotate(-163.86129665073054,1104.80,283.30)"/>
+        <text x="1519.80" y="397.60" font-family="Arial" font-size="15.0" text-anchor="start" transform="translate(0,795.20) scale(1,-1)" fill="black">Aggregate Base (8")</text>
+      </g>
+      <g id="leader-06ace813">
+        <polyline points="1104.80,343.30 1499.80,343.60 1514.80,343.60" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="1104.80,343.30 1099.80,340.80 1099.80,345.80" fill="black" transform="rotate(-179.95648422645883,1104.80,343.30)"/>
+        <text x="1519.80" y="343.60" font-family="Arial" font-size="15.0" text-anchor="start" transform="translate(0,687.20) scale(1,-1)" fill="black">Asphalt (2")</text>
+      </g>
     </g>
   </g>
   <!-- Legend -->
@@ -22,8 +65,8 @@
   <rect x="10" y="80" width="15" height="15" fill="#7F8C8D"/>
   <text x="30" y="92" font-family="Arial" font-size="12">CrushedRockLayer</text>
   <!-- Scale -->
-  <line x1="10" y1="601.6000000000045" x2="314.7999902464003" y2="601.6000000000045" stroke="black" stroke-width="2"/>
-  <line x1="10" y1="596.6000000000045" x2="10" y2="606.6000000000045" stroke="black" stroke-width="2"/>
-  <line x1="314.7999902464003" y1="596.6000000000045" x2="314.7999902464003" y2="606.6000000000045" stroke="black" stroke-width="2"/>
-  <text x="162.39999512320014" y="621.6000000000045" font-family="Arial" font-size="12" text-anchor="middle">10ft</text>
+  <line x1="10" y1="1155.1000000000085" x2="314.7999902464003" y2="1155.1000000000085" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="1150.1000000000085" x2="10" y2="1160.1000000000085" stroke="black" stroke-width="2"/>
+  <line x1="314.7999902464003" y1="1150.1000000000085" x2="314.7999902464003" y2="1160.1000000000085" stroke="black" stroke-width="2"/>
+  <text x="162.39999512320014" y="1175.1000000000085" font-family="Arial" font-size="12" text-anchor="middle">10ft</text>
 </svg>

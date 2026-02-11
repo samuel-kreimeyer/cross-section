@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2578.5" height="357.5" viewBox="0 0 2578.5 357.5">
+<svg xmlns="http://www.w3.org/2000/svg" width="2671.9" height="425.5" viewBox="0 0 2671.9 425.5">
   <title>Two-Lane Road: Cut Section (Left) vs Fill Section (Right)</title>
-  <rect width="2578.5" height="357.5" fill="white"/>
+  <rect width="2671.9" height="425.5" fill="white"/>
   <g transform="scale(1,-1)">
-    <g transform="translate(0,-357.5)">
+    <g transform="translate(0,-425.5)">
       <polygon points="1586.50,152.40 1586.50,149.90 1406.50,146.30 1406.50,148.80" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="1586.50,149.90 1586.50,146.15 1406.50,142.55 1406.50,146.30" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="1586.50,146.15 1586.50,136.15 1406.50,132.55 1406.50,142.55" fill="#7F8C8D" stroke="black" stroke-width="1"/>
@@ -18,6 +18,56 @@
       <polygon points="1766.50,146.80 1858.50,145.00 1861.00,142.50 1766.50,144.30" fill="#2C3E50" stroke="black" stroke-width="1"/>
       <polygon points="1766.50,144.30 1861.00,142.50 1856.50,147.00 1943.50,132.50 1766.50,134.30" fill="#7F8C8D" stroke="black" stroke-width="1"/>
       <polygon points="1943.50,132.50 2543.50,232.50 2543.50,232.00 1943.50,132.00" fill="#BDC3C7" stroke="black" stroke-width="1"/>
+      <!-- Annotations -->
+      <text x="892.00" y="238.50" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,477.00) scale(1,-1)" fill="black">Slope 4.0:1</text>
+      <text x="1098.25" y="238.50" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,477.00) scale(1,-1)" fill="black">Ditch</text>
+      <text x="1318.00" y="296.75" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,593.50) scale(1,-1)" fill="black">Shoulder</text>
+      <text x="1496.50" y="296.75" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,593.50) scale(1,-1)" fill="black">Lane</text>
+      <text x="1676.50" y="296.75" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,593.50) scale(1,-1)" fill="black">Lane</text>
+      <text x="1855.00" y="296.75" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,593.50) scale(1,-1)" fill="black">Shoulder</text>
+      <text x="2243.50" y="296.75" font-family="Arial" font-size="7.5" text-anchor="middle" transform="translate(0,593.50) scale(1,-1)" fill="black">Slope 6.0:1</text>
+      <g id="dimension-f9874822">
+        <line x1="1406.50" y1="159.90" x2="1406.50" y2="265.00" stroke="black" stroke-width="0.5"/>
+        <line x1="1586.50" y1="159.90" x2="1586.50" y2="265.00" stroke="black" stroke-width="0.5"/>
+        <line x1="1406.50" y1="265.00" x2="1586.50" y2="265.00" stroke="black" stroke-width="1"/>
+        <polygon points="1406.50,265.00 1401.50,262.50 1401.50,267.50" fill="black" transform="rotate(180.0,1406.50,265.00)"/>
+        <polygon points="1586.50,265.00 1581.50,262.50 1581.50,267.50" fill="black" transform="rotate(0.0,1586.50,265.00)"/>
+        <text x="1496.50" y="268.00" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,536.00) scale(1,-1)" fill="black">11'-9.7"</text>
+      </g>
+      <g id="dimension-eadb75a7">
+        <line x1="1229.50" y1="156.30" x2="1229.50" y2="265.00" stroke="black" stroke-width="0.5"/>
+        <line x1="1406.50" y1="156.30" x2="1406.50" y2="265.00" stroke="black" stroke-width="0.5"/>
+        <line x1="1229.50" y1="265.00" x2="1406.50" y2="265.00" stroke="black" stroke-width="1"/>
+        <polygon points="1229.50,265.00 1224.50,262.50 1224.50,267.50" fill="black" transform="rotate(180.0,1229.50,265.00)"/>
+        <polygon points="1406.50,265.00 1401.50,262.50 1401.50,267.50" fill="black" transform="rotate(0.0,1406.50,265.00)"/>
+        <text x="1318.00" y="268.00" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,536.00) scale(1,-1)" fill="black">5'-10.9"</text>
+      </g>
+      <g id="dimension-a3af8889">
+        <line x1="1586.50" y1="159.90" x2="1586.50" y2="265.00" stroke="black" stroke-width="0.5"/>
+        <line x1="1766.50" y1="159.90" x2="1766.50" y2="265.00" stroke="black" stroke-width="0.5"/>
+        <line x1="1586.50" y1="265.00" x2="1766.50" y2="265.00" stroke="black" stroke-width="1"/>
+        <polygon points="1586.50,265.00 1581.50,262.50 1581.50,267.50" fill="black" transform="rotate(180.0,1586.50,265.00)"/>
+        <polygon points="1766.50,265.00 1761.50,262.50 1761.50,267.50" fill="black" transform="rotate(0.0,1766.50,265.00)"/>
+        <text x="1676.50" y="268.00" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,536.00) scale(1,-1)" fill="black">11'-9.7"</text>
+      </g>
+      <g id="dimension-ae946ac8">
+        <line x1="1766.50" y1="156.30" x2="1766.50" y2="265.00" stroke="black" stroke-width="0.5"/>
+        <line x1="1943.50" y1="156.30" x2="1943.50" y2="265.00" stroke="black" stroke-width="0.5"/>
+        <line x1="1766.50" y1="265.00" x2="1943.50" y2="265.00" stroke="black" stroke-width="1"/>
+        <polygon points="1766.50,265.00 1761.50,262.50 1761.50,267.50" fill="black" transform="rotate(180.0,1766.50,265.00)"/>
+        <polygon points="1943.50,265.00 1938.50,262.50 1938.50,267.50" fill="black" transform="rotate(0.0,1943.50,265.00)"/>
+        <text x="1855.00" y="268.00" font-family="Arial" font-size="6.0" text-anchor="middle" transform="translate(0,536.00) scale(1,-1)" fill="black">5'-10.9"</text>
+      </g>
+      <g id="leader-43b4e2d6">
+        <polyline points="1766.50,149.35 2561.00,247.50 2568.50,247.50" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="1766.50,149.35 1761.50,146.85 1761.50,151.85" fill="black" transform="rotate(-172.95754299364344,1766.50,149.35)"/>
+        <text x="2573.50" y="247.50" font-family="Arial" font-size="7.5" text-anchor="start" transform="translate(0,495.00) scale(1,-1)" fill="black">Asphalt (2")</text>
+      </g>
+      <g id="leader-d0f1cca4">
+        <polyline points="1766.50,139.35 2561.00,238.50 2568.50,238.50" fill="none" stroke="black" stroke-width="1"/>
+        <polygon points="1766.50,139.35 1761.50,136.85 1761.50,141.85" fill="black" transform="rotate(-172.88652242438164,1766.50,139.35)"/>
+        <text x="2573.50" y="238.50" font-family="Arial" font-size="7.5" text-anchor="start" transform="translate(0,477.00) scale(1,-1)" fill="black">Aggregate Base (8")</text>
+      </g>
     </g>
   </g>
   <!-- Legend -->
@@ -27,8 +77,8 @@
   <rect x="10" y="60" width="15" height="15" fill="#7F8C8D"/>
   <text x="30" y="72" font-family="Arial" font-size="12">CrushedRockLayer</text>
   <!-- Scale -->
-  <line x1="10" y1="327.5000000000003" x2="771.9999756160007" y2="327.5000000000003" stroke="black" stroke-width="2"/>
-  <line x1="10" y1="322.5000000000003" x2="10" y2="332.5000000000003" stroke="black" stroke-width="2"/>
-  <line x1="771.9999756160007" y1="322.5000000000003" x2="771.9999756160007" y2="332.5000000000003" stroke="black" stroke-width="2"/>
-  <text x="390.99998780800036" y="347.5000000000003" font-family="Arial" font-size="12" text-anchor="middle">50ft</text>
+  <line x1="10" y1="395.50000000000097" x2="771.9999756160007" y2="395.50000000000097" stroke="black" stroke-width="2"/>
+  <line x1="10" y1="390.50000000000097" x2="10" y2="400.50000000000097" stroke="black" stroke-width="2"/>
+  <line x1="771.9999756160007" y1="390.50000000000097" x2="771.9999756160007" y2="400.50000000000097" stroke="black" stroke-width="2"/>
+  <text x="390.99998780800036" y="415.50000000000097" font-family="Arial" font-size="12" text-anchor="middle">50ft</text>
 </svg>

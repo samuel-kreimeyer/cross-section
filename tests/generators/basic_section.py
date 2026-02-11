@@ -1,7 +1,28 @@
 #!/usr/bin/env python
-"""Basic example demonstrating cross-section creation."""
+"""Generator: Basic two-lane road section.
+
+A simple example demonstrating cross-section creation with:
+- Two travel lanes on the right side
+- Standard pavement structure
+- 2% cross slope
+"""
+
+import sys
+from pathlib import Path
+
+# Add src to path for imports
+SCRIPT_DIR = Path(__file__).parent.absolute()
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from cross_section.core.domain import RoadSection, ControlPoint, TravelLane
+from cross_section.core.domain.annotations import (
+    AnnotationGenerator,
+    default_annotation_options,
+)
+from cross_section.core.domain.pavement import AsphaltLayer, CrushedRockLayer
+from cross_section.export.svg_annotations import AnnotatedSVGExporter
+from _svg_to_png import svg_to_png
 
 
 def main():
@@ -14,55 +35,73 @@ def main():
         description="Road Crown"
     )
 
+    # Standard pavement layers
+    pavement_layers = [
+        AsphaltLayer(
+            thickness=0.05,
+            aggregate_size=12.5,
+            binder_type='PG 64-22',
+            binder_percentage=5.5,
+            density=2400
+        ),
+        AsphaltLayer(
+            thickness=0.075,
+            aggregate_size=19.0,
+            binder_type='PG 64-22',
+            binder_percentage=5.0,
+            density=2380
+        ),
+        CrushedRockLayer(
+            thickness=0.15,
+            aggregate_size=37.5,
+            density=2200,
+            material_type='crushed_stone'
+        ),
+    ]
+
     # Create a road section
     section = RoadSection(
         name="Two-Lane Road",
         control_point=control_point
     )
 
-    # Add components to the right side (they snap together automatically)
-    # Note: TravelLane uses default pavement layers if not specified
+    # Add two lanes on the right side
     section.add_component_right(TravelLane(
         width=3.6,
         cross_slope=0.02,
-        traffic_direction='outbound'
+        traffic_direction='outbound',
+        pavement_layers=pavement_layers
     ))
 
     section.add_component_right(TravelLane(
         width=3.6,
         cross_slope=0.02,
-        traffic_direction='outbound'
+        traffic_direction='outbound',
+        pavement_layers=[layer for layer in pavement_layers]  # Copy layers
     ))
-
-    # Validate the section
-    print(f"Section: {section}")
-    print("\nValidation:")
-    errors = section.validate()
-    if errors:
-        print("  Errors found:")
-        for error in errors:
-            print(f"  - {error}")
-    else:
-        print("  ✓ Section is valid")
 
     # Generate geometry
-    print("\nGenerating geometry...")
     geometry = section.to_geometry()
 
-    print(f"  Components: {len(geometry.components)}")
-    print(f"  Section bounds: {geometry.bounds()}")
+    # Generate annotations
+    options = default_annotation_options()
+    annotations = AnnotationGenerator.generate(geometry, options)
+    result = annotations.resolve_collisions(geometry=geometry)
+    if not result.success:
+        print(f"  WARN: {result.overflow_count} overflow, {result.remaining_collisions} collisions", file=sys.stderr)
 
-    # Show individual component details
-    print("\nComponent details:")
-    for i, comp_geom in enumerate(geometry.components):
-        print(f"  Component {i}:")
-        print(f"    Type: {comp_geom.metadata.get('component_type', 'Unknown')}")
-        print(f"    Width: {comp_geom.metadata.get('width', 'N/A')} m")
-        print(f"    Cross slope: {comp_geom.metadata.get('cross_slope', 'N/A')}")
-        print(f"    Assembly direction: {comp_geom.metadata.get('assembly_direction', 'N/A')}")
-        print(f"    Traffic direction: {comp_geom.metadata.get('traffic_direction', 'N/A')}")
-        print(f"    Bounds: {comp_geom.bounds()}")
-        print(f"    Polygons: {len(comp_geom.polygons)}")
+    # Export to SVG
+    output_dir = SCRIPT_DIR.parent / "output"
+    output_dir.mkdir(exist_ok=True)
+    svg_path = output_dir / "basic_section.svg"
+
+    print(f"Generating {svg_path.name}...")
+    exporter = AnnotatedSVGExporter(scale=50.0)
+    with open(svg_path, 'w') as f:
+        exporter.export_with_annotations(geometry, annotations, f)
+    svg_to_png(svg_path)
+
+    print(f"  Components: {len(geometry.components)}, Annotations: {annotations.count()}")
 
 
 if __name__ == "__main__":

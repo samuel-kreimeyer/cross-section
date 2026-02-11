@@ -52,13 +52,31 @@ class LeaderAnnotation(AnnotationBase):
         return self.points[-1]
 
     def bounds(self) -> BoundingBox:
-        """Calculate bounding box including path and text.
+        """Calculate bounding box including path, arrowhead, and text.
 
         Returns:
             Bounding box containing leader line and text
         """
         # Start with all path points
         bounds_points = list(self.points)
+
+        # Include arrowhead extent at start point
+        if self.arrow_at_start and len(self.points) >= 2:
+            arrow_size = self.text_size * 0.4  # Matches to_svg_elements
+            dx = self.points[0].x - self.points[1].x
+            dy = self.points[0].y - self.points[1].y
+            length = (dx * dx + dy * dy) ** 0.5
+            if length > 0:
+                dir_x = dx / length
+                dir_y = dy / length
+                perp_x = -dir_y
+                perp_y = dir_x
+                tip = self.points[0]
+                for sign in (1, -1):
+                    bounds_points.append(Point2D(
+                        tip.x - dir_x * arrow_size + sign * perp_x * arrow_size / 2,
+                        tip.y - dir_y * arrow_size + sign * perp_y * arrow_size / 2,
+                    ))
 
         # Add text bounds (approximate)
         text_pos = self.get_text_position()
@@ -152,11 +170,12 @@ class LeaderAnnotation(AnnotationBase):
             f'stroke="black" stroke-width="0.75" fill="none" class="leader-line"/>'
         )
 
-        # Arrow at start (if enabled)
+        # Arrow at start (if enabled) - arrow points TO the first point (target)
         if self.arrow_at_start and len(t_points) >= 2:
-            # Direction from first to second point
-            dx = t_points[1].x - t_points[0].x
-            dy = t_points[1].y - t_points[0].y
+            # Direction pointing TOWARDS the first point (from second to first)
+            # This makes the arrow point TO the target, not away from it
+            dx = t_points[0].x - t_points[1].x
+            dy = t_points[0].y - t_points[1].y
             length = (dx * dx + dy * dy) ** 0.5
 
             if length > 0:
@@ -166,7 +185,7 @@ class LeaderAnnotation(AnnotationBase):
                 perp_x = -dir_y
                 perp_y = dir_x
 
-                # Arrow points
+                # Arrow tip at target, barbs pointing back along the line
                 tip = t_points[0]
                 p1 = Point2D(
                     tip.x - dir_x * arrow_size + perp_x * arrow_size/2,

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- PNG output alongside SVG from all generator scripts via Inkscape CLI helper (`tests/generators/_svg_to_png.py`)
 - Shapely validation with geometry clipping and gap checks
 - Barrier and wall components with dimensionally accurate profiles
 - Shoulder attachment point fixes for fully_paved mode
@@ -34,6 +35,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Leader annotations keep anchor points fixed during repositioning
 
 ### Fixed
+- Zone-aware collision resolver: annotations in different zones no longer treated as colliding, allowing labels, symbols, and dimensions to coexist inside dimension brackets
+- Dimension bounding box false positives: `_annotation_has_collision` no longer uses generic `bounds().intersects()` against dimension annotations (whose bounds span the entire bracket area)
+- Extension line collision exemption: `detect_line_text` and `detect_symbol_dimension` skip extension line checks for annotations horizontally inside the dimension span
+- Traffic arrow geometry collision: traffic arrows now marked `allow_geometry_overlap` since they intentionally straddle the road surface
+- Paired annotation collision: same-layer annotations at the same X position (e.g., drainage arrow + slope text) skip collision detection
+- Slope text offset adjusted (0.55 -> 0.69) to clear rotation-inflated drainage arrow bounding boxes
 - Type errors in slopes, shoulders, curbs, barriers, and section modules
 - Added proper type guards for union types
 - Resolved variable naming conflicts in shoulder layer processing

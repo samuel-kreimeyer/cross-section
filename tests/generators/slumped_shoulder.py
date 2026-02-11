@@ -1,11 +1,24 @@
 #!/usr/bin/env python
 """Example demonstrating slumped shoulder geometry with 1:1 asphalt slump."""
 
+import sys
+from pathlib import Path
+
+# Add src to path for imports
+SCRIPT_DIR = Path(__file__).parent.absolute()
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
+
 from cross_section.core.domain import (
     RoadSection, ControlPoint, TravelLane, Shoulder,
     AsphaltLayer, CrushedRockLayer
 )
-from cross_section.export.svg import SimpleSVGExporter
+from cross_section.core.domain.annotations import (
+    AnnotationGenerator,
+    default_annotation_options,
+)
+from cross_section.export.svg_annotations import AnnotatedSVGExporter
+from _svg_to_png import svg_to_png
 
 
 def main():
@@ -196,17 +209,25 @@ def main():
                 else:
                     print(f"        Layer {j} ({layer_type}, {thickness*1000:.0f}mm): {width_top:.3f}m wide (to foreslope)")
 
+    # Generate automated annotations
+    print("\nGenerating annotations...")
+    options = default_annotation_options()
+    annotations = AnnotationGenerator.generate(geometry, options)
+    result = annotations.resolve_collisions(geometry=geometry)
+    if not result.success:
+        print(f"  WARN: {result.overflow_count} overflow, {result.remaining_collisions} collisions", file=sys.stderr)
+    print(f"  Generated {annotations.count()} annotations")
+
     # Export to SVG
-    svg_path = "tests/output/slumped_shoulder.svg"
-    print(f"\nExporting to SVG: {svg_path}")
+    output_dir = SCRIPT_DIR.parent / "output"
+    output_dir.mkdir(exist_ok=True)
+    svg_path = output_dir / "slumped_shoulder.svg"
 
-    import os
-    os.makedirs("tests/output", exist_ok=True)
-
-    # Use true proportions (no vertical exaggeration)
-    exporter = SimpleSVGExporter(scale=50.0, vertical_exaggeration=1.0)
+    print(f"\nExporting to SVG: {svg_path.name}")
+    exporter = AnnotatedSVGExporter(scale=50.0, vertical_exaggeration=1.0)
     with open(svg_path, 'w') as f:
-        exporter.export(geometry, f)
+        exporter.export_with_annotations(geometry, annotations, f)
+    svg_to_png(svg_path)
 
     print("✓ SVG exported successfully!")
     print(f"\nOpen {svg_path} in a web browser to view the cross-section.")

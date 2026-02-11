@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="698.8"
+   height="315.0"
+   viewBox="0 0 698.8 315.0"
+   version="1.1"
+   id="svg128"
+   sodipodi:docname="basic_section_annotated.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs132">
+    <marker
+       style="overflow:visible"
+       id="marker2893"
+       refX="5"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow2"
+       markerWidth="7.6999998"
+       markerHeight="5.5999999"
+       viewBox="0 0 7.7 5.6"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="path2891" />
+    </marker>
+    <rect
+       x="246.86002"
+       y="228.71964"
+       width="80.730831"
+       height="13.021039"
+       id="rect2759" />
+    <marker
+       style="overflow:visible"
+       id="Arrow1"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow1"
+       markerWidth="4.0606604"
+       markerHeight="6.7071066"
+       viewBox="0 0 4.0606602 6.7071068"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:none;stroke:context-stroke;stroke-width:1;stroke-linecap:butt"
+         d="M 3,-3 0,0 3,3"
+         id="path5057"
+         transform="rotate(180,0.125,0)"
+         sodipodi:nodetypes="ccc" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="RoundedArrow"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="RoundedArrow"
+       markerWidth="2.0688837"
+       markerHeight="2"
+       viewBox="0 0 6.1347524 5.9304951"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="path1367" />
+    </marker>
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect2336"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect2308"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect2280"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <marker
+       style="overflow:visible"
+       id="marker1566"
+       refX="6"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow2"
+       markerWidth="7.6999998"
+       markerHeight="5.5999999"
+       viewBox="0 0 7.7 5.6"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="path1564" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="marker1502"
+       refX="6"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow2"
+       markerWidth="7.6999998"
+       markerHeight="5.5999999"
+       viewBox="0 0 7.7 5.6"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="path1500" />
+    </marker>
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect1486"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <marker
+       style="overflow:visible"
+       id="marker1432"
+       refX="6"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow2"
+       markerWidth="7.6999998"
+       markerHeight="5.5999999"
+       viewBox="0 0 7.7 5.6"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="path1430" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow2"
+       refX="6"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow2"
+       markerWidth="7.6999998"
+       markerHeight="5.5999999"
+       viewBox="0 0 7.7 5.6"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="arrow2L" />
+    </marker>
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect1171"
+       is_visible="true"
+       lpeversion="1"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false" />
+    <marker
+       style="overflow:visible"
+       id="marker2893-3"
+       refX="5"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow2"
+       markerWidth="7.6999998"
+       markerHeight="5.5999999"
+       viewBox="0 0 7.7 5.6"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="path2891-6" />
+    </marker>
+    <rect
+       x="246.86002"
+       y="228.71964"
+       width="80.730827"
+       height="13.021039"
+       id="rect2759-7" />
+    <marker
+       style="overflow:visible"
+       id="RoundedArrow-5"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="RoundedArrow"
+       markerWidth="2.0688837"
+       markerHeight="2"
+       viewBox="0 0 6.1347524 5.9304951"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="path1367-6" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1-2"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow1"
+       markerWidth="4.0606604"
+       markerHeight="6.7071066"
+       viewBox="0 0 4.0606602 6.7071068"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:none;stroke:context-stroke;stroke-width:1;stroke-linecap:butt"
+         d="M 3,-3 0,0 3,3"
+         id="path5057-9"
+         transform="rotate(180,0.125,0)"
+         sodipodi:nodetypes="ccc" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="namedview130"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.8746423"
+     inkscape:cx="313.92656"
+     inkscape:cy="200.03816"
+     inkscape:window-width="1854"
+     inkscape:window-height="1011"
+     inkscape:window-x="66"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg128" />
+  <title
+     id="title18">Two-Lane Road</title>
+  <rect
+     width="698.8"
+     height="315.0"
+     fill="white"
+     id="rect20" />
+  <g
+     transform="scale(1,-1)"
+     id="g108">
+    <g
+       transform="translate(0,-315.0)"
+       id="g106">
+      <polygon
+         points="210.40,130.28 390.40,126.68 390.40,124.18 210.40,127.78"
+         fill="#2C3E50"
+         stroke="black"
+         stroke-width="1"
+         id="polygon22" />
+      <polygon
+         points="210.40,127.78 390.40,124.18 390.40,120.43 210.40,124.03"
+         fill="#2C3E50"
+         stroke="black"
+         stroke-width="1"
+         id="polygon24" />
+      <polygon
+         points="210.40,124.03 390.40,120.43 390.40,112.93 210.40,116.53"
+         fill="#7F8C8D"
+         stroke="black"
+         stroke-width="1"
+         id="polygon26" />
+      <polygon
+         points="390.40,126.68 570.40,123.08 570.40,120.58 390.40,124.18"
+         fill="#2C3E50"
+         stroke="black"
+         stroke-width="1"
+         id="polygon28" />
+      <polygon
+         points="390.40,124.18 570.40,120.58 570.40,116.83 390.40,120.43"
+         fill="#2C3E50"
+         stroke="black"
+         stroke-width="1"
+         id="polygon30" />
+      <polygon
+         points="390.40,120.43 570.40,116.83 570.40,109.33 390.40,112.93"
+         fill="#7F8C8D"
+         stroke="black"
+         stroke-width="1"
+         id="polygon32" />
+      <!-- Annotations -->
+      <g
+         id="symbol-fdab623b"
+         transform="translate(300.40,145.28) scale(1.0) rotate(-0.0)">
+        <g
+           id="g36">
+          <path
+             d="M -5,-15 L 5,-15 L 5,0 L 9,0 L 0,15 L -9,0 L -5,0 Z"
+             fill="black"
+             stroke="black"
+             stroke-width="1"
+             id="path34" />
+        </g>
+      </g>
+      <g
+         id="symbol-f7627061"
+         transform="translate(300.40,152.78) scale(0.8) rotate(-0.0)">
+        <g
+           id="g41">
+          <path
+             d="M -10,0 L 8,0 L 8,-5 L 15,0 L 8,5 L 8,0 Z"
+             fill="black"
+             stroke="black"
+             stroke-width="0.75"
+             id="path39" />
+        </g>
+      </g>
+      <text
+         x="286.90"
+         y="164.78"
+         font-family="Arial"
+         font-size="5.0"
+         text-anchor="middle"
+         transform="translate(0,329.55) scale(1,-1)"
+         fill="black"
+         id="text44">2%</text>
+      <text
+         x="456.30"
+         y="101.60"
+         font-family="Arial"
+         font-size="6.0"
+         text-anchor="middle"
+         transform="translate(0,203.20) scale(1,-1)"
+         fill="black"
+         id="text46">Asphalt</text>
+      <g
+         id="symbol-48a5276d"
+         transform="translate(480.40,141.68) scale(1.0) rotate(-0.0)">
+        <g
+           id="g50">
+          <path
+             d="M -5,-15 L 5,-15 L 5,0 L 9,0 L 0,15 L -9,0 L -5,0 Z"
+             fill="black"
+             stroke="black"
+             stroke-width="1"
+             id="path48" />
+        </g>
+      </g>
+      <g
+         id="symbol-9b63a855"
+         transform="translate(480.40,149.18) scale(0.8) rotate(-0.0)">
+        <g
+           id="g55">
+          <path
+             d="M -10,0 L 8,0 L 8,-5 L 15,0 L 8,5 L 8,0 Z"
+             fill="black"
+             stroke="black"
+             stroke-width="0.75"
+             id="path53" />
+        </g>
+      </g>
+      <text
+         x="466.90"
+         y="161.18"
+         font-family="Arial"
+         font-size="5.0"
+         text-anchor="middle"
+         transform="translate(0,322.35) scale(1,-1)"
+         fill="black"
+         id="text58">2%</text>
+      <text
+         x="504.50"
+         y="98.00"
+         font-family="Arial"
+         font-size="6.0"
+         text-anchor="middle"
+         transform="translate(0,196.00) scale(1,-1)"
+         fill="black"
+         id="text60">Asphalt</text>
+      <g
+         id="dimension-0d4ef200">
+        <line
+           x1="210.40"
+           y1="137.78"
+           x2="210.40"
+           y2="172.78"
+           stroke="black"
+           stroke-width="0.5"
+           id="line62" />
+        <line
+           x1="390.40"
+           y1="137.78"
+           x2="390.40"
+           y2="172.78"
+           stroke="black"
+           stroke-width="0.5"
+           id="line64" />
+        <line
+           x1="210.40"
+           y1="172.78"
+           x2="390.40"
+           y2="172.78"
+           stroke="black"
+           stroke-width="1"
+           id="line66" />
+        <polygon
+           points="210.40,172.78 205.40,170.28 205.40,175.28"
+           fill="black"
+           transform="rotate(180.0,210.40,172.78)"
+           id="polygon68" />
+        <polygon
+           points="390.40,172.78 385.40,170.28 385.40,175.28"
+           fill="black"
+           transform="rotate(0.0,390.40,172.78)"
+           id="polygon70" />
+        <text
+           x="300.40"
+           y="175.78"
+           font-family="Arial"
+           font-size="6.0"
+           text-anchor="middle"
+           transform="translate(0,351.55) scale(1,-1)"
+           fill="black"
+           id="text72">11'-9.7&quot;</text>
+      </g>
+      <text
+         x="300.40"
+         y="136.28"
+         font-family="Arial"
+         font-size="7.5"
+         text-anchor="middle"
+         transform="translate(0,272.55) scale(1,-1)"
+         fill="black"
+         id="text75">Lane</text>
+      <g
+         id="dimension-07dcf340">
+        <line
+           x1="390.40"
+           y1="134.18"
+           x2="390.40"
+           y2="172.78"
+           stroke="black"
+           stroke-width="0.5"
+           id="line77" />
+        <line
+           x1="570.40"
+           y1="134.18"
+           x2="570.40"
+           y2="172.78"
+           stroke="black"
+           stroke-width="0.5"
+           id="line79" />
+        <line
+           x1="390.40"
+           y1="172.78"
+           x2="570.40"
+           y2="172.78"
+           stroke="black"
+           stroke-width="1"
+           id="line81" />
+        <polygon
+           points="390.40,172.78 385.40,170.28 385.40,175.28"
+           fill="black"
+           transform="rotate(180.0,390.40,172.78)"
+           id="polygon83" />
+        <polygon
+           points="570.40,172.78 565.40,170.28 565.40,175.28"
+           fill="black"
+           transform="rotate(0.0,570.40,172.78)"
+           id="polygon85" />
+        <text
+           x="480.40"
+           y="175.78"
+           font-family="Arial"
+           font-size="6.0"
+           text-anchor="middle"
+           transform="translate(0,351.55) scale(1,-1)"
+           fill="black"
+           id="text87">11'-9.7&quot;</text>
+      </g>
+      <text
+         x="480.40"
+         y="186.28"
+         font-family="Arial"
+         font-size="7.5"
+         text-anchor="middle"
+         transform="translate(0,372.55) scale(1,-1)"
+         fill="black"
+         id="text90">Lane</text>
+      <g
+         id="leader-4137f9ea">
+        <polyline
+           points="390.40,127.23 587.90,145.28 595.40,145.28"
+           fill="none"
+           stroke="black"
+           stroke-width="1"
+           id="polyline92" />
+        <polygon
+           points="390.40,127.23 385.40,124.73 385.40,129.73"
+           fill="black"
+           transform="rotate(-174.7781074124216,390.40,127.23)"
+           id="polygon94" />
+        <text
+           x="600.40"
+           y="145.28"
+           font-family="Arial"
+           font-size="7.5"
+           text-anchor="start"
+           transform="translate(0,290.55) scale(1,-1)"
+           fill="black"
+           id="text96">Asphalt (2&quot;)</text>
+      </g>
+      <g
+         id="leader-cef71ed9">
+        <polyline
+           points="390.40,118.48 587.90,136.28 595.40,136.28"
+           fill="none"
+           stroke="black"
+           stroke-width="1"
+           id="polyline99" />
+        <polygon
+           points="390.40,118.48 385.40,115.98 385.40,120.98"
+           fill="black"
+           transform="rotate(-174.85004116742095,390.40,118.48)"
+           id="polygon101" />
+        <text
+           x="600.40"
+           y="136.28"
+           font-family="Arial"
+           font-size="7.5"
+           text-anchor="start"
+           transform="translate(0,272.55) scale(1,-1)"
+           fill="black"
+           id="text103">Aggregate Base (6&quot;)</text>
+      </g>
+    </g>
+  </g>
+  <!-- Legend -->
+  <text
+     x="10"
+     y="20"
+     font-family="Arial"
+     font-size="14"
+     font-weight="bold"
+     id="text110">Two-Lane Road</text>
+  <rect
+     x="10"
+     y="40"
+     width="15"
+     height="15"
+     fill="#2C3E50"
+     id="rect112" />
+  <text
+     x="30"
+     y="52"
+     font-family="Arial"
+     font-size="12"
+     id="text114">AsphaltLayer</text>
+  <rect
+     x="10"
+     y="60"
+     width="15"
+     height="15"
+     fill="#7F8C8D"
+     id="rect116" />
+  <text
+     x="30"
+     y="72"
+     font-family="Arial"
+     font-size="12"
+     id="text118">CrushedRockLayer</text>
+  <!-- Scale -->
+  <line
+     x1="10"
+     y1="285.0250000000014"
+     x2="162.39999512320014"
+     y2="285.0250000000014"
+     stroke="black"
+     stroke-width="2"
+     id="line120" />
+  <line
+     x1="10"
+     y1="280.0250000000014"
+     x2="10"
+     y2="290.0250000000014"
+     stroke="black"
+     stroke-width="2"
+     id="line122" />
+  <line
+     x1="162.39999512320014"
+     y1="280.0250000000014"
+     x2="162.39999512320014"
+     y2="290.0250000000014"
+     stroke="black"
+     stroke-width="2"
+     id="line124" />
+  <text
+     x="86.19999756160007"
+     y="305.0250000000014"
+     font-family="Arial"
+     font-size="12"
+     text-anchor="middle"
+     id="text126">10ft</text>
+  <path
+     style="fill:#ff0000;stroke:#ff0000;stroke-width:1;stroke-dasharray:none;marker-start:url(#Arrow2);marker-end:url(#marker1432)"
+     d="m 210.4,100.37104 c 60.00101,0.36982 120.00101,0.73964 180,1.10945"
+     id="path1169"
+     inkscape:path-effect="#path-effect1171"
+     inkscape:original-d="m 210.4,100.37104 c 60.001,0.37082 120.001,0.74064 180,1.10945" />
+  <path
+     style="fill:#ff0000;stroke:#ff0000;stroke-width:1;stroke-dasharray:none;marker-start:url(#marker1502);marker-end:url(#marker1566)"
+     d="m 390.4,101.48049 c 60.001,-0.24876 120.001,-0.49751 180,-0.74626"
+     id="path1484"
+     inkscape:path-effect="#path-effect1486"
+     inkscape:original-d="m 390.4,101.48049 c 60.001,-0.24775 120.001,-0.49651 180,-0.74626" />
+  <path
+     style="fill:#ff0000;stroke:#ff0000;stroke-width:1;stroke-dasharray:none"
+     d="m 210.4,100.37104 c 0,25.61732 -1e-5,51.23364 -1e-5,76.84896"
+     id="path2278"
+     inkscape:path-effect="#path-effect2280"
+     inkscape:original-d="m 210.4,100.37104 c 0.001,25.61732 0.001,51.23364 -1e-5,76.84896" />
+  <path
+     style="fill:#ff0000;stroke:#ff0000;stroke-width:1;stroke-dasharray:none"
+     d="m 570.4,100.73423 c 10e-6,26.69626 10e-6,53.39152 2e-5,80.08578"
+     id="path2306"
+     inkscape:path-effect="#path-effect2308"
+     inkscape:original-d="m 570.4,100.73423 c 10e-4,26.69626 10e-4,53.39152 2e-5,80.08578" />
+  <path
+     style="fill:#ff0000;stroke:#ff0000;stroke-width:1;stroke-dasharray:none"
+     d="m 390.4,101.48049 c 0,25.2475 -10e-6,50.49401 -10e-6,75.73951"
+     id="path2334"
+     inkscape:path-effect="#path-effect2336"
+     inkscape:original-d="m 390.4,101.48049 c 0.001,25.2475 0.001,50.49401 -10e-6,75.73951" />
+  <text
+     xml:space="preserve"
+     style="font-size:11.3386px;font-family:'Ubuntu Sans';-inkscape-font-specification:'Ubuntu Sans';text-align:center;text-anchor:middle;fill:#ff0000;stroke:#ff0000;stroke-width:1;stroke-dasharray:none"
+     x="296.49838"
+     y="98.790771"
+     id="text2416"><tspan
+       sodipodi:role="line"
+       id="tspan2414"
+       x="296.49838"
+       y="98.790771"
+       style="font-size:11.3386px">DIM_LENGTH</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:11.3386px;font-family:'Ubuntu Sans';-inkscape-font-specification:'Ubuntu Sans';text-align:center;text-anchor:middle;fill:#ff0000;stroke:#ff0000;stroke-width:1;stroke-dasharray:none"
+     x="482.65808"
+     y="99.319298"
+     id="text2416-3"><tspan
+       sodipodi:role="line"
+       id="tspan2414-6"
+       x="482.65808"
+       y="99.319298"
+       style="font-size:11.3386px">DIM_LENGTH</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:11.3386px;font-family:'Ubuntu Sans';-inkscape-font-specification:'Ubuntu Sans';text-align:center;text-anchor:middle;fill:#ff0000;stroke:#ff0000;stroke-width:1;stroke-dasharray:none"
+     x="296.25461"
+     y="111.87492"
+     id="text2575"><tspan
+       sodipodi:role="line"
+       id="tspan2573"
+       x="296.25461"
+       y="111.87492">COMPONENT_LABEL</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:11.3386px;font-family:'Ubuntu Sans';-inkscape-font-specification:'Ubuntu Sans';text-align:center;text-anchor:middle;fill:#ff0000;stroke:#ff0000;stroke-width:1;stroke-dasharray:none"
+     x="484.05783"
+     y="112.66409"
+     id="text2575-9"><tspan
+       sodipodi:role="line"
+       id="tspan2573-3"
+       x="484.05783"
+       y="112.66409">COMPONENT_LABEL</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:7.55906;marker-end:url(#RoundedArrow)"
+     d="m 300.4,154.72 -0.0703,-18.99254"
+     id="path463"
+     sodipodi:nodetypes="cc" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:1;stroke-dasharray:none;marker-end:url(#Arrow1)"
+     d="m 259.65579,174.89559 c 11.69657,0 77.17765,2.00212 77.17765,2.00212"
+     id="path2255" />
+  <text
+     xml:space="preserve"
+     style="font-size:11.3386px;font-family:'Ubuntu Sans';-inkscape-font-specification:'Ubuntu Sans';text-align:center;text-anchor:middle;fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:1;stroke-dasharray:none"
+     x="300.60059"
+     y="172.69127"
+     id="text2457"><tspan
+       sodipodi:role="line"
+       id="tspan2455"
+       x="300.60059"
+       y="172.69127"
+       style="font-size:11.3386px;fill:#ff0000">2%</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:7.55906;marker-end:url(#RoundedArrow-5)"
+     d="m 478.75411,159.42846 -0.0703,-18.99254"
+     id="path463-1"
+     sodipodi:nodetypes="cc" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:1;stroke-dasharray:none;marker-end:url(#Arrow1-2)"
+     d="m 438.0099,179.60405 c 11.69657,0 77.17765,2.00212 77.17765,2.00212"
+     id="path2255-2" />
+  <text
+     xml:space="preserve"
+     style="font-size:11.3386px;font-family:'Ubuntu Sans';-inkscape-font-specification:'Ubuntu Sans';text-align:center;text-anchor:middle;fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:1;stroke-dasharray:none"
+     x="478.95471"
+     y="177.39973"
+     id="text2457-7"><tspan
+       sodipodi:role="line"
+       id="tspan2455-0"
+       x="478.95471"
+       y="177.39973"
+       style="font-size:11.3386px;fill:#ff0000">2%</tspan></text>
+  <text
+     xml:space="preserve"
+     id="text2757"
+     style="font-size:11.3386px;font-family:'Ubuntu Sans';-inkscape-font-specification:'Ubuntu Sans';text-align:center;white-space:pre;shape-inside:url(#rect2759);fill:#ff0000;fill-rule:evenodd;stroke:#ff0000;stroke-width:1;stroke-dasharray:none"
+     transform="translate(-18.886644,-7.601385)"><tspan
+       x="260.68759"
+       y="239.01798"
+       id="tspan4068">LEADER_1</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:1;stroke-dasharray:none;marker-end:url(#marker2893)"
+     d="m 298.72294,234.01423 h 26.36724 l 24.30981,-43.70433"
+     id="path2853" />
+  <text
+     xml:space="preserve"
+     id="text2757-5"
+     style="font-size:11.3386px;font-family:'Ubuntu Sans';-inkscape-font-specification:'Ubuntu Sans';text-align:center;white-space:pre;shape-inside:url(#rect2759-7);display:inline;fill:#ff0000;fill-rule:evenodd;stroke:#ff0000;stroke-width:1;stroke-dasharray:none"
+     transform="translate(0.25372218,16.653443)"><tspan
+       x="260.68759"
+       y="239.01798"
+       id="tspan4070">LEADER_2</tspan></text>
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:1;stroke-dasharray:none;marker-end:url(#marker2893-3)"
+     d="m 317.8633,258.26906 h 26.36724 l 33.75999,-63.33896"
+     id="path2853-3"
+     sodipodi:nodetypes="ccc" />
+  <metadata
+     id="metadata3889">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Two-Lane Road</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
