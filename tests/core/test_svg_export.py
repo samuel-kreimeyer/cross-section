@@ -1,87 +1,127 @@
-"""Tests for SVG exporter layout margins."""
+"""Tests for SVG exporter."""
+
+import io
+import re
 
 import pytest
 
-from cross_section.core.domain.annotations import AnnotationCollection
+from cross_section.core.domain.annotations import AnnotationCollector
 from cross_section.core.domain.section import SectionGeometry
 from cross_section.core.geometry.primitives import ComponentGeometry, Point2D, Polygon
-from cross_section.export import AnnotatedSVGExporter
-from cross_section.export.svg import SimpleSVGExporter
+from cross_section.export.svg import SVGExporter, SimpleSVGExporter
 
 
-def _create_section(name: str = "Test Section") -> SectionGeometry:
-    polygon = Polygon(exterior=[
-        Point2D(0, 99.5),
-        Point2D(3.6, 99.5),
-        Point2D(3.6, 100.0),
-        Point2D(0, 100.0),
-    ])
+def _make_section(name: str = "Test Section") -> SectionGeometry:
+    polygon = Polygon(
+        exterior=[
+            Point2D(0, 99.5),
+            Point2D(3.6, 99.5),
+            Point2D(3.6, 100.0),
+            Point2D(0, 100.0),
+        ]
+    )
     component = ComponentGeometry(
         polygons=[polygon],
         metadata={
             "component_type": "TravelLane",
             "width": 3.6,
-            "layers": [{"type": "AsphaltLayer", "thickness": 0.5}],
+            "cross_slope": 0.02,
+            "assembly_direction": "right",
+            "layers": [{"type": "AsphaltLayer", "thickness": 0.05}],
         },
     )
     return SectionGeometry(components=[component], metadata={"name": name})
 
 
-def test_simple_svg_ui_margins_reserve_space():
-    geometry = _create_section(name="Long Section Name For Legend Width")
+def _get_svg_width(svg: str) -> float:
+    m = re.search(r'<svg[^>]+width="([\d.]+)"', svg)
+    return float(m.group(1)) if m else 0.0
+
+
+def test_simple_export_produces_valid_svg():
+    """Basic geometry export should produce valid SVG markup."""
+    section = _make_section()
+    exporter = SVGExporter(scale=100.0)
+    buf = io.StringIO()
+    exporter.export(section, buf)
+    content = buf.getvalue()
+
+    assert "<svg" in content
+    assert 'xmlns="http://www.w3.org/2000/svg"' in content
+    assert "</svg>" in content
+    assert "<polygon" in content
+
+
+def test_empty_section_produces_placeholder_svg():
+    section = SectionGeometry(components=[], metadata={"name": "Empty"})
+    exporter = SVGExporter(scale=100.0)
+    buf = io.StringIO()
+    exporter.export(section, buf)
+    assert "<svg" in buf.getvalue()
+
+
+def test_svg_contains_section_name():
+    section = _make_section(name="Crowned Highway")
+    exporter = SVGExporter(scale=100.0)
+    buf = io.StringIO()
+    exporter.export(section, buf)
+    assert "Crowned Highway" in buf.getvalue()
+
+
+def test_annotated_export_includes_dimension_line():
+    section = _make_section()
+    collector = AnnotationCollector(units="metric", include_widths=True,
+                                    include_slopes=False, include_layer_labels=False)
+    annotations = collector.collect(section)
+    assert len(annotations.dimensions) == 1
+
+    exporter = SVGExporter(scale=100.0)
+    buf = io.StringIO()
+    exporter.export_annotated(section, annotations, buf)
+    content = buf.getvalue()
+
+    assert "<svg" in content
+    assert "<line" in content  # dimension / extension lines
+    # Dimension text (metric)
+    assert "3.60m" in content or "3.6m" in content
+
+
+def test_annotated_export_includes_slope_tag():
+    section = _make_section()
+    collector = AnnotationCollector(units="metric", include_widths=False,
+                                    include_slopes=True, include_layer_labels=False)
+    annotations = collector.collect(section)
+    assert len(annotations.slope_tags) == 1
+
+    exporter = SVGExporter(scale=100.0)
+    buf = io.StringIO()
+    exporter.export_annotated(section, annotations, buf)
+    assert "2.0%" in buf.getvalue()
+
+
+def test_scale_affects_svg_dimensions():
+    section = _make_section()
+
+    buf1 = io.StringIO()
+    SVGExporter(scale=50.0).export(section, buf1)
+
+    buf2 = io.StringIO()
+    SVGExporter(scale=200.0).export(section, buf2)
+
+    assert _get_svg_width(buf2.getvalue()) > _get_svg_width(buf1.getvalue())
+
+
+def test_simple_svg_exporter_alias():
+    section = _make_section()
     exporter = SimpleSVGExporter(scale=100.0)
-    min_x, min_y, max_x, max_y = geometry.bounds()
-
-    (
-        view_min_x,
-        _view_min_y,
-        _view_max_x,
-        _view_max_y,
-        scale_length_m,
-        _scale_label,
-    ) = exporter._compute_view_bounds(min_x, min_y, max_x, max_y, geometry, keyed_notes_count=0)
-
-    left_px, _right_px, _top_px, _bottom_px = exporter._ui_margins_px(
-        geometry,
-        scale_length_m,
-        keyed_notes_count=0,
-    )
-
-    left_margin_m = min_x - view_min_x - exporter.content_margin_m
-    assert left_margin_m * exporter.scale == pytest.approx(left_px)
+    buf = io.StringIO()
+    exporter.export(section, buf)
+    assert "<svg" in buf.getvalue()
 
 
-def test_annotated_svg_margins_include_keyed_notes():
-    geometry = _create_section()
-    annotations = AnnotationCollection()
-    annotations.add_keyed_note("Test Note")
-    exporter = AnnotatedSVGExporter(scale=100.0)
-
-    min_x, min_y, max_x, max_y = geometry.bounds()
-
-    (
-        _view_min_x,
-        _view_min_y,
-        view_max_x,
-        _view_max_y,
-        scale_length_m,
-        _scale_label,
-    ) = exporter._compute_view_bounds(
-        min_x,
-        min_y,
-        max_x,
-        max_y,
-        geometry,
-        keyed_notes_count=len(annotations.keyed_notes),
-    )
-
-    left_px, right_px, top_px, bottom_px = exporter._ui_margins_px(
-        geometry,
-        scale_length_m,
-        keyed_notes_count=len(annotations.keyed_notes),
-    )
-
-    right_margin_m = view_max_x - max_x - exporter.content_margin_m
-    assert right_margin_m * exporter.scale == pytest.approx(right_px)
-    assert right_px >= exporter.KEYED_NOTES_WIDTH_PX
-    assert bottom_px >= exporter.KEYED_NOTES_ROW_HEIGHT_PX + exporter.KEYED_NOTES_PADDING_PX
+def test_svg_contains_asphalt_color():
+    section = _make_section()
+    exporter = SVGExporter(scale=100.0)
+    buf = io.StringIO()
+    exporter.export(section, buf)
+    assert "#2C3E50" in buf.getvalue()

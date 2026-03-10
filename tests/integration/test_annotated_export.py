@@ -1,201 +1,145 @@
-"""Integration test for annotated cross-section export."""
+"""Integration tests for annotated cross-section export."""
 
-import os
+import io
 import tempfile
-from pathlib import Path
+import os
 
 import pytest
 
-from cross_section.core.domain.annotations import (
-    AnnotationCollection,
-    AnnotationGenerator,
-    AnnotationGeneratorOptions,
-    DimensionAnnotation,
-    LeaderAnnotation,
-)
-from cross_section.core.domain.section import SectionGeometry
+from cross_section.core.domain.annotations import AnnotationCollector, SectionAnnotations
+from cross_section.core.domain.section import RoadSection, SectionGeometry, ControlPoint
+from cross_section.core.domain.components.lanes import TravelLane
+from cross_section.core.domain.components.shoulders import Shoulder
+from cross_section.core.domain.pavement import AsphaltLayer, CrushedRockLayer
 from cross_section.core.geometry.primitives import ComponentGeometry, Point2D, Polygon
-from cross_section.export import AnnotatedSVGExporter
+from cross_section.export.svg import SVGExporter
 
 
-def test_annotated_crowned_road_export():
-    """Test full workflow: create section, add annotations, export to SVG."""
-    # Create a simple section
-    ft_to_m = 0.3048
-    lane_width = 12.0 * ft_to_m
-
-    lane_poly = Polygon(exterior=[
-        Point2D(0, 100.0),
-        Point2D(lane_width, 100.0),
-        Point2D(lane_width, 99.85),
-        Point2D(0, 99.85),
+def _simple_section() -> SectionGeometry:
+    polygon = Polygon(exterior=[
+        Point2D(0, 100.0), Point2D(3.6, 100.0),
+        Point2D(3.6, 99.93), Point2D(0, 99.93),
     ])
-
-    section = SectionGeometry(
+    return SectionGeometry(
         components=[ComponentGeometry(
-            polygons=[lane_poly],
+            polygons=[polygon],
             metadata={
                 "component_type": "TravelLane",
-                "width": lane_width,
-            }
+                "width": 3.6,
+                "cross_slope": 0.02,
+                "assembly_direction": "right",
+                "layers": [{"type": "AsphaltLayer", "thickness": 0.05}],
+            },
         )],
-        metadata={"name": "Test Section"}
+        metadata={"name": "Test Section"},
     )
 
-    # Create annotations
-    collection = AnnotationCollection()
 
-    # Add dimension
-    collection.add(DimensionAnnotation(
-        start=Point2D(0, 100.0),
-        end=Point2D(lane_width, 100.0),
-        offset=0.5,
-        dimension_text="12'-0\"",
-        layer="dimensions"
-    ))
+def test_export_annotated_produces_svg_file():
+    """Full workflow: section → collect annotations → export annotated SVG."""
+    section = _simple_section()
+    collector = AnnotationCollector(units="metric")
+    annotations = collector.collect(section)
 
-    # Add leader
-    collection.add(LeaderAnnotation(
-        points=[
-            Point2D(lane_width / 2, 99.85),
-            Point2D(lane_width / 2 + 1.0, 99.5),
+    exporter = SVGExporter(scale=100.0)
+    buf = io.StringIO()
+    exporter.export_annotated(section, annotations, buf)
+    content = buf.getvalue()
+
+    assert "<svg" in content
+    assert "</svg>" in content
+    assert "<polygon" in content
+
+
+def test_collector_derives_width_dimensions():
+    section = _simple_section()
+    collector = AnnotationCollector(units="metric", include_widths=True,
+                                    include_slopes=False, include_layer_labels=False)
+    annotations = collector.collect(section)
+
+    assert len(annotations.dimensions) == 1
+    dim = annotations.dimensions[0]
+    assert abs(dim.width - 3.6) < 0.01
+    assert "3.60m" in dim.text or "3.6m" in dim.text
+
+
+def test_collector_derives_slope_tags():
+    section = _simple_section()
+    collector = AnnotationCollector(units="metric", include_widths=False,
+                                    include_slopes=True, include_layer_labels=False)
+    annotations = collector.collect(section)
+
+    assert len(annotations.slope_tags) == 1
+    assert "2.0%" in annotations.slope_tags[0].text
+
+
+def test_collector_derives_layer_labels():
+    section = _simple_section()
+    collector = AnnotationCollector(include_widths=False, include_slopes=False,
+                                    include_layer_labels=True)
+    annotations = collector.collect(section)
+
+    assert len(annotations.labels) == 1
+    assert "AC" in annotations.labels[0].text or "Asphalt" in annotations.labels[0].text
+
+
+def test_full_road_section_annotated_export():
+    """End-to-end: build RoadSection, generate geometry, collect annotations, export SVG."""
+    section = RoadSection(
+        name="Urban Arterial",
+        control_point=ControlPoint(x=0, elevation=100.0),
+        left_components=[
+            TravelLane(width=3.6, cross_slope=0.02, pavement_layers=[
+                AsphaltLayer(thickness=0.05, aggregate_size=12.5, binder_type="PG 64-22",
+                             binder_percentage=5.5, density=2400),
+                CrushedRockLayer(thickness=0.15, aggregate_size=37.5, density=2100),
+            ]),
+            Shoulder(width=2.4, cross_slope=0.04),
         ],
-        text="Test",
-        arrow_at_start=True,
-        layer="leaders"
-    ))
-
-    # Export to SVG
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.svg', delete=False) as f:
-        temp_path = f.name
-        exporter = AnnotatedSVGExporter(scale=100.0, vertical_exaggeration=10.0)
-        exporter.export_with_annotations(section, collection, f)
-
-    try:
-        # Verify file was created
-        assert os.path.exists(temp_path)
-
-        # Read and verify content
-        with open(temp_path, 'r') as f:
-            content = f.read()
-
-        # Check SVG structure
-        assert '<svg' in content
-        assert 'xmlns="http://www.w3.org/2000/svg"' in content
-        assert '</svg>' in content
-
-        # Check annotations are present
-        assert 'dimension-' in content
-        assert 'leader-' in content
-        assert '12\'-0"' in content
-        assert 'Test' in content
-
-        # Check geometry is present
-        assert '<polygon' in content
-
-    finally:
-        # Clean up
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
-
-
-def test_example_script_generates_valid_svg():
-    """Test that the example script generates a valid SVG file."""
-    # Import and run the example
-    import sys
-    sys.path.insert(0, str(Path(__file__).parent.parent / "generators"))
-
-    try:
-        from annotated_crowned_road import create_crowned_road_section
-
-        # Create section and annotations
-        section = create_crowned_road_section()
-        annotations = AnnotationGenerator.generate(
-            section,
-            AnnotationGeneratorOptions(
-                add_component_labels=True,
-                add_width_dimensions=True,
-                add_material_labels=True,
-                add_traffic_symbols=True,
-                add_cross_slope_symbols=True,
-                add_cross_slope_text=True,
-            ),
-        )
-        annotations.resolve_collisions(geometry=section)
-
-        # Verify section structure
-        assert len(section.components) == 6  # 2 lanes + 2 shoulders + 2 ditches
-        assert section.metadata["name"] == "Crowned Road with Ditches"
-
-        # Verify annotations
-        assert annotations.count() > 0
-
-        # Export to temp file
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.svg', delete=False) as f:
-            temp_path = f.name
-            exporter = AnnotatedSVGExporter(
-                scale=100.0,
-                vertical_exaggeration=10.0,
-                units="imperial"
-            )
-            exporter.export_with_annotations(section, annotations, f)
-
-        try:
-            # Verify file content
-            with open(temp_path, 'r') as f:
-                content = f.read()
-
-            # Check that automated annotations render
-            assert 'dimension-' in content
-
-        finally:
-            if os.path.exists(temp_path):
-                os.remove(temp_path)
-
-    finally:
-        sys.path.pop(0)
-
-
-def test_annotation_text_size_calculation():
-    """Verify text size matches requested point size at intended scale."""
-    # For 10pt text at scale=100 px/m:
-    # 10pt = ~13.3 pixels at 96 DPI
-    # 13.3 pixels / 100 px/m = 0.133 meters
-    text_size_meters = 0.13
-
-    # Create simple annotation
-    collection = AnnotationCollection()
-    collection.add(LeaderAnnotation(
-        points=[Point2D(0, 0), Point2D(1, 1)],
-        text="Test",
-        layer="leaders"
-    ))
-
-    # Create minimal section
-    section = SectionGeometry(
-        components=[ComponentGeometry(
-            polygons=[Polygon(exterior=[
-                Point2D(0, 0), Point2D(1, 0), Point2D(1, 1), Point2D(0, 1)
-            ])],
-            metadata={}
-        )],
-        metadata={}
+        right_components=[
+            TravelLane(width=3.6, cross_slope=0.02, pavement_layers=[
+                AsphaltLayer(thickness=0.05, aggregate_size=12.5, binder_type="PG 64-22",
+                             binder_percentage=5.5, density=2400),
+                CrushedRockLayer(thickness=0.15, aggregate_size=37.5, density=2100),
+            ]),
+            Shoulder(width=2.4, cross_slope=0.04),
+        ],
     )
 
-    # Export with text size
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.svg', delete=False) as f:
-        temp_path = f.name
-        exporter = AnnotatedSVGExporter(scale=100.0)
-        exporter.export_with_annotations(section, collection, f)
+    geometry = section.to_geometry()
+    assert len(geometry.components) == 4
+
+    collector = AnnotationCollector(units="metric")
+    annotations = collector.collect(geometry)
+
+    # Should have dimensions for each component that has a width
+    assert len(annotations.dimensions) >= 4  # 2 lanes + 2 shoulders
+
+    exporter = SVGExporter(scale=80.0)
+    buf = io.StringIO()
+    exporter.export_annotated(geometry, annotations, buf)
+    content = buf.getvalue()
+
+    assert "<svg" in content
+    assert "Urban Arterial" in content
+    assert "<polygon" in content
+    # Dimensions annotation group present
+    assert "Width dimensions" in content
+
+
+def test_annotated_export_to_file():
+    """Annotated export should write a valid SVG file to disk."""
+    section = _simple_section()
+    annotations = AnnotationCollector(units="imperial").collect(section)
+
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".svg", delete=False) as f:
+        path = f.name
+        SVGExporter(scale=100.0).export_annotated(section, annotations, f)
 
     try:
-        with open(temp_path, 'r') as f:
-            content = f.read()
-
-        # Default text size should be around 15 pixels (0.15m * 100 px/m)
-        # Our custom size would be 13 pixels (0.13m * 100 px/m)
-        assert 'font-size="15.0"' in content  # Default leader text size
-
+        assert os.path.exists(path)
+        content = open(path).read()
+        assert "<svg" in content
+        assert "</svg>" in content
     finally:
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
+        os.remove(path)

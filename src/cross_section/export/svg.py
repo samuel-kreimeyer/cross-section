@@ -1,34 +1,111 @@
-"""Simple SVG exporter - Pure Python, no dependencies."""
+"""SVG exporter for road cross-section geometry.
 
-from typing import Literal, TextIO
+Pure Python — no external dependencies required.
+
+The exporter supports two modes:
+
+1. Geometry-only (SimpleSVGExporter.export):
+   Renders component polygons and polylines with layer-based colours.
+
+2. Annotated (SVGExporter.export_annotated):
+   Adds width dimensions, slope tags, and layer labels above/below
+   the geometry using a *tiered*, deterministic placement strategy —
+   no runtime collision resolution.
+
+Dimension placement:
+   All width dimensions share a single horizontal dimension line located
+   DIMENSION_TIER_MARGIN_M above the top of the section.  Vertical
+   extension lines drop from that line to each component's surface.
+   Text sits centred on the span; if the span is too narrow the text
+   is placed outside with a small tick.
+"""
+
+from __future__ import annotations
+
+import html
+import math
+from typing import TYPE_CHECKING, Literal, TextIO
 
 from ..core.domain.section import SectionGeometry
 
+if TYPE_CHECKING:
+    from ..core.domain.annotations.types import SectionAnnotations
 
-class SimpleSVGExporter:
-    """Export road section geometry to SVG format.
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
 
-    This is a minimal pure-Python SVG exporter for visualization and testing.
-    Colors are assigned to layers based on their type.
+# Colours keyed by pavement layer class name
+_LAYER_COLORS: dict[str, str] = {
+    "AsphaltLayer": "#2C3E50",
+    "ConcreteLayer": "#95A5A6",
+    "CrushedRockLayer": "#7F8C8D",
+}
+_DEFAULT_COLOR = "#BDC3C7"
+
+# Component fill colours for non-pavement components
+_COMPONENT_COLORS: dict[str, str] = {
+    "Curb": "#808080",
+    "Sidewalk": "#A8A8A8",
+    "Barrier": "#505050",
+    "RetainingWall": "#606060",
+    "Ditch": "#B8D4F0",
+    "Slope": "#C8E6C9",
+    "Gutter": "#909090",
+    "Buffer": "#8BC34A",
+    "Shoring": "#607D8B",
+    "Shoulder": "#546E7A",
+}
+
+# Margin above section top to the dimension tier line (meters)
+_DIMENSION_TIER_MARGIN_M = 0.8
+# Arrow half-length at tips of dimension lines (meters)
+_ARROW_SIZE_M = 0.05
+# Minimum span for in-line dimension text (meters)
+_MIN_INLINE_SPAN_M = 0.4
+# Font size for dimension text (meters)
+_DIM_FONT_SIZE_M = 0.18
+# Font size for slope tags (meters)
+_SLOPE_FONT_SIZE_M = 0.16
+# Font size for layer labels (meters)
+_LABEL_FONT_SIZE_M = 0.14
+# Extension line overshoot above dimension tier line (meters)
+_EXT_LINE_OVERSHOOT_M = 0.05
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+
+def _escape(text: str) -> str:
+    return html.escape(str(text))
+
+
+def _fmt_pts(points: list[tuple[float, float]]) -> str:
+    return " ".join(f"{x:.3f},{y:.3f}" for x, y in points)
+
+
+# ---------------------------------------------------------------------------
+# SVG Exporter
+# ---------------------------------------------------------------------------
+
+
+class SVGExporter:
+    """Export road section geometry (and optional annotations) to SVG.
+
+    Parameters
+    ----------
+    scale:
+        Pixels per metre.  Default 100 → 1 m = 100 px.
+    vertical_exaggeration:
+        Multiply vertical distances by this factor so thin layers are
+        visible.  Default 1.0 (no exaggeration).
+    units:
+        ``"imperial"`` or ``"metric"`` — used for the scale bar label.
+    content_margin_m:
+        White-space margin around the section content, in metres.
     """
-
-    LEGEND_X = 10
-    LEGEND_Y = 20
-    LEGEND_LINE_HEIGHT = 20
-    LEGEND_TITLE_FONT_PX = 14
-    LEGEND_ITEM_FONT_PX = 12
-    SCALE_X_START = 10
-    SCALE_Y_OFFSET = 30
-    SCALE_TICK_HALF = 5
-    SCALE_LABEL_OFFSET = 20
-
-    # Color palette for different layer types
-    COLORS = {
-        "AsphaltLayer": "#2C3E50",  # Dark gray-blue
-        "ConcreteLayer": "#95A5A6",  # Light gray
-        "CrushedRockLayer": "#7F8C8D",  # Medium gray
-        "default": "#BDC3C7",  # Very light gray
-    }
 
     def __init__(
         self,
@@ -36,319 +113,422 @@ class SimpleSVGExporter:
         vertical_exaggeration: float = 1.0,
         units: Literal["imperial", "metric"] = "imperial",
         content_margin_m: float = 0.5,
-        ui_padding_px: float = 10.0,
-    ):
-        """Initialize SVG exporter.
-
-        Args:
-            scale: Pixels per meter (default 100 = 1m = 100px)
-            vertical_exaggeration: Factor to exaggerate vertical dimensions for visibility
-            units: Unit system for scale labeling ('imperial' or 'metric')
-            content_margin_m: Base margin around geometry in meters
-            ui_padding_px: Extra padding around UI elements in pixels
-        """
+    ) -> None:
         self.scale = scale
-        self.vertical_exaggeration = vertical_exaggeration
+        self.ve = vertical_exaggeration  # vertical exaggeration factor
         self.units = units
         self.content_margin_m = content_margin_m
-        self.ui_padding_px = ui_padding_px
+
+    # ------------------------------------------------------------------
+    # Public API
+    # ------------------------------------------------------------------
 
     def export(self, geometry: SectionGeometry, output: TextIO) -> None:
-        """Export section geometry to SVG.
+        """Export geometry without annotations."""
+        self._write_svg(geometry, output, annotations=None)
 
-        Args:
-            geometry: The section geometry to export
-            output: File object to write SVG to
-        """
+    def export_annotated(
+        self,
+        geometry: SectionGeometry,
+        annotations: "SectionAnnotations",
+        output: TextIO,
+    ) -> None:
+        """Export geometry with annotations overlaid."""
+        self._write_svg(geometry, output, annotations=annotations)
+
+    # ------------------------------------------------------------------
+    # Core rendering
+    # ------------------------------------------------------------------
+
+    def _write_svg(
+        self,
+        geometry: SectionGeometry,
+        output: TextIO,
+        annotations: "SectionAnnotations | None",
+    ) -> None:
         if not geometry.components:
             output.write('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">')
             output.write('<text x="10" y="50">Empty section</text>')
             output.write("</svg>")
             return
 
-        # Calculate bounds
-        bounds = geometry.bounds()
-        min_x, min_y, max_x, max_y = bounds
+        # Geometry bounds in model space (metres)
+        g_min_x, g_min_y, g_max_x, g_max_y = geometry.bounds()
 
-        (
-            view_min_x,
-            view_min_y,
-            view_max_x,
-            view_max_y,
-            scale_length_m,
-            scale_label,
-        ) = self._compute_view_bounds(
-            min_x,
-            min_y,
-            max_x,
-            max_y,
-            geometry,
-            keyed_notes_count=0,
-        )
+        # Annotation bounds — extend view upward for dimension tier
+        ann_top_m = 0.0
+        if annotations and annotations.dimensions:
+            # Tier margin + arrow + text height above top of section
+            ann_top_m = _DIMENSION_TIER_MARGIN_M + _DIM_FONT_SIZE_M + _EXT_LINE_OVERSHOOT_M
 
-        # Calculate viewport dimensions
-        view_width = view_max_x - view_min_x
-        view_height = (view_max_y - view_min_y) * self.vertical_exaggeration
+        # View bounds in model space (metres)
+        m = self.content_margin_m
+        view_min_x = g_min_x - m
+        view_min_y = g_min_y - m
+        view_max_x = g_max_x + m
+        view_max_y = g_max_y + m + ann_top_m
 
-        # SVG dimensions in pixels
-        svg_width = view_width * self.scale
-        svg_height = view_height * self.scale
+        view_w_m = view_max_x - view_min_x
+        view_h_m = (view_max_y - view_min_y) * self.ve
 
-        # Write SVG header
+        svg_w = view_w_m * self.scale
+        svg_h = view_h_m * self.scale
+
+        # Reserve left margin for legend
+        legend_items = self._collect_legend_items(geometry)
+        legend_w_px = self._legend_width_px(geometry.metadata.get("name", ""), legend_items)
+        legend_h_px = 20 + (len(legend_items) + 1) * 20
+
+        total_w = svg_w + legend_w_px + 10
+        total_h = max(svg_h, legend_h_px) + 50  # bottom margin for scale bar
+
+        # Scale bar
+        scale_len_m, scale_label = self._choose_scale_bar(view_w_m)
+
+        output.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         output.write('<svg xmlns="http://www.w3.org/2000/svg" ')
-        output.write(f'width="{svg_width:.1f}" height="{svg_height:.1f}" ')
-        output.write(f'viewBox="0 0 {svg_width:.1f} {svg_height:.1f}">\n')
+        output.write(f'width="{total_w:.1f}" height="{total_h:.1f}" ')
+        output.write(f'viewBox="0 0 {total_w:.1f} {total_h:.1f}">\n')
+        output.write(f'  <title>{_escape(geometry.metadata.get("name", "Road Section"))}</title>\n')
+        output.write(f'  <rect width="{total_w:.1f}" height="{total_h:.1f}" fill="white"/>\n')
 
-        # Add title
-        output.write(f"  <title>{geometry.metadata.get('name', 'Road Section')}</title>\n")
+        # Geometry group — translated & Y-flipped
+        # We render into a sub-SVG offset by legend_w_px horizontally
+        content_x = legend_w_px + 10
 
-        # Add white background
-        output.write(f'  <rect width="{svg_width:.1f}" height="{svg_height:.1f}" fill="white"/>\n')
+        # Transform: flip Y (SVG Y↓, model Y↑)
+        # After translate(0, svg_h) scale(1,-1):
+        #   SVG_y = svg_h - (model_y - view_min_y) * scale * ve
+        #   SVG_x = (model_x - view_min_x) * scale + content_x
+        output.write(f'  <g id="geometry" transform="translate({content_x:.1f},0)">\n')
+        output.write(f'    <g transform="translate(0,{svg_h:.3f}) scale(1,-1)">\n')
+        output.write(f'      <g transform="translate({-view_min_x * self.scale:.3f},'
+                     f'{view_min_y * self.scale * self.ve:.3f})">\n')
 
-        # Create transformation group (flip Y axis since SVG Y increases downward)
-        output.write('  <g transform="scale(1,-1)">\n')
-        output.write(f'    <g transform="translate(0,-{svg_height:.1f})">\n')
+        for comp in geometry.components:
+            self._render_component(output, comp)
 
-        # Draw each component's polygons
-        for comp_idx, component in enumerate(geometry.components):
-            for poly_idx, polygon in enumerate(component.polygons):
-                # Get layer info from metadata if available
-                layer_info = None
-                if "layers" in component.metadata:
-                    layers = component.metadata["layers"]
-                    if poly_idx < len(layers):
-                        layer_info = layers[poly_idx]
-
-                # Determine color based on layer type
-                if layer_info and "type" in layer_info:
-                    color = self.COLORS.get(layer_info["type"], self.COLORS["default"])
-                else:
-                    color = self.COLORS["default"]
-
-                # Convert polygon vertices to SVG path
-                points = []
-                for point in polygon.exterior:
-                    # Transform coordinates
-                    x = (point.x - view_min_x) * self.scale
-                    y = (point.y - view_min_y) * self.scale * self.vertical_exaggeration
-                    points.append(f"{x:.2f},{y:.2f}")
-
-                # Draw polygon
-                points_str = " ".join(points)
-                output.write(f'      <polygon points="{points_str}" ')
-                output.write(f'fill="{color}" stroke="black" stroke-width="1"/>\n')
-
-            # Draw component's polylines (e.g., ditch void boundaries)
-            polyline_styles = component.metadata.get("polyline_styles", [])
-            for poly_idx, polyline in enumerate(component.polylines):
-                # Convert polyline vertices to SVG path
-                points = []
-                for point in polyline:
-                    # Transform coordinates
-                    x = (point.x - view_min_x) * self.scale
-                    y = (point.y - view_min_y) * self.scale * self.vertical_exaggeration
-                    points.append(f"{x:.2f},{y:.2f}")
-
-                # Draw polyline (no fill, just stroke)
-                points_str = " ".join(points)
-                output.write(f'      <polyline points="{points_str}" ')
-                style = polyline_styles[poly_idx] if poly_idx < len(polyline_styles) else {}
-                dasharray = style.get("stroke_dasharray")
-                stroke_width = style.get("stroke_width", "1.5")
-                if dasharray:
-                    output.write(
-                        f'fill="none" stroke="black" stroke-width="{stroke_width}" '
-                        f'stroke-dasharray="{dasharray}"/>\n'
-                    )
-                else:
-                    output.write(
-                        f'fill="none" stroke="black" stroke-width="{stroke_width}"/>\n'
-                    )
-
+        output.write("      </g>\n")
         output.write("    </g>\n")
+
+        # Annotations (rendered in the same horizontal space but NOT y-flipped;
+        # we compute SVG coords directly)
+        if annotations:
+            self._render_annotations(
+                output, annotations, view_min_x, view_min_y, view_max_y, svg_h
+            )
+
         output.write("  </g>\n")
 
-        # Add legend (not transformed)
-        self._add_legend(output, geometry, svg_width, svg_height)
+        # Legend (top-left, outside geometry group)
+        self._render_legend(output, geometry, legend_items, 10, 10)
 
-        # Add scale indicator
-        self._add_scale(output, svg_height, scale_length_m, scale_label)
+        # Scale bar (bottom-left of entire SVG)
+        self._render_scale_bar(output, scale_len_m, scale_label, 10, total_h - 30)
 
         output.write("</svg>\n")
 
-    def _compute_view_bounds(
-        self,
-        min_x: float,
-        min_y: float,
-        max_x: float,
-        max_y: float,
-        geometry: SectionGeometry,
-        keyed_notes_count: int,
-    ) -> tuple[float, float, float, float, float, str]:
-        content_width = max(max_x - min_x, 1e-6)
-        scale_length_m, scale_label = self._select_scale_bar(content_width)
+    # ------------------------------------------------------------------
+    # Coordinate helpers
+    # ------------------------------------------------------------------
 
-        left_px, right_px, top_px, bottom_px = self._ui_margins_px(
-            geometry,
-            scale_length_m,
-            keyed_notes_count,
-        )
+    def _to_svg_x(self, model_x: float, view_min_x: float) -> float:
+        """Model X → SVG X within the geometry group (no content_x offset applied)."""
+        return (model_x - view_min_x) * self.scale
 
-        y_scale = self.scale * self.vertical_exaggeration
-        left_m = left_px / self.scale
-        right_m = right_px / self.scale
-        top_m = top_px / y_scale
-        bottom_m = bottom_px / y_scale
+    def _to_svg_y(self, model_y: float, view_min_y: float, view_max_y: float, svg_h: float) -> float:
+        """Model Y → SVG Y (Y-axis flipped)."""
+        # view_max_y in model space maps to SVG y=0 (top of content)
+        # view_min_y in model space maps to SVG y=svg_h (bottom of content)
+        return svg_h - (model_y - view_min_y) * self.scale * self.ve
 
-        view_min_x = min_x - self.content_margin_m - left_m
-        view_max_x = max_x + self.content_margin_m + right_m
-        view_min_y = min_y - self.content_margin_m - bottom_m
-        view_max_y = max_y + self.content_margin_m + top_m
+    # ------------------------------------------------------------------
+    # Component rendering
+    # ------------------------------------------------------------------
 
-        return view_min_x, view_min_y, view_max_x, view_max_y, scale_length_m, scale_label
+    def _render_component(self, output: TextIO, comp: "SectionGeometry.components[0]") -> None:  # type: ignore[name-defined]
+        meta = comp.metadata
+        comp_type = meta.get("component_type", "")
 
-    def _ui_margins_px(
-        self,
-        geometry: SectionGeometry,
-        scale_length_m: float,
-        keyed_notes_count: int,
-    ) -> tuple[float, float, float, float]:
-        legend_width, legend_height = self._legend_box_px(geometry)
-        scale_width, scale_height = self._scale_box_px(scale_length_m)
-        notes_width, notes_height = self._keyed_notes_box_px(keyed_notes_count)
+        for poly_idx, polygon in enumerate(comp.polygons):
+            color = self._polygon_color(meta, poly_idx, comp_type)
+            pts = [(p.x * self.scale, p.y * self.scale * self.ve) for p in polygon.exterior]
+            pts_str = _fmt_pts(pts)
+            output.write(f'        <polygon points="{pts_str}" ')
+            output.write(f'fill="{color}" stroke="#333333" stroke-width="0.8"/>\n')
 
-        left_px = max(legend_width, scale_width) + self.ui_padding_px
-        top_px = legend_height + self.ui_padding_px
-        bottom_px = max(scale_height, notes_height) + self.ui_padding_px
-        right_px = (notes_width + self.ui_padding_px) if notes_width > 0 else self.ui_padding_px
+            # Polygon holes (e.g., cable barrier post void)
+            if polygon.holes:
+                for hole in polygon.holes:
+                    hole_pts = [(p.x * self.scale, p.y * self.scale * self.ve) for p in hole]
+                    hole_str = _fmt_pts(hole_pts)
+                    # Render holes by clipping: draw hole as white polygon on top
+                    output.write(f'        <polygon points="{hole_str}" ')
+                    output.write('fill="white" stroke="#333333" stroke-width="0.8"/>\n')
 
-        return left_px, right_px, top_px, bottom_px
+        # Polylines (ditch void outlines, surface profiles, etc.)
+        polyline_styles = meta.get("polyline_styles", [])
+        for pl_idx, polyline in enumerate(comp.polylines):
+            pts = [(p.x * self.scale, p.y * self.scale * self.ve) for p in polyline]
+            pts_str = _fmt_pts(pts)
+            style = polyline_styles[pl_idx] if pl_idx < len(polyline_styles) else {}
+            dasharray = style.get("stroke_dasharray", "")
+            sw = style.get("stroke_width", "1.5")
+            dash_attr = f'stroke-dasharray="{dasharray}" ' if dasharray else ""
+            output.write(f'        <polyline points="{pts_str}" fill="none" '
+                         f'stroke="#333333" stroke-width="{sw}" {dash_attr}/>\n')
 
-    def _legend_box_px(self, geometry: SectionGeometry) -> tuple[float, float]:
-        title_text = geometry.metadata.get("name", "Section")
-        title_width = self._estimate_text_width(title_text, self.LEGEND_TITLE_FONT_PX)
+    def _polygon_color(self, meta: dict, poly_idx: int, comp_type: str) -> str:
+        """Determine fill colour for a polygon."""
+        layers = meta.get("layers", [])
+        if poly_idx < len(layers):
+            layer_type = layers[poly_idx].get("type", "")
+            if layer_type in _LAYER_COLORS:
+                return _LAYER_COLORS[layer_type]
+        for key in _COMPONENT_COLORS:
+            if comp_type.startswith(key):
+                return _COMPONENT_COLORS[key]
+        return _DEFAULT_COLOR
 
-        layer_types = self._collect_layer_types(geometry)
-        item_width = 0.0
-        if layer_types:
-            item_width = max(
-                self._estimate_text_width(layer_type, self.LEGEND_ITEM_FONT_PX)
-                for layer_type in layer_types
-            )
+    # ------------------------------------------------------------------
+    # Annotation rendering
+    # ------------------------------------------------------------------
 
-        width = max(
-            self.LEGEND_X + title_width,
-            self.LEGEND_X + 20 + item_width,
-        )
-        item_count = max(1, len(layer_types) + 1)
-        height = self.LEGEND_Y + self.LEGEND_LINE_HEIGHT * item_count
-        return width + self.ui_padding_px, height + self.ui_padding_px
-
-    def _scale_box_px(self, scale_length_m: float) -> tuple[float, float]:
-        scale_px = scale_length_m * self.scale
-        width = self.SCALE_X_START + scale_px
-        height = self.SCALE_Y_OFFSET + self.SCALE_LABEL_OFFSET
-        return width + self.ui_padding_px, height + self.ui_padding_px
-
-    def _keyed_notes_box_px(self, keyed_notes_count: int) -> tuple[float, float]:
-        return (0.0, 0.0)
-
-    def _estimate_text_width(self, text: str, font_size_px: float) -> float:
-        return len(text) * font_size_px * 0.6
-
-    def _collect_layer_types(self, geometry: SectionGeometry) -> list[str]:
-        layer_types = set()
-        for component in geometry.components:
-            if "layers" in component.metadata:
-                for layer in component.metadata["layers"]:
-                    if "type" in layer:
-                        layer_types.add(layer["type"])
-        return sorted(layer_types)
-
-    def _select_scale_bar(self, content_width: float) -> tuple[float, str]:
-        if self.units == "imperial":
-            feet_per_meter = 3.28084
-            view_width_ft = content_width * feet_per_meter
-            if view_width_ft < 20:
-                scale_length_ft = 5.0
-            elif view_width_ft < 50:
-                scale_length_ft = 10.0
-            elif view_width_ft < 100:
-                scale_length_ft = 20.0
-            else:
-                scale_length_ft = 50.0
-            scale_length = scale_length_ft / feet_per_meter
-            scale_label = f"{scale_length_ft:.0f}ft"
-        else:
-            if content_width < 5:
-                scale_length = 1.0
-            elif content_width < 15:
-                scale_length = 2.0
-            elif content_width < 30:
-                scale_length = 5.0
-            else:
-                scale_length = 10.0
-            scale_label = f"{scale_length:.0f}m"
-
-        return scale_length, scale_label
-
-    def _add_legend(
-        self, output: TextIO, geometry: SectionGeometry, svg_width: float, svg_height: float
-    ) -> None:
-        """Add legend showing layer types."""
-        legend_x = self.LEGEND_X
-        legend_y = self.LEGEND_Y
-        line_height = self.LEGEND_LINE_HEIGHT
-
-        output.write("  <!-- Legend -->\n")
-        output.write(f'  <text x="{legend_x}" y="{legend_y}" font-family="Arial" ')
-        output.write(f'font-size="{self.LEGEND_TITLE_FONT_PX}" font-weight="bold">')
-        output.write(f"{geometry.metadata.get('name', 'Section')}</text>\n")
-
-        # Collect unique layer types
-        layer_types = set(self._collect_layer_types(geometry))
-
-        # Draw legend items
-        y = legend_y + line_height
-        for layer_type in sorted(layer_types):
-            color = self.COLORS.get(layer_type, self.COLORS["default"])
-            output.write(
-                f'  <rect x="{legend_x}" y="{y}" width="15" height="15" fill="{color}"/>\n'
-            )
-            output.write(
-                f'  <text x="{legend_x + 20}" y="{y + 12}" font-family="Arial" '
-                f'font-size="{self.LEGEND_ITEM_FONT_PX}">'
-            )
-            output.write(f"{layer_type}</text>\n")
-            y += line_height
-
-    def _add_scale(
+    def _render_annotations(
         self,
         output: TextIO,
-        svg_height: float,
-        scale_length: float,
-        scale_label: str,
+        annotations: "SectionAnnotations",
+        view_min_x: float,
+        view_min_y: float,
+        view_max_y: float,
+        svg_h: float,
     ) -> None:
-        """Add scale indicator."""
-        scale_px = scale_length * self.scale
-        x_start = self.SCALE_X_START
-        y_pos = svg_height - self.SCALE_Y_OFFSET
+        output.write('    <!-- Annotations -->\n')
 
-        output.write("  <!-- Scale -->\n")
-        output.write(f'  <line x1="{x_start}" y1="{y_pos}" x2="{x_start + scale_px}" y2="{y_pos}" ')
-        output.write('stroke="black" stroke-width="2"/>\n')
-        output.write(
-            f'  <line x1="{x_start}" y1="{y_pos - self.SCALE_TICK_HALF}" '
-            f'x2="{x_start}" y2="{y_pos + self.SCALE_TICK_HALF}" '
+        # Slope tags — rendered near the surface (small italic text)
+        for tag in annotations.slope_tags:
+            sx = self._to_svg_x(tag.x, view_min_x)
+            sy = self._to_svg_y(tag.y, view_min_y, view_max_y, svg_h)
+            fs = _SLOPE_FONT_SIZE_M * self.scale
+            output.write(f'    <text x="{sx:.2f}" y="{sy - 4:.2f}" '
+                         f'font-family="Arial" font-size="{fs:.1f}" '
+                         f'font-style="italic" text-anchor="middle" '
+                         f'fill="#444">{_escape(tag.text)}</text>\n')
+
+        # Layer labels — rendered inside polygon centroids
+        for label in annotations.labels:
+            lx = self._to_svg_x(label.x, view_min_x)
+            ly = self._to_svg_y(label.y, view_min_y, view_max_y, svg_h)
+            fs = _LABEL_FONT_SIZE_M * self.scale
+            output.write(f'    <text x="{lx:.2f}" y="{ly:.2f}" '
+                         f'font-family="Arial" font-size="{fs:.1f}" '
+                         f'text-anchor="middle" dominant-baseline="middle" '
+                         f'fill="white" opacity="0.85">{_escape(label.text)}</text>\n')
+
+        # Width dimensions — horizontal line above section
+        if annotations.dimensions:
+            self._render_dimensions(
+                output, annotations.dimensions, view_min_x, view_min_y, view_max_y, svg_h
+            )
+
+    def _render_dimensions(
+        self,
+        output: TextIO,
+        dimensions: list["Dimension"],  # type: ignore[name-defined]
+        view_min_x: float,
+        view_min_y: float,
+        view_max_y: float,
+        svg_h: float,
+    ) -> None:
+        """Render all width dimensions.
+
+        Dimension line is a horizontal line _DIMENSION_TIER_MARGIN_M above
+        the top of section geometry.  Extension lines drop from that line
+        to each component's surface.
+        """
+        # Y position of the dimension tier line (model space → SVG)
+        tier_y_model = view_max_y - self.content_margin_m + _EXT_LINE_OVERSHOOT_M
+        tier_svg_y = self._to_svg_y(tier_y_model, view_min_y, view_max_y, svg_h)
+
+        dim_line_color = "#222"
+        dim_stroke = max(0.8, self.scale * 0.008)
+        text_fs = _DIM_FONT_SIZE_M * self.scale
+        arrow_px = _ARROW_SIZE_M * self.scale
+        min_inline_px = _MIN_INLINE_SPAN_M * self.scale
+
+        output.write('    <!-- Width dimensions -->\n')
+        output.write(f'    <g stroke="{dim_line_color}" stroke-width="{dim_stroke:.2f}" '
+                     f'font-family="Arial" font-size="{text_fs:.1f}" fill="{dim_line_color}">\n')
+
+        for dim in dimensions:
+            x1 = self._to_svg_x(dim.x_start, view_min_x)
+            x2 = self._to_svg_x(dim.x_end, view_min_x)
+            # Ensure x1 < x2 for rendering
+            if x1 > x2:
+                x1, x2 = x2, x1
+
+            surf_svg_y = self._to_svg_y(dim.y_surface, view_min_y, view_max_y, svg_h)
+
+            # Extension lines
+            overshoot_px = _EXT_LINE_OVERSHOOT_M * self.scale
+            ext_top = tier_svg_y - overshoot_px
+            output.write(f'      <line x1="{x1:.2f}" y1="{ext_top:.2f}" '
+                         f'x2="{x1:.2f}" y2="{surf_svg_y:.2f}" '
+                         f'stroke-dasharray="3,2"/>\n')
+            output.write(f'      <line x1="{x2:.2f}" y1="{ext_top:.2f}" '
+                         f'x2="{x2:.2f}" y2="{surf_svg_y:.2f}" '
+                         f'stroke-dasharray="3,2"/>\n')
+
+            # Horizontal dimension line with arrowheads
+            output.write(f'      <line x1="{x1:.2f}" y1="{tier_svg_y:.2f}" '
+                         f'x2="{x2:.2f}" y2="{tier_svg_y:.2f}"/>\n')
+            # Left arrowhead (pointing right, i.e. →)
+            self._write_arrowhead(output, x1, tier_svg_y, arrow_px, direction="right")
+            # Right arrowhead (pointing left, i.e. ←)
+            self._write_arrowhead(output, x2, tier_svg_y, arrow_px, direction="left")
+
+            # Dimension text
+            span_px = x2 - x1
+            mid_x = (x1 + x2) / 2.0
+            text = _escape(dim.text)
+            if span_px >= min_inline_px:
+                # Text centred on span
+                output.write(f'      <text x="{mid_x:.2f}" y="{tier_svg_y - 4:.2f}" '
+                              f'text-anchor="middle" dominant-baseline="auto">'
+                              f'{text}</text>\n')
+            else:
+                # Text placed to the right of the span
+                output.write(f'      <text x="{x2 + 4:.2f}" y="{tier_svg_y + text_fs * 0.35:.2f}" '
+                              f'text-anchor="start">{text}</text>\n')
+
+        output.write('    </g>\n')
+
+    def _write_arrowhead(
+        self,
+        output: TextIO,
+        tip_x: float,
+        tip_y: float,
+        arrow_px: float,
+        direction: Literal["left", "right"],
+    ) -> None:
+        """Draw a small filled triangle arrowhead on the dimension line."""
+        if direction == "right":
+            # Arrow pointing right: tip at (tip_x, tip_y), tail to the right
+            pts = [
+                (tip_x, tip_y),
+                (tip_x + arrow_px, tip_y - arrow_px * 0.35),
+                (tip_x + arrow_px, tip_y + arrow_px * 0.35),
+            ]
+        else:
+            pts = [
+                (tip_x, tip_y),
+                (tip_x - arrow_px, tip_y - arrow_px * 0.35),
+                (tip_x - arrow_px, tip_y + arrow_px * 0.35),
+            ]
+        pts_str = _fmt_pts(pts)
+        output.write(f'      <polygon points="{pts_str}" fill="currentColor" stroke="none"/>\n')
+
+    # ------------------------------------------------------------------
+    # Legend
+    # ------------------------------------------------------------------
+
+    def _collect_legend_items(self, geometry: SectionGeometry) -> list[tuple[str, str]]:
+        """Return (label, color) pairs for each unique layer type."""
+        seen: dict[str, str] = {}
+        for comp in geometry.components:
+            meta = comp.metadata
+            comp_type = meta.get("component_type", "")
+            layers = meta.get("layers", [])
+            if layers:
+                for i, layer_info in enumerate(layers):
+                    lt = layer_info.get("type", "")
+                    if lt and lt not in seen:
+                        seen[lt] = _LAYER_COLORS.get(lt, _DEFAULT_COLOR)
+            else:
+                for key in _COMPONENT_COLORS:
+                    if comp_type.startswith(key) and comp_type not in seen:
+                        seen[comp_type] = _COMPONENT_COLORS[key]
+                        break
+        return list(seen.items())
+
+    def _legend_width_px(self, title: str, items: list[tuple[str, str]]) -> float:
+        longest = max((len(label) for label, _ in items), default=0)
+        title_len = len(title)
+        chars = max(longest, title_len)
+        return max(120.0, chars * 7.5 + 30)
+
+    def _render_legend(
+        self,
+        output: TextIO,
+        geometry: SectionGeometry,
+        items: list[tuple[str, str]],
+        x: float,
+        y: float,
+    ) -> None:
+        title = _escape(geometry.metadata.get("name", "Section"))
+        output.write(f'  <text x="{x}" y="{y + 14}" font-family="Arial" font-size="13" '
+                     f'font-weight="bold">{title}</text>\n')
+        for i, (label, color) in enumerate(items):
+            iy = y + 24 + i * 20
+            output.write(f'  <rect x="{x}" y="{iy}" width="14" height="14" '
+                         f'fill="{color}" stroke="#333" stroke-width="0.5"/>\n')
+            output.write(f'  <text x="{x + 20}" y="{iy + 11}" font-family="Arial" '
+                         f'font-size="11">{_escape(label)}</text>\n')
+
+    # ------------------------------------------------------------------
+    # Scale bar
+    # ------------------------------------------------------------------
+
+    def _choose_scale_bar(self, content_width_m: float) -> tuple[float, str]:
+        if self.units == "imperial":
+            ft = content_width_m * 3.28084
+            for threshold, size_ft in [(20, 5), (50, 10), (100, 20), (float("inf"), 50)]:
+                if ft < threshold:
+                    return size_ft / 3.28084, f"{size_ft:.0f} ft"
+        else:
+            for threshold, size_m in [(5, 1), (15, 2), (30, 5), (float("inf"), 10)]:
+                if content_width_m < threshold:
+                    return float(size_m), f"{size_m} m"
+        return 1.0, "1 m"
+
+    def _render_scale_bar(
+        self,
+        output: TextIO,
+        scale_len_m: float,
+        label: str,
+        x: float,
+        y: float,
+    ) -> None:
+        bar_px = scale_len_m * self.scale
+        tick = 5
+        output.write(f'  <line x1="{x}" y1="{y}" x2="{x + bar_px:.1f}" y2="{y}" '
+                     f'stroke="black" stroke-width="2"/>\n')
+        for tx in (x, x + bar_px):
+            output.write(f'  <line x1="{tx:.1f}" y1="{y - tick}" x2="{tx:.1f}" y2="{y + tick}" '
+                         f'stroke="black" stroke-width="2"/>\n')
+        mid = x + bar_px / 2
+        output.write(f'  <text x="{mid:.1f}" y="{y + 18}" font-family="Arial" '
+                     f'font-size="11" text-anchor="middle">{_escape(label)}</text>\n')
+
+
+# ---------------------------------------------------------------------------
+# Backwards-compatible alias used by older code / tests
+# ---------------------------------------------------------------------------
+
+class SimpleSVGExporter(SVGExporter):
+    """Alias for SVGExporter (backwards compatibility)."""
+
+    def __init__(
+        self,
+        scale: float = 100.0,
+        vertical_exaggeration: float = 1.0,
+        units: Literal["imperial", "metric"] = "imperial",
+        content_margin_m: float = 0.5,
+        ui_padding_px: float = 10.0,  # kept for API compat, ignored
+    ) -> None:
+        super().__init__(
+            scale=scale,
+            vertical_exaggeration=vertical_exaggeration,
+            units=units,
+            content_margin_m=content_margin_m,
         )
-        output.write('stroke="black" stroke-width="2"/>\n')
-        output.write(f'  <line x1="{x_start + scale_px}" y1="{y_pos - self.SCALE_TICK_HALF}" ')
-        output.write(
-            f'x2="{x_start + scale_px}" y2="{y_pos + self.SCALE_TICK_HALF}" '
-            'stroke="black" stroke-width="2"/>\n'
-        )
-        output.write(
-            f'  <text x="{x_start + scale_px / 2}" y="{y_pos + self.SCALE_LABEL_OFFSET}" '
-        )
-        output.write('font-family="Arial" font-size="12" text-anchor="middle">')
-        output.write(f"{scale_label}</text>\n")

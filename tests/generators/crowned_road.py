@@ -18,14 +18,11 @@ SCRIPT_DIR = Path(__file__).parent.absolute()
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from cross_section.core.domain.annotations import (
-    AnnotationGenerator,
-    default_annotation_options,
-)
+from cross_section.core.domain.annotations import AnnotationCollector
 from cross_section.core.domain import ControlPoint, RoadSection, SurfaceProfile, TravelLane
 from cross_section.core.domain.components import Ditch
 from cross_section.core.domain.pavement import AsphaltLayer
-from cross_section.export.svg_annotations import AnnotatedSVGExporter
+from cross_section.export.svg import SVGExporter
 from _svg_to_png import svg_to_png
 
 
@@ -104,11 +101,7 @@ def main():
     geometry = section.to_geometry()
 
     # Generate annotations
-    options = default_annotation_options()
-    annotations = AnnotationGenerator.generate(geometry, options)
-    result = annotations.resolve_collisions(geometry=geometry)
-    if not result.success:
-        print(f"  WARN: {result.overflow_count} overflow, {result.remaining_collisions} collisions", file=sys.stderr)
+    annotations = AnnotationCollector(units="imperial").collect(geometry)
 
     # Export to SVG
     output_dir = SCRIPT_DIR.parent / "output"
@@ -116,12 +109,12 @@ def main():
     svg_path = output_dir / "crowned_road.svg"
 
     print(f"Generating {svg_path.name}...")
-    exporter = AnnotatedSVGExporter(scale=30.48)
+    exporter = SVGExporter(scale=30.48)
     with open(svg_path, 'w') as f:
-        exporter.export_with_annotations(geometry, annotations, f)
+        exporter.export_annotated(geometry, annotations, f)
     svg_to_png(svg_path)
 
-    print(f"  Components: {len(geometry.components)}, Annotations: {annotations.count()}")
+    print(f"  Components: {len(geometry.components)}, Annotations: {len(annotations.dimensions) + len(annotations.slope_tags)}")
 
 
 if __name__ == "__main__":

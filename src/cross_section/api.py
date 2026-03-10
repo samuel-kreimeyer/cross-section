@@ -1,5 +1,14 @@
 """Stable public API surface for cross_section."""
 
+from .core.domain.annotations import (
+    AnnotationCollector,
+    Dimension,
+    Label,
+    SectionAnnotations,
+    SlopeTag,
+)
+from .export.dxf import DXFExporter
+from .export.svg import SVGExporter, SimpleSVGExporter
 from .core.domain import (
     Buffer,
     ControlPoint,
@@ -34,6 +43,17 @@ from .core.domain.pavement import (
 )
 
 __all__ = [
+    # Annotations
+    "AnnotationCollector",
+    "Dimension",
+    "Label",
+    "SectionAnnotations",
+    "SlopeTag",
+    # Exporters
+    "SVGExporter",
+    "SimpleSVGExporter",
+    "DXFExporter",
+    # Domain
     "Buffer",
     "ControlPoint",
     "Curb",
