@@ -82,11 +82,64 @@ class SlopeTag:
 
 
 @dataclass
+class ComponentSpan:
+    """A rule for creating a dimension that spans multiple component types.
+
+    The collector matches all components whose ``component_type`` is in
+    ``types``, finds their combined X extent, and emits a single ``Dimension``
+    labelled with ``label``.
+
+    This directly models the DOT convention of annotating aggregate widths
+    (traveled way, curb-to-curb, shoulder-to-shoulder, etc.) alongside
+    per-component dimensions.
+
+    Attributes:
+        types: Component type names to include (e.g. ``["TravelLane", "TurnLane"]``).
+        label: Text for the dimension (e.g. ``"Traveled Way"``).  If ``None``,
+            the collected width is formatted in the selected unit system.
+        tier: Dimension tier.  Use 1 for aggregate spans so they appear above
+            the tier-0 per-component dimensions.
+        layer: DXF layer name.
+        sides: Which assembly sides to include: ``"both"``, ``"left"``, or ``"right"``.
+
+    Examples::
+
+        # Full traveled way (both lanes + turn lane, both sides)
+        ComponentSpan(
+            types=["TravelLane", "TurnLane"],
+            label="Traveled Way",
+            tier=1,
+        )
+
+        # Curb-to-curb (lanes + curbs)
+        ComponentSpan(
+            types=["TravelLane", "TurnLane", "Curb", "Gutter"],
+            label="Curb to Curb",
+            tier=2,
+        )
+
+        # Back-of-walk to back-of-walk
+        ComponentSpan(
+            types=["TravelLane", "TurnLane", "Curb", "Gutter", "Sidewalk"],
+            label="Back of Walk to Back of Walk",
+            tier=3,
+        )
+    """
+
+    types: list[str]
+    label: str | None = None
+    tier: int = 1
+    layer: str = "ANNOTATION_DIM"
+    sides: str = "both"  # "both" | "left" | "right"
+
+
+@dataclass
 class SectionAnnotations:
     """All annotations for a complete road section.
 
     Attributes:
-        dimensions: Width dimension annotations (above section)
+        dimensions: Width dimension annotations (above section), keyed by tier.
+            Tier 0 = per-component, tier 1+ = spanning / aggregate.
         labels: Material and component labels (inside or below section)
         slope_tags: Cross-slope indicators (at component surfaces)
     """

@@ -57,8 +57,10 @@ def test_collector_derives_width_dimensions():
                                     include_slopes=False, include_layer_labels=False)
     annotations = collector.collect(section)
 
-    assert len(annotations.dimensions) == 1
-    dim = annotations.dimensions[0]
+    # tier 0 = per-component; tier 1+ = spanning (from DEFAULT_SPANS)
+    per_component = [d for d in annotations.dimensions if d.tier == 0]
+    assert len(per_component) == 1
+    dim = per_component[0]
     assert abs(dim.width - 3.6) < 0.01
     assert "3.60m" in dim.text or "3.6m" in dim.text
 

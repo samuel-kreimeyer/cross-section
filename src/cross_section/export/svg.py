@@ -155,11 +155,13 @@ class SVGExporter:
         # Geometry bounds in model space (metres)
         g_min_x, g_min_y, g_max_x, g_max_y = geometry.bounds()
 
-        # Annotation bounds — extend view upward for dimension tier
+        # Annotation bounds — extend view upward for all dimension tiers.
+        # Each tier beyond tier 0 adds one tier-step of vertical space.
         ann_top_m = 0.0
         if annotations and annotations.dimensions:
-            # Tier margin + arrow + text height above top of section
-            ann_top_m = _DIMENSION_TIER_MARGIN_M + _DIM_FONT_SIZE_M + _EXT_LINE_OVERSHOOT_M
+            max_tier = max(d.tier for d in annotations.dimensions)
+            # tier 0 = one margin; tier 1 = two margins stacked; etc.
+            ann_top_m = _DIMENSION_TIER_MARGIN_M * (max_tier + 1) + _DIM_FONT_SIZE_M + _EXT_LINE_OVERSHOOT_M
 
         # View bounds in model space (metres)
         m = self.content_margin_m
@@ -340,66 +342,92 @@ class SVGExporter:
         view_max_y: float,
         svg_h: float,
     ) -> None:
-        """Render all width dimensions.
+        """Render all width dimensions, grouped by tier.
 
-        Dimension line is a horizontal line _DIMENSION_TIER_MARGIN_M above
-        the top of section geometry.  Extension lines drop from that line
-        to each component's surface.
+        Tier 0 (per-component) sits closest to the section.
+        Tier 1+ (spanning / aggregate) stack upward, each one tier-step higher.
+
+        Visual result (two tiers, typical urban section):
+
+            Curb to Curb = 9.0m          ← tier 1
+          |←→|←————→|←→|←————→|←→|      ← tier 1 extension lines
+          3.6m  3.6m   …                  ← tier 0 dimension lines
+        |=====|=====|===|=====|=====|     ← geometry
+
+        The extension lines for a spanning dim drop all the way to
+        the geometry surface, so the callout always anchors to real
+        geometry regardless of tier.
         """
-        # Y position of the dimension tier line (model space → SVG)
-        tier_y_model = view_max_y - self.content_margin_m + _EXT_LINE_OVERSHOOT_M
-        tier_svg_y = self._to_svg_y(tier_y_model, view_min_y, view_max_y, svg_h)
+        # Base tier line is the first step above the section
+        base_tier_y_model = view_max_y - self.content_margin_m + _EXT_LINE_OVERSHOOT_M
 
         dim_line_color = "#222"
+        span_line_color = "#555"  # slightly lighter for aggregate dims
         dim_stroke = max(0.8, self.scale * 0.008)
         text_fs = _DIM_FONT_SIZE_M * self.scale
         arrow_px = _ARROW_SIZE_M * self.scale
         min_inline_px = _MIN_INLINE_SPAN_M * self.scale
 
-        output.write('    <!-- Width dimensions -->\n')
-        output.write(f'    <g stroke="{dim_line_color}" stroke-width="{dim_stroke:.2f}" '
-                     f'font-family="Arial" font-size="{text_fs:.1f}" fill="{dim_line_color}">\n')
-
+        # Group dimensions by tier
+        tiers: dict[int, list] = {}
         for dim in dimensions:
-            x1 = self._to_svg_x(dim.x_start, view_min_x)
-            x2 = self._to_svg_x(dim.x_end, view_min_x)
-            # Ensure x1 < x2 for rendering
-            if x1 > x2:
-                x1, x2 = x2, x1
+            tiers.setdefault(dim.tier, []).append(dim)
 
-            surf_svg_y = self._to_svg_y(dim.y_surface, view_min_y, view_max_y, svg_h)
+        output.write('    <!-- Width dimensions -->\n')
+        output.write(f'    <g font-family="Arial" font-size="{text_fs:.1f}">\n')
 
-            # Extension lines
+        for tier_idx in sorted(tiers):
+            # Each tier sits one step higher than the previous
+            tier_y_model = base_tier_y_model + tier_idx * _DIMENSION_TIER_MARGIN_M
+            tier_svg_y = self._to_svg_y(tier_y_model, view_min_y, view_max_y, svg_h)
             overshoot_px = _EXT_LINE_OVERSHOOT_M * self.scale
-            ext_top = tier_svg_y - overshoot_px
-            output.write(f'      <line x1="{x1:.2f}" y1="{ext_top:.2f}" '
-                         f'x2="{x1:.2f}" y2="{surf_svg_y:.2f}" '
-                         f'stroke-dasharray="3,2"/>\n')
-            output.write(f'      <line x1="{x2:.2f}" y1="{ext_top:.2f}" '
-                         f'x2="{x2:.2f}" y2="{surf_svg_y:.2f}" '
-                         f'stroke-dasharray="3,2"/>\n')
 
-            # Horizontal dimension line with arrowheads
-            output.write(f'      <line x1="{x1:.2f}" y1="{tier_svg_y:.2f}" '
-                         f'x2="{x2:.2f}" y2="{tier_svg_y:.2f}"/>\n')
-            # Left arrowhead (pointing right, i.e. →)
-            self._write_arrowhead(output, x1, tier_svg_y, arrow_px, direction="right")
-            # Right arrowhead (pointing left, i.e. ←)
-            self._write_arrowhead(output, x2, tier_svg_y, arrow_px, direction="left")
+            # Spanning dimensions use a bolder line and larger font
+            is_span_tier = tier_idx > 0
+            stroke_color = span_line_color if is_span_tier else dim_line_color
+            stroke_w = dim_stroke * (1.4 if is_span_tier else 1.0)
+            label_offset = -6 if is_span_tier else -4
 
-            # Dimension text
-            span_px = x2 - x1
-            mid_x = (x1 + x2) / 2.0
-            text = _escape(dim.text)
-            if span_px >= min_inline_px:
-                # Text centred on span
-                output.write(f'      <text x="{mid_x:.2f}" y="{tier_svg_y - 4:.2f}" '
-                              f'text-anchor="middle" dominant-baseline="auto">'
-                              f'{text}</text>\n')
-            else:
-                # Text placed to the right of the span
-                output.write(f'      <text x="{x2 + 4:.2f}" y="{tier_svg_y + text_fs * 0.35:.2f}" '
-                              f'text-anchor="start">{text}</text>\n')
+            output.write(f'      <g stroke="{stroke_color}" stroke-width="{stroke_w:.2f}" '
+                         f'fill="{stroke_color}">\n')
+
+            for dim in tiers[tier_idx]:
+                x1 = self._to_svg_x(dim.x_start, view_min_x)
+                x2 = self._to_svg_x(dim.x_end, view_min_x)
+                if x1 > x2:
+                    x1, x2 = x2, x1
+
+                surf_svg_y = self._to_svg_y(dim.y_surface, view_min_y, view_max_y, svg_h)
+
+                # Extension lines drop from tier line to geometry surface
+                ext_top = tier_svg_y - overshoot_px
+                output.write(f'        <line x1="{x1:.2f}" y1="{ext_top:.2f}" '
+                             f'x2="{x1:.2f}" y2="{surf_svg_y:.2f}" '
+                             f'stroke-dasharray="3,2"/>\n')
+                output.write(f'        <line x1="{x2:.2f}" y1="{ext_top:.2f}" '
+                             f'x2="{x2:.2f}" y2="{surf_svg_y:.2f}" '
+                             f'stroke-dasharray="3,2"/>\n')
+
+                # Horizontal dimension line with arrowheads
+                output.write(f'        <line x1="{x1:.2f}" y1="{tier_svg_y:.2f}" '
+                             f'x2="{x2:.2f}" y2="{tier_svg_y:.2f}"/>\n')
+                self._write_arrowhead(output, x1, tier_svg_y, arrow_px, direction="right")
+                self._write_arrowhead(output, x2, tier_svg_y, arrow_px, direction="left")
+
+                # Dimension text
+                span_px = x2 - x1
+                mid_x = (x1 + x2) / 2.0
+                text = _escape(dim.text)
+                if span_px >= min_inline_px:
+                    output.write(f'        <text x="{mid_x:.2f}" y="{tier_svg_y + label_offset:.2f}" '
+                                 f'text-anchor="middle" dominant-baseline="auto">'
+                                 f'{text}</text>\n')
+                else:
+                    # Span too narrow — place text to the right
+                    output.write(f'        <text x="{x2 + 4:.2f}" y="{tier_svg_y + text_fs * 0.35:.2f}" '
+                                 f'text-anchor="start">{text}</text>\n')
+
+            output.write('      </g>\n')
 
         output.write('    </g>\n')
 

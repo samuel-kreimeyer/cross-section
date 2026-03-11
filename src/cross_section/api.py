@@ -2,6 +2,8 @@
 
 from .core.domain.annotations import (
     AnnotationCollector,
+    ComponentSpan,
+    DEFAULT_SPANS,
     Dimension,
     Label,
     SectionAnnotations,
@@ -45,6 +47,8 @@ from .core.domain.pavement import (
 __all__ = [
     # Annotations
     "AnnotationCollector",
+    "ComponentSpan",
+    "DEFAULT_SPANS",
     "Dimension",
     "Label",
     "SectionAnnotations",

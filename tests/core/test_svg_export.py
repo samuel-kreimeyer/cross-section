@@ -73,7 +73,8 @@ def test_annotated_export_includes_dimension_line():
     collector = AnnotationCollector(units="metric", include_widths=True,
                                     include_slopes=False, include_layer_labels=False)
     annotations = collector.collect(section)
-    assert len(annotations.dimensions) == 1
+    per_component_dims = [d for d in annotations.dimensions if d.tier == 0]
+    assert len(per_component_dims) == 1
 
     exporter = SVGExporter(scale=100.0)
     buf = io.StringIO()
