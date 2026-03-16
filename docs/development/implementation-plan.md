@@ -16,7 +16,7 @@ Deliver a core library with a simple, domain-aligned API for roadway cross secti
 | RoadSection / ControlPoint | Core | Implemented | Central assembly API is present. |
 | TravelLane | Core | Implemented | Uses layered pavement and validation. |
 | Shoulder | Core | Implemented | Supports fully paved + slumped; partial paving still needed for spec parity. |
-| Slope | Core | Implemented | Surface-only representation still uses thin polygons. |
+| Slope | Core | Implemented | Surface-only slopes now render as polylines; material slopes remain polygons. |
 | Ditch | Core | Implemented | Void line + optional lining in place. |
 | Curb | Core | Implemented | Gutter integrated; standalone Gutter not yet present. |
 | Barrier (concrete/guardrail/cable) | Extended | Implemented | Spec alignment needed in documentation. |
@@ -28,7 +28,7 @@ Deliver a core library with a simple, domain-aligned API for roadway cross secti
 | Buffer | Core | Missing | Needed for urban scenario. |
 | Sidewalk / PedestrianFacility | Core | Missing | Needed for urban scenario. |
 | Gutter (standalone) | Core | Missing | Currently folded into Curb. |
-| SurfaceProfile / PolylineComponent | Core | Missing | Needed to avoid thin polygons for surface-only elements. |
+| SurfaceProfile / PolylineComponent | Core | Implemented | Use for surface-only elements without artificial thickness. |
 
 ## Plan (Revised)
 
@@ -80,11 +80,11 @@ Deliverables:
 - Components sufficient to re-implement the remaining manual scenarios via API.
 
 ### 4) Geometry representation updates
-- Add a `SurfaceProfile`/`PolylineComponent` for surface-only elements.
-- Update validation to exclude surface-only elements from area overlap checks, while still checking polyline crossings.
+- Expand use of `SurfaceProfile`/polyline-based geometry for surface-only elements.
+- Keep validation focused on area overlap for solids while still checking polyline crossings.
 
 Deliverables:
-- Surface-only elements no longer require thin polygons.
+- Surface-only elements are represented without artificial thickness.
 
 ### 5) Validation + test enforcement
 - Shapely validation exists; now enforce it in tests:

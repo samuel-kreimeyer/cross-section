@@ -4,6 +4,7 @@ import pytest
 
 from cross_section.core.domain.components.slopes import Slope
 from cross_section.core.domain.section import ControlPoint
+from cross_section.core.geometry.primitives import Segment2D
 
 
 class TestSlope:
@@ -115,10 +116,13 @@ class TestSlope:
 
         geometry = slope.to_geometry(cp, 'right')
 
-        # Should have one polygon (very thin trapezoid)
-        assert len(geometry.polygons) == 1
-        polygon = geometry.polygons[0]
-        assert len(polygon.exterior) == 4
+        assert geometry.polygons == []
+        assert len(geometry.polylines) == 1
+        line = geometry.polylines[0]
+        assert line[0].x == pytest.approx(0.0)
+        assert line[0].y == pytest.approx(100.0)
+        assert line[1].x == pytest.approx(4.0)
+        assert line[1].y == pytest.approx(99.0)
 
         # Check metadata
         assert geometry.metadata['component_type'] == 'Slope'
@@ -136,11 +140,12 @@ class TestSlope:
 
         geometry = slope.to_geometry(cp, 'left')
 
-        assert len(geometry.polygons) == 1
-        polygon = geometry.polygons[0]
+        assert geometry.polygons == []
+        assert len(geometry.polylines) == 1
+        line = geometry.polylines[0]
 
         # Vertices should be on left side (negative X)
-        for point in polygon.exterior:
+        for point in line:
             assert point.x <= 0.0
 
         assert geometry.metadata['assembly_direction'] == 'left'
@@ -156,6 +161,9 @@ class TestSlope:
         assert len(geometry.polygons) == 1
         polygon = geometry.polygons[0]
         assert len(polygon.exterior) == 4
+        top_edge = Segment2D(polygon.exterior[0], polygon.exterior[1])
+        bottom_edge = Segment2D(polygon.exterior[3], polygon.exterior[2])
+        assert top_edge.is_parallel_to(bottom_edge)
 
         # Verify thickness is applied
         assert geometry.metadata['thickness'] == 0.3
@@ -177,7 +185,8 @@ class TestSlope:
         cp = ControlPoint(x=0.0, elevation=100.0).to_connection_point()
 
         geometry = slope.to_geometry(cp, 'right')
-        assert len(geometry.polygons) == 1
+        assert geometry.polygons == []
+        assert len(geometry.polylines) == 1
         assert geometry.metadata['vertical_drop'] == -1.0
 
     def test_validate_valid_slope(self):

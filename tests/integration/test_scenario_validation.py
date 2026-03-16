@@ -20,7 +20,7 @@ from cross_section.core.geometry.validate import validate_section_geometry
 
 # Import scenario builders
 import sys
-sys.path.insert(0, str(Path(__file__).parent.parent / "scenarios"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "generators"))
 
 from crowned_road import build_scenario as build_crowned_road
 from three_lane_urban import build_scenario as build_three_lane_urban
@@ -46,7 +46,7 @@ class TestScenarioValidation:
         )
 
     def _validate_section_geometry(self, section):
-        """Validate section geometry using shapely if available."""
+        """Validate section geometry with enforced shapely-backed checks."""
         # Run shapely validation (expects list of components)
         validate_section_geometry(section.components)
 
@@ -234,7 +234,7 @@ class TestScenarioBuilderInterface:
     """Test that all scenario builders follow the expected interface."""
 
     def test_scenario_builders_return_tuple(self):
-        """Test that all scenario builders return (SectionGeometry, AnnotationCollection)."""
+        """Test that all scenario builders return (section geometry, annotations)."""
         scenarios = [
             build_crowned_road,
             build_three_lane_urban,
@@ -248,8 +248,8 @@ class TestScenarioBuilderInterface:
             assert len(result) == 2, f"{build_func.__name__} should return 2-tuple"
 
             section, annotations = result
-            assert hasattr(section, 'components'), "First element should be SectionGeometry"
-            assert hasattr(annotations, 'count'), "Second element should be AnnotationCollection"
+            assert hasattr(section, 'components'), "First element should be section geometry"
+            assert hasattr(annotations, 'count'), "Second element should be annotations collection"
 
     def test_scenario_builders_have_docstrings(self):
         """Test that all scenario builders are documented."""

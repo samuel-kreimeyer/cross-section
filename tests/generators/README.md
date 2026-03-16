@@ -22,7 +22,7 @@ python /path/to/cross-section/tests/regenerate_all_svgs.py
 
 This will:
 1. Run all generator scripts in this directory
-2. Run all scenario builders
+2. Run all generator scripts
 3. Output SVG files to `tests/output/`
 
 The script automatically handles Python paths and can be run from any directory.
@@ -40,10 +40,12 @@ PYTHONPATH=../../src python <script_name>.py
 
 ## Generator Scripts
 
-All 12 generator scripts successfully generate SVG output:
+Generator scripts in this directory generate SVG output:
 
-- **annotated_3lane_urban.py** - Three-lane urban section with annotations
-- **annotated_crowned_road.py** - Crowned road with annotations
+- **three_lane_urban.py** - Three-lane urban section with annotations
+- **crowned_road.py** - Crowned road with annotations
+- **ardot_undivided_highway.py** - ARDOT undivided highway section
+- **ardot_undivided_notch_and_widen.py** - ARDOT notch and widen section
 - **asymmetric_cut_fill.py** - Asymmetric cut and fill slopes
 - **basic_section.py** - Simple two-lane road section
 - **curb_and_gutter.py** - Curb and gutter detail
@@ -61,5 +63,5 @@ All generator scripts output to: `tests/output/`
 
 ## Related
 
-- Scenario builders: `tests/scenarios/`
+- Reusable scenario builders: `tests/generators/` via `build_scenario()`
 - Runner script: `tests/regenerate_all_svgs.py`

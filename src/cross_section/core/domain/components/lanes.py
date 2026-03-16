@@ -3,7 +3,13 @@
 from dataclasses import dataclass, field
 from typing import Literal
 
-from ...geometry.primitives import ComponentGeometry, ConnectionPoint, Point2D, Polygon
+from ...geometry.primitives import (
+    ComponentGeometry,
+    ConnectionPoint,
+    Point2D,
+    Segment2D,
+    quad_between_segments,
+)
 from ..base import Direction, RoadComponent
 from ..pavement import AsphaltLayer, PavementLayer
 
@@ -119,23 +125,12 @@ class TravelLane(RoadComponent):
             outside_top = attachment.y - layer_top
             outside_bottom = attachment.y - layer_bottom
 
-            # Create polygon vertices (counter-clockwise)
-            if direction == "right":
-                vertices = [
-                    Point2D(insertion.x, inside_top),  # Inside, top
-                    Point2D(attachment.x, outside_top),  # Outside, top
-                    Point2D(attachment.x, outside_bottom),  # Outside, bottom
-                    Point2D(insertion.x, inside_bottom),  # Inside, bottom
-                ]
-            else:  # left
-                vertices = [
-                    Point2D(insertion.x, inside_top),  # Inside, top
-                    Point2D(insertion.x, inside_bottom),  # Inside, bottom
-                    Point2D(attachment.x, outside_bottom),  # Outside, bottom
-                    Point2D(attachment.x, outside_top),  # Outside, top
-                ]
-
-            polygons.append(Polygon(exterior=vertices))
+            top_edge = Segment2D(
+                start=Point2D(insertion.x, inside_top),
+                end=Point2D(attachment.x, outside_top),
+            )
+            bottom_edge = top_edge.translated_y(-layer.thickness)
+            polygons.append(quad_between_segments(top_edge, bottom_edge, direction))
             current_depth = layer_bottom
 
         # Build layer metadata

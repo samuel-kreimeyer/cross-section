@@ -3,6 +3,7 @@
 import pytest
 from cross_section.core.domain.components import TravelLane
 from cross_section.core.domain.section import ControlPoint
+from cross_section.core.geometry.primitives import Segment2D
 
 
 class TestTravelLane:
@@ -97,6 +98,10 @@ class TestTravelLane:
         assert geometry.metadata['width'] == 3.6
         assert geometry.metadata['cross_slope'] == 0.02
         assert geometry.metadata['assembly_direction'] == 'right'
+        polygon = geometry.polygons[0]
+        top_edge = Segment2D(polygon.exterior[0], polygon.exterior[1])
+        bottom_edge = Segment2D(polygon.exterior[3], polygon.exterior[2])
+        assert top_edge.is_parallel_to(bottom_edge)
 
     def test_to_geometry_left(self):
         """Test geometry generation for left side."""

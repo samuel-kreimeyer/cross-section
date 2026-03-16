@@ -1,10 +1,15 @@
 """Tests for geometry primitives."""
 
 from cross_section.core.geometry.primitives import (
+    ComponentGeometry,
+    ConnectionPoint,
     Point2D,
     Polygon,
-    ConnectionPoint,
-    ComponentGeometry,
+    Segment2D,
+    horizontal_segment,
+    profile_segment,
+    quad_between_segments,
+    vertical_segment,
 )
 
 
@@ -105,6 +110,36 @@ class TestPolygon:
         ]
         polygon = Polygon(exterior=vertices)
         assert polygon.area() == 6.0
+
+
+class TestSegment2D:
+    """Tests for segment helpers used in constrained geometry construction."""
+
+    def test_parallel_segments(self):
+        top = Segment2D(Point2D(0.0, 1.0), Point2D(2.0, 0.5))
+        bottom = top.translated_y(-0.15)
+        assert top.is_parallel_to(bottom)
+
+    def test_perpendicular_segments(self):
+        vertical = vertical_segment(x=1.0, y_top=2.0, y_bottom=0.0)
+        horizontal = horizontal_segment(x_start=1.0, x_end=3.0, y=2.0)
+        assert vertical.is_perpendicular_to(horizontal)
+
+    def test_profile_segment(self):
+        segment = profile_segment(
+            start=Point2D(0.0, 10.0),
+            horizontal_run=4.0,
+            vertical_drop=1.0,
+            direction="right",
+        )
+        assert segment.end.x == 4.0
+        assert segment.end.y == 9.0
+
+    def test_quad_between_segments_right(self):
+        top = Segment2D(Point2D(0.0, 1.0), Point2D(2.0, 0.5))
+        bottom = top.translated_y(-0.2)
+        polygon = quad_between_segments(top, bottom, "right")
+        assert polygon.exterior == [top.start, top.end, bottom.end, bottom.start]
 
 
 class TestConnectionPoint:

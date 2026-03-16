@@ -23,6 +23,35 @@ class Point2D:
         return f"Point2D({self.x:.3f}, {self.y:.3f})"
 
 
+@dataclass(frozen=True)
+class Segment2D:
+    """2D line segment with relationship helpers for constrained construction."""
+
+    start: Point2D
+    end: Point2D
+
+    def dx(self) -> float:
+        return self.end.x - self.start.x
+
+    def dy(self) -> float:
+        return self.end.y - self.start.y
+
+    def translated(self, dx: float = 0.0, dy: float = 0.0) -> "Segment2D":
+        return Segment2D(self.start.offset(dx, dy), self.end.offset(dx, dy))
+
+    def translated_y(self, dy: float) -> "Segment2D":
+        return self.translated(dy=dy)
+
+    def is_parallel_to(self, other: "Segment2D", tolerance: float = 1e-9) -> bool:
+        return abs((self.dx() * other.dy()) - (self.dy() * other.dx())) <= tolerance
+
+    def is_perpendicular_to(self, other: "Segment2D", tolerance: float = 1e-9) -> bool:
+        return abs((self.dx() * other.dx()) + (self.dy() * other.dy())) <= tolerance
+
+    def to_polyline(self) -> list[Point2D]:
+        return [self.start, self.end]
+
+
 @dataclass
 class Polygon:
     """2D polygon - pure Python, no library dependencies."""
@@ -124,3 +153,34 @@ class ComponentGeometry:
         max_y = max(b[3] for b in all_bounds)
 
         return (min_x, min_y, max_x, max_y)
+
+
+def vertical_segment(x: float, y_top: float, y_bottom: float) -> Segment2D:
+    """Create a vertical segment."""
+    return Segment2D(Point2D(x, y_top), Point2D(x, y_bottom))
+
+
+def horizontal_segment(x_start: float, x_end: float, y: float) -> Segment2D:
+    """Create a horizontal segment."""
+    return Segment2D(Point2D(x_start, y), Point2D(x_end, y))
+
+
+def profile_segment(
+    start: Point2D,
+    horizontal_run: float,
+    vertical_drop: float,
+    direction: str,
+) -> Segment2D:
+    """Create a profile segment from a point, run, and drop."""
+    end_x = start.x + horizontal_run if direction == "right" else start.x - horizontal_run
+    end_y = start.y - vertical_drop
+    return Segment2D(start=start, end=Point2D(end_x, end_y))
+
+
+def quad_between_segments(top: Segment2D, bottom: Segment2D, direction: str) -> Polygon:
+    """Create a four-vertex polygon between corresponding top and bottom segments."""
+    if direction == "right":
+        vertices = [top.start, top.end, bottom.end, bottom.start]
+    else:
+        vertices = [top.start, bottom.start, bottom.end, top.end]
+    return Polygon(exterior=vertices)

@@ -2,8 +2,6 @@
 
 import pytest
 
-pytest.importorskip("shapely")
-
 from cross_section.core.domain import Curb, Shoulder, Slope
 from cross_section.core.domain.components import TravelLane as Lane
 from cross_section.core.domain.components.barriers import Barrier, JERSEY_32

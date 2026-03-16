@@ -9,8 +9,6 @@ from cross_section.core.geometry.validate import (
     validate_section_geometry,
 )
 
-pytest.importorskip("shapely")
-
 
 def _square(x0: float, y0: float, size: float) -> Polygon:
     return Polygon(

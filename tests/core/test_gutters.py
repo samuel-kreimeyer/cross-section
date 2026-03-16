@@ -4,6 +4,7 @@ import pytest
 
 from cross_section.core.domain import ControlPoint
 from cross_section.core.domain.components.gutters import Gutter
+from cross_section.core.geometry.primitives import Segment2D
 
 
 def test_gutter_geometry_right():
@@ -14,6 +15,10 @@ def test_gutter_geometry_right():
 
     assert len(geometry.polygons) == 1
     assert geometry.metadata["component_type"] == "Gutter"
+    polygon = geometry.polygons[0]
+    top_edge = Segment2D(polygon.exterior[0], polygon.exterior[1])
+    bottom_edge = Segment2D(polygon.exterior[3], polygon.exterior[2])
+    assert top_edge.is_parallel_to(bottom_edge)
 
 
 def test_gutter_attachment_left():

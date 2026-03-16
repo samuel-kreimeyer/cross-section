@@ -2,7 +2,14 @@
 
 from dataclasses import dataclass
 
-from ...geometry.primitives import ComponentGeometry, ConnectionPoint, Point2D, Polygon
+from ...geometry.primitives import (
+    ComponentGeometry,
+    ConnectionPoint,
+    Point2D,
+    Polygon,
+    horizontal_segment,
+    vertical_segment,
+)
 from ..base import Direction, RoadComponent
 from ..pavement import ConcreteLayer
 
@@ -150,19 +157,19 @@ class Curb(RoadComponent):
         gutter_outer_y = insertion.y - self.gutter_drop
         p2 = Point2D(insertion.x + self.gutter_width, gutter_outer_y)
 
-        # Front of curb at top (battered face - narrower than bottom)
-        p3 = Point2D(
-            insertion.x + self.gutter_width + self.curb_width_top, gutter_outer_y + self.curb_height
+        curb_top = horizontal_segment(
+            x_start=insertion.x + self.gutter_width + self.curb_width_top,
+            x_end=insertion.x + self.gutter_width + self.curb_width_bottom,
+            y=gutter_outer_y + self.curb_height,
         )
-
-        # Back of curb at top
-        p4 = Point2D(
-            insertion.x + self.gutter_width + self.curb_width_bottom,
-            gutter_outer_y + self.curb_height,
+        back_face = vertical_segment(
+            x=insertion.x + self.gutter_width + self.curb_width_bottom,
+            y_top=gutter_outer_y + self.curb_height,
+            y_bottom=gutter_outer_y,
         )
-
-        # Back of curb at gutter surface level
-        p5 = Point2D(insertion.x + self.gutter_width + self.curb_width_bottom, gutter_outer_y)
+        p3 = curb_top.start
+        p4 = curb_top.end
+        p5 = back_face.end
 
         # Bottom outside of curb (continuous with gutter bottom)
         p6 = Point2D(
@@ -194,19 +201,19 @@ class Curb(RoadComponent):
             insertion.y - self.gutter_thickness,
         )
 
-        # Back of curb at gutter surface level
-        p5 = Point2D(insertion.x - self.gutter_width - self.curb_width_bottom, gutter_outer_y)
-
-        # Back of curb at top
-        p4 = Point2D(
-            insertion.x - self.gutter_width - self.curb_width_bottom,
-            gutter_outer_y + self.curb_height,
+        back_face = vertical_segment(
+            x=insertion.x - self.gutter_width - self.curb_width_bottom,
+            y_top=gutter_outer_y + self.curb_height,
+            y_bottom=gutter_outer_y,
         )
-
-        # Front of curb at top (battered face - narrower than bottom)
-        p3 = Point2D(
-            insertion.x - self.gutter_width - self.curb_width_top, gutter_outer_y + self.curb_height
+        curb_top = horizontal_segment(
+            x_start=insertion.x - self.gutter_width - self.curb_width_bottom,
+            x_end=insertion.x - self.gutter_width - self.curb_width_top,
+            y=gutter_outer_y + self.curb_height,
         )
+        p5 = back_face.end
+        p4 = back_face.start
+        p3 = curb_top.end
 
         # Top outside of gutter (at outer edge, with drop)
         p2 = Point2D(insertion.x - self.gutter_width, gutter_outer_y)

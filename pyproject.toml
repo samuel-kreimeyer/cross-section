@@ -45,6 +45,7 @@ viktor = [
 
 # Development dependencies
 dev = [
+    "shapely>=2.0",
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
     "hypothesis>=6.92.0",  # Property-based testing

@@ -6,41 +6,38 @@ from pathlib import Path
 
 import pytest
 
+from cross_section.core.domain import AsphaltLayer, ControlPoint, RoadSection, TravelLane
 from cross_section.core.domain.annotations import (
     AnnotationCollection,
-    AnnotationGenerator,
-    AnnotationGeneratorOptions,
     DimensionAnnotation,
     LeaderAnnotation,
 )
-from cross_section.core.domain.section import SectionGeometry
-from cross_section.core.geometry.primitives import ComponentGeometry, Point2D, Polygon
+from cross_section.core.geometry.primitives import Point2D
 from cross_section.export import AnnotatedSVGExporter
+
+
+def _asphalt_layer(thickness: float = 0.15) -> AsphaltLayer:
+    return AsphaltLayer(
+        thickness=thickness,
+        aggregate_size=12.5,
+        binder_type="PG 64-22",
+        binder_percentage=5.5,
+        density=2400,
+    )
 
 
 def test_annotated_crowned_road_export():
     """Test full workflow: create section, add annotations, export to SVG."""
-    # Create a simple section
     ft_to_m = 0.3048
     lane_width = 12.0 * ft_to_m
-
-    lane_poly = Polygon(exterior=[
-        Point2D(0, 100.0),
-        Point2D(lane_width, 100.0),
-        Point2D(lane_width, 99.85),
-        Point2D(0, 99.85),
-    ])
-
-    section = SectionGeometry(
-        components=[ComponentGeometry(
-            polygons=[lane_poly],
-            metadata={
-                "component_type": "TravelLane",
-                "width": lane_width,
-            }
-        )],
-        metadata={"name": "Test Section"}
+    road = RoadSection(
+        name="Test Section",
+        control_point=ControlPoint(x=0.0, elevation=100.0),
+        right_components=[
+            TravelLane(width=lane_width, pavement_layers=[_asphalt_layer()]),
+        ],
     )
+    section = road.to_geometry()
 
     # Create annotations
     collection = AnnotationCollection()
@@ -106,25 +103,13 @@ def test_example_script_generates_valid_svg():
     sys.path.insert(0, str(Path(__file__).parent.parent / "generators"))
 
     try:
-        from annotated_crowned_road import create_crowned_road_section
+        from crowned_road import build_scenario
 
         # Create section and annotations
-        section = create_crowned_road_section()
-        annotations = AnnotationGenerator.generate(
-            section,
-            AnnotationGeneratorOptions(
-                add_component_labels=True,
-                add_width_dimensions=True,
-                add_material_labels=True,
-                add_traffic_symbols=True,
-                add_cross_slope_symbols=True,
-                add_cross_slope_text=True,
-            ),
-        )
-        annotations.resolve_collisions(geometry=section)
+        section, annotations = build_scenario()
 
         # Verify section structure
-        assert len(section.components) == 6  # 2 lanes + 2 shoulders + 2 ditches
+        assert len(section.components) == 6
         assert section.metadata["name"] == "Crowned Road with Ditches"
 
         # Verify annotations
@@ -147,6 +132,7 @@ def test_example_script_generates_valid_svg():
 
             # Check that automated annotations render
             assert 'dimension-' in content
+            assert 'leader-' in content
 
         finally:
             if os.path.exists(temp_path):
@@ -158,12 +144,6 @@ def test_example_script_generates_valid_svg():
 
 def test_annotation_text_size_calculation():
     """Verify text size matches requested point size at intended scale."""
-    # For 10pt text at scale=100 px/m:
-    # 10pt = ~13.3 pixels at 96 DPI
-    # 13.3 pixels / 100 px/m = 0.133 meters
-    text_size_meters = 0.13
-
-    # Create simple annotation
     collection = AnnotationCollection()
     collection.add(LeaderAnnotation(
         points=[Point2D(0, 0), Point2D(1, 1)],
@@ -171,16 +151,14 @@ def test_annotation_text_size_calculation():
         layer="leaders"
     ))
 
-    # Create minimal section
-    section = SectionGeometry(
-        components=[ComponentGeometry(
-            polygons=[Polygon(exterior=[
-                Point2D(0, 0), Point2D(1, 0), Point2D(1, 1), Point2D(0, 1)
-            ])],
-            metadata={}
-        )],
-        metadata={}
+    road = RoadSection(
+        name="Text Size Test",
+        control_point=ControlPoint(x=0.0, elevation=0.0),
+        right_components=[
+            TravelLane(width=1.0, pavement_layers=[_asphalt_layer()]),
+        ],
     )
+    section = road.to_geometry()
 
     # Export with text size
     with tempfile.NamedTemporaryFile(mode='w', suffix='.svg', delete=False) as f:

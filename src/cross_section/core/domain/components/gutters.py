@@ -2,7 +2,13 @@
 
 from dataclasses import dataclass
 
-from ...geometry.primitives import ComponentGeometry, ConnectionPoint, Point2D, Polygon
+from ...geometry.primitives import (
+    ComponentGeometry,
+    ConnectionPoint,
+    Point2D,
+    Segment2D,
+    quad_between_segments,
+)
 from ..base import Direction, RoadComponent
 from ..pavement import ConcreteLayer
 
@@ -46,25 +52,12 @@ class Gutter(RoadComponent):
 
     def to_geometry(self, insertion: ConnectionPoint, direction: Direction) -> ComponentGeometry:
         attachment = self.get_attachment_point(insertion, direction)
-        bottom_inside = insertion.y - self.thickness
-        bottom_outside = attachment.y - self.thickness
-
-        if direction == "right":
-            vertices = [
-                Point2D(insertion.x, insertion.y),
-                Point2D(attachment.x, attachment.y),
-                Point2D(attachment.x, bottom_outside),
-                Point2D(insertion.x, bottom_inside),
-            ]
-        else:
-            vertices = [
-                Point2D(insertion.x, insertion.y),
-                Point2D(insertion.x, bottom_inside),
-                Point2D(attachment.x, bottom_outside),
-                Point2D(attachment.x, attachment.y),
-            ]
-
-        polygon = Polygon(exterior=vertices)
+        top_edge = Segment2D(
+            start=Point2D(insertion.x, insertion.y),
+            end=Point2D(attachment.x, attachment.y),
+        )
+        bottom_edge = top_edge.translated_y(-self.thickness)
+        polygon = quad_between_segments(top_edge, bottom_edge, direction)
         assert self.concrete is not None  # nosec B101
 
         return ComponentGeometry(

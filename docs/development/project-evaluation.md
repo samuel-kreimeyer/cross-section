@@ -14,8 +14,8 @@
 - Scenario builders often bypass the domain API and construct `SectionGeometry` and `ComponentGeometry` directly, which avoids exercising domain rules and validation. `tests/scenarios/crowned_road.py:34`, `tests/scenarios/three_lane_urban.py:25`, `tests/scenarios/ardot_undivided_notch_and_widen.py:25`
 
 ### Geometry soundness and validation
-- Shapely-backed validation is optional and integration tests do not fail when it is missing; this weakens guarantees during development. `tests/integration/test_scenario_validation.py:26`, `src/cross_section/core/domain/section.py:175`
-- Surface-only slopes are represented as thin polygons, which can introduce artificial overlaps/gaps in validation and exports. `src/cross_section/core/domain/components/slopes.py:120`
+- Shapely-backed validation remains optional at runtime, so development and CI must continue to enforce it explicitly. `tests/conftest.py:1`, `src/cross_section/core/domain/section.py:195`
+- Surface-only geometry should be represented as polylines rather than artificial solids; this pattern now exists and should be used consistently across components. `src/cross_section/core/domain/components/surfaces.py:1`, `src/cross_section/core/domain/components/slopes.py:100`
 
 ### Spec alignment
 - The current implementation lacks several components and abstractions described in `component_spec.md` (TraveledWay, TurnLane, Buffer, PedestrianFacility, etc.), which contributes to manual geometry in scenarios. `docs/reference/component_spec.md:12`
@@ -30,7 +30,7 @@
 ### Specification updates needed
 - Clarify and prioritize which abstractions are core (TraveledWay/LaneGroup, TurnLane, Shoulder variants, Barrier/Buffer, Pedestrian/Bike facilities).
 - Define how existing pavement, overlays, and widening transitions should be represented.
-- Add explicit guidance for surface-only elements (cross slopes, aggregate flats, slumped shoulders) to avoid representing them as artificial solids.
+- Add explicit guidance for surface-only elements (cross slopes, aggregate flats, slumped shoulders) to keep using polyline-style geometry rather than artificial solids.
 
 ### API additions implied by scenarios
 - TraveledWay/LaneGroup that includes multiple lanes with shared pavement structure and crown logic.

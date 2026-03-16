@@ -2,7 +2,14 @@
 
 from dataclasses import dataclass
 
-from ...geometry.primitives import ComponentGeometry, ConnectionPoint, Point2D, Polygon
+from ...geometry.primitives import (
+    ComponentGeometry,
+    ConnectionPoint,
+    Point2D,
+    Polygon,
+    profile_segment,
+    quad_between_segments,
+)
 from ..base import Direction, RoadComponent
 
 
@@ -100,8 +107,8 @@ class Slope(RoadComponent):
     def to_geometry(self, insertion: ConnectionPoint, direction: Direction) -> ComponentGeometry:
         """Create slope geometry.
 
-        Creates a triangular or trapezoidal polygon representing the slope.
-        If thickness is 0, creates a simple triangular surface.
+        Creates a surface polyline or a trapezoidal polygon representing the slope.
+        If thickness is 0, creates a simple surface line.
         If thickness > 0, creates a trapezoid with material thickness.
 
         Args:
@@ -115,48 +122,33 @@ class Slope(RoadComponent):
         assert self.horizontal_run is not None
         assert self.vertical_drop is not None
 
-        attachment = self.get_attachment_point(insertion, direction)
+        top_segment = profile_segment(
+            start=Point2D(insertion.x, insertion.y),
+            horizontal_run=self.horizontal_run,
+            vertical_drop=self.vertical_drop,
+            direction=direction,
+        )
+        attachment = ConnectionPoint(
+            x=top_segment.end.x,
+            y=top_segment.end.y,
+            description=f"Slope attachment ({direction})",
+        )
 
         if self.thickness == 0:
-            # Simple surface line (represented as very thin polygon)
-            if direction == "right":
-                vertices = [
-                    Point2D(insertion.x, insertion.y),
-                    Point2D(attachment.x, attachment.y),
-                    Point2D(attachment.x, attachment.y - 0.01),  # Minimal thickness
-                    Point2D(insertion.x, insertion.y - 0.01),
-                ]
-            else:  # left
-                vertices = [
-                    Point2D(insertion.x, insertion.y),
-                    Point2D(insertion.x, insertion.y - 0.01),
-                    Point2D(attachment.x, attachment.y - 0.01),
-                    Point2D(attachment.x, attachment.y),
-                ]
+            line = top_segment.to_polyline()
+            polygons: list[Polygon] = []
+            polylines = [line]
         else:
-            # Material with thickness
-            if direction == "right":
-                vertices = [
-                    Point2D(insertion.x, insertion.y),  # Top inside
-                    Point2D(attachment.x, attachment.y),  # Top outside
-                    Point2D(attachment.x, attachment.y - self.thickness),  # Bottom outside
-                    Point2D(insertion.x, insertion.y - self.thickness),  # Bottom inside
-                ]
-            else:  # left
-                vertices = [
-                    Point2D(insertion.x, insertion.y),  # Top inside
-                    Point2D(insertion.x, insertion.y - self.thickness),  # Bottom inside
-                    Point2D(attachment.x, attachment.y - self.thickness),  # Bottom outside
-                    Point2D(attachment.x, attachment.y),  # Top outside
-                ]
-
-        polygon = Polygon(exterior=vertices)
+            bottom_segment = top_segment.translated_y(-self.thickness)
+            polygons = [quad_between_segments(top_segment, bottom_segment, direction)]
+            polylines = []
 
         slope_ratio = (
             self.slope_ratio if self.slope_ratio else self.horizontal_run / abs(self.vertical_drop)
         )
         return ComponentGeometry(
-            polygons=[polygon],
+            polygons=polygons,
+            polylines=polylines,
             metadata={
                 "component_type": "Slope",
                 "horizontal_run": self.horizontal_run,

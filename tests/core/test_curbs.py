@@ -5,6 +5,7 @@ import pytest
 from cross_section.core.domain.components.curbs import Curb
 from cross_section.core.domain.pavement import ConcreteLayer
 from cross_section.core.domain.section import ControlPoint
+from cross_section.core.geometry.primitives import Segment2D
 
 
 class TestCurb:
@@ -137,6 +138,9 @@ class TestCurb:
         assert geometry.metadata['gutter_width'] == 0.6
         assert geometry.metadata['curb_height'] == 0.15
         assert geometry.metadata['assembly_direction'] == 'right'
+        back_face = Segment2D(polygon.exterior[3], polygon.exterior[4])
+        curb_top = Segment2D(polygon.exterior[2], polygon.exterior[3])
+        assert back_face.is_perpendicular_to(curb_top)
 
     def test_to_geometry_left(self):
         """Test geometry creation for left side curb."""

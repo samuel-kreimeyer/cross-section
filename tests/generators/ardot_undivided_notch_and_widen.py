@@ -40,8 +40,8 @@ from cross_section.export.svg_annotations import AnnotatedSVGExporter
 from _svg_to_png import svg_to_png
 
 
-def main():
-    """Create and export ARDOT notch and widen cross-section."""
+def build_scenario():
+    """Build the ARDOT notch and widen scenario and its annotations."""
     # Convert units
     ft_to_m = 0.3048
     in_to_m = 0.0254
@@ -266,6 +266,13 @@ def main():
     result = annotations.resolve_collisions(geometry=geometry)
     if not result.success:
         print(f"  WARN: {result.overflow_count} overflow, {result.remaining_collisions} collisions", file=sys.stderr)
+
+    return geometry, annotations
+
+
+def main():
+    """Create and export ARDOT notch and widen cross-section."""
+    geometry, annotations = build_scenario()
 
     # Export to SVG
     output_dir = SCRIPT_DIR.parent / "output"
